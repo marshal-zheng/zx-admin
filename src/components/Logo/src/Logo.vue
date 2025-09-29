@@ -20,7 +20,6 @@ const collapse = computed(() => appStore.getCollapse)
 const logo = computed(() => appStore.getLogo)
 
 onMounted(() => {
-  console.log('logo', logo.value)
   if (unref(collapse)) show.value = false
 })
 
