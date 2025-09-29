@@ -4,10 +4,12 @@ import { setCssVar, humpToUnderline } from '@/utils'
 import { colorIsDark, hexToRGB, lighten, mix } from '@/utils/color'
 import { ElMessage, ComponentSize } from 'element-plus'
 import { useCssVar } from '@vueuse/core'
-import { unref } from 'vue'
+import { unref, watch } from 'vue'
 import { useDark } from '@vueuse/core'
 
 interface AppState {
+  // 本地持久化的状态版本，用于向前兼容迁移
+  stateVersion?: number
   breadcrumb: boolean
   breadcrumbIcon: boolean
   collapse: boolean
@@ -35,66 +37,111 @@ interface AppState {
   fixedMenu: boolean
 }
 
-export const useAppStore = defineStore('app', {
-  state: (): AppState => {
-    return {
-      sizeMap: ['default', 'large', 'small'],
-      mobile: false, // 是否是移动端
-      title: import.meta.env.VITE_APP_TITLE, // 标题
-      pageLoading: false, // 路由跳转loading
-      breadcrumb: true, // 面包屑
-      breadcrumbIcon: true, // 面包屑图标
-      collapse: false, // 折叠菜单
-      uniqueOpened: false, // 是否只保持一个子菜单的展开
-      hamburger: true, // 折叠图标
-      screenfull: true, // 全屏图标
-      size: true, // 尺寸图标
-      locale: true, // 多语言图标
-      tagsView: true, // 标签页
-      tagsViewIcon: true, // 是否显示标签图标
-      logo: true, // logo
-      fixedHeader: true, // 固定toolheader
-      footer: true, // 显示页脚
-      greyMode: false, // 是否开始灰色模式，用于特殊悼念日
-      dynamicRouter: true, // 是否动态路由
-      serverDynamicRouter: true, // 是否服务端渲染动态路由
-      fixedMenu: false, // 是否固定菜单
+// 默认版本号：每次对默认状态结构有破坏性调整时 +1
+const APP_STATE_VERSION = 1
 
-      layout: 'classic', // layout布局
-      isDark: false, // 是否是暗黑模式
-      currentSize: 'default', // 组件尺寸
-      theme: {
-        // 主题色
-        elColorPrimary: '#409eff',
-        // 左侧菜单边框颜色
-        leftMenuBorderColor: 'inherit',
-        // 左侧菜单背景颜色
-        leftMenuBgColor: '#001529',
-        // 左侧菜单浅色背景颜色
-        leftMenuBgLightColor: '#0f2438',
-        // 左侧菜单选中背景颜色
-        leftMenuBgActiveColor: 'var(--el-color-primary)',
-        // 左侧菜单收起选中背景颜色
-        leftMenuCollapseBgActiveColor: 'var(--el-color-primary)',
-        // 左侧菜单字体颜色
-        leftMenuTextColor: '#bfcbd9',
-        // 左侧菜单选中字体颜色
-        leftMenuTextActiveColor: '#fff',
-        // logo字体颜色
-        logoTitleTextColor: '#fff',
-        // logo边框颜色
-        logoBorderColor: 'inherit',
-        // 头部背景颜色
-        topHeaderBgColor: '#fff',
-        // 头部字体颜色
-        topHeaderTextColor: 'inherit',
-        // 头部悬停颜色
-        topHeaderHoverColor: '#f6f6f6',
-        // 头部边框颜色
-        topToolBorderColor: '#eee'
-      }
+// 配置项哈希：用于检测代码默认值变更，触发自动同步
+let configHash = ''
+
+// 当版本变更时，需要与代码默认值保持同步的关键字段
+const SYNC_DEFAULT_KEYS: (keyof AppState)[] = [
+  'logo',
+  'breadcrumb',
+  'breadcrumbIcon',
+  'fixedHeader',
+  'footer',
+  'dynamicRouter',
+  'serverDynamicRouter',
+  'fixedMenu',
+  'layout',
+  'size',
+  'locale',
+  'tagsView',
+  'tagsViewIcon'
+]
+
+// 计算配置项的哈希值，用于检测默认值变更
+function calculateConfigHash(config: AppState): string {
+  const syncConfig = SYNC_DEFAULT_KEYS.reduce(
+    (acc, key) => {
+      acc[key] = config[key] as any
+      return acc
+    },
+    {} as Record<string, any>
+  )
+  return JSON.stringify(syncConfig)
+}
+
+function createDefaultState(): AppState {
+  const state = {
+    stateVersion: APP_STATE_VERSION,
+    sizeMap: ['default', 'large', 'small'] as ComponentSize[],
+    mobile: false, // 是否是移动端
+    title: import.meta.env.VITE_APP_TITLE, // 标题
+    pageLoading: false, // 路由跳转loading
+    breadcrumb: true, // 面包屑
+    breadcrumbIcon: true, // 面包屑图标
+    collapse: false, // 折叠菜单
+    uniqueOpened: false, // 是否只保持一个子菜单的展开
+    hamburger: true, // 折叠图标
+    screenfull: true, // 全屏图标
+    size: false, // 尺寸图标
+    locale: false, // 多语言图标
+    tagsView: true, // 标签页
+    tagsViewIcon: true, // 是否显示标签图标
+    logo: false, // logo
+    fixedHeader: true, // 固定toolheader
+    footer: true, // 显示页脚
+    greyMode: false, // 是否开始灰色模式，用于特殊悼念日
+    dynamicRouter: false, // 是否动态路由
+    serverDynamicRouter: false, // 是否服务端渲染动态路由
+    fixedMenu: false, // 是否固定菜单
+
+    layout: 'classic' as LayoutType, // layout布局
+    isDark: false, // 是否是暗黑模式
+    currentSize: 'default' as ComponentSize, // 组件尺寸
+    theme: {
+      // 主题色
+      elColorPrimary: '#409eff',
+      // 左侧菜单边框颜色
+      leftMenuBorderColor: 'inherit',
+      // 左侧菜单背景颜色
+      leftMenuBgColor: '#001529',
+      // 左侧菜单浅色背景颜色
+      leftMenuBgLightColor: '#0f2438',
+      // 左侧菜单选中背景颜色
+      leftMenuBgActiveColor: 'var(--el-color-primary)',
+      // 左侧菜单收起选中背景颜色
+      leftMenuCollapseBgActiveColor: 'var(--el-color-primary)',
+      // 左侧菜单字体颜色
+      leftMenuTextColor: '#bfcbd9',
+      // 左侧菜单选中字体颜色
+      leftMenuTextActiveColor: '#fff',
+      // logo字体颜色
+      logoTitleTextColor: '#fff',
+      // logo边框颜色
+      logoBorderColor: 'inherit',
+      // 头部背景颜色
+      topHeaderBgColor: '#fff',
+      // 头部字体颜色
+      topHeaderTextColor: 'inherit',
+      // 头部悬停颜色
+      topHeaderHoverColor: '#f6f6f6',
+      // 头部边框颜色
+      topToolBorderColor: '#eee'
     }
-  },
+  }
+
+  // 初始化时计算配置哈希
+  if (!configHash) {
+    configHash = calculateConfigHash(state)
+  }
+
+  return state
+}
+
+export const useAppStore = defineStore('app', {
+  state: (): AppState => createDefaultState(),
   getters: {
     getBreadcrumb(): boolean {
       return this.breadcrumb
@@ -173,6 +220,37 @@ export const useAppStore = defineStore('app', {
     }
   },
   actions: {
+    // 迁移并同步本地存储：当版本落后或配置哈希变更时，将关键系统配置对齐为当前默认值
+    migrateAndSync() {
+      const defaults = createDefaultState()
+      const currentVersion = this.stateVersion ?? 0
+      const currentConfigHash = calculateConfigHash(this as AppState)
+      const defaultConfigHash = calculateConfigHash(defaults)
+
+      // 版本升级或配置哈希变更时，同步默认值
+      const shouldSync =
+        currentVersion < APP_STATE_VERSION || currentConfigHash !== defaultConfigHash
+
+      if (shouldSync) {
+        console.log('🔄 检测到配置变更，同步默认值到本地存储')
+        SYNC_DEFAULT_KEYS.forEach((key) => {
+          // 以代码默认为准，覆盖本地历史值，保证"配置 + UI"一致
+          // @ts-ignore 索引签名
+          this[key] = defaults[key]
+        })
+        this.theme = { ...defaults.theme, ...(this.theme || {}) }
+        this.stateVersion = APP_STATE_VERSION
+      }
+      // 每次确保 CSS 变量与主题同步
+      this.setCssVarTheme()
+    },
+    // 重置为默认状态，并保持必要的主题变量同步
+    resetToDefaults() {
+      const defaults = createDefaultState()
+      // 逐字段赋值，避免替换 this 引用
+      Object.assign(this, defaults)
+      this.setCssVarTheme()
+    },
     setBreadcrumb(breadcrumb: boolean) {
       this.breadcrumb = breadcrumb
     },
@@ -323,6 +401,8 @@ export const useAppStore = defineStore('app', {
       }
     },
     initTheme() {
+      // 优先处理迁移与同步，避免 UI 与存储不一致
+      this.migrateAndSync()
       const isDark = useDark({
         valueDark: 'dark',
         valueLight: 'light'
@@ -332,9 +412,45 @@ export const useAppStore = defineStore('app', {
       newTitle !== this.getTitle && this.setTitle(newTitle)
     }
   },
-  persist: true
+  persist: {
+    key: 'vepa-app',
+    storage: localStorage
+  }
 })
 
 export const useAppStoreWithOut = () => {
   return useAppStore(store)
+}
+
+// 统一的配置同步管理器：监听所有配置项变更，自动触发 localStorage 同步
+export const setupAppStoreSync = () => {
+  const appStore = useAppStore()
+
+  // 监听所有同步字段的变更，确保实时同步到 localStorage
+  SYNC_DEFAULT_KEYS.forEach((key) => {
+    watch(
+      () => (appStore as any)[key],
+      (newValue, oldValue) => {
+        if (newValue !== oldValue) {
+          console.log(`📝 配置项 ${key} 已更新: ${oldValue} → ${newValue}`)
+          // Pinia 持久化插件会自动处理同步，这里只是日志记录
+        }
+      },
+      { immediate: false }
+    )
+  })
+
+  // 监听主题对象变更
+  watch(
+    () => appStore.theme,
+    (newTheme, oldTheme) => {
+      if (JSON.stringify(newTheme) !== JSON.stringify(oldTheme)) {
+        console.log('🎨 主题配置已更新')
+        appStore.setCssVarTheme()
+      }
+    },
+    { deep: true, immediate: false }
+  )
+
+  console.log('✅ 应用配置同步管理器已启动')
 }

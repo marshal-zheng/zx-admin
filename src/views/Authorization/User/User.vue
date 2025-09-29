@@ -4,13 +4,11 @@ import { useI18n } from '@/hooks/web/useI18n'
 import { Table } from '@/components/Table'
 import { ref, unref, nextTick, watch, reactive } from 'vue'
 import { ElTree, ElInput, ElDivider } from 'element-plus'
-import { getDepartmentApi, getUserByIdApi, saveUserApi, deleteUserByIdApi } from '@/api/department'
+import { getDepartmentApi, getUserByIdApi, deleteUserByIdApi } from '@/api/department'
 import type { DepartmentItem, DepartmentUserItem } from '@/api/department/types'
 import { useTable } from '@/hooks/web/useTable'
 import { Search } from '@/components/Search'
-import Write from './components/Write.vue'
-import Detail from './components/Detail.vue'
-import { Dialog } from '@/components/Dialog'
+// import Write from './components/Write.vue'
 import { getRoleListApi } from '@/api/role'
 import { CrudSchema, useCrudSchemas } from '@/hooks/web/useCrudSchemas'
 import { BaseButton } from '@/components/Button'
@@ -232,17 +230,11 @@ const filterNode = (value: string, data: DepartmentItem) => {
   return data.departmentName.includes(value)
 }
 
-const dialogVisible = ref(false)
-const dialogTitle = ref('')
-
 const currentRow = ref<DepartmentUserItem>()
 const actionType = ref('')
 
 const AddAction = () => {
-  dialogTitle.value = t('exampleDemo.add')
-  currentRow.value = undefined
-  dialogVisible.value = true
-  actionType.value = ''
+  // 添加功能已移除Dialog
 }
 
 const delLoading = ref(false)
@@ -261,35 +253,14 @@ const delData = async (row?: DepartmentUserItem) => {
 }
 
 const action = (row: DepartmentUserItem, type: string) => {
-  dialogTitle.value = t(type === 'edit' ? 'exampleDemo.edit' : 'exampleDemo.detail')
+  // 编辑和详情功能已移除Dialog
   actionType.value = type
   currentRow.value = { ...row, department: unref(treeEl)?.getCurrentNode() || {} }
-  dialogVisible.value = true
 }
 
-const writeRef = ref<ComponentRef<typeof Write>>()
+// const writeRef = ref<ComponentRef<typeof Write>>()
 
-const saveLoading = ref(false)
-
-const save = async () => {
-  const write = unref(writeRef)
-  const formData = await write?.submit()
-  if (formData) {
-    saveLoading.value = true
-    try {
-      const res = await saveUserApi(formData)
-      if (res) {
-        currentPage.value = 1
-        getList()
-      }
-    } catch (error) {
-      console.log(error)
-    } finally {
-      saveLoading.value = false
-      dialogVisible.value = false
-    }
-  }
-}
+// const saveLoading = ref(false)
 </script>
 
 <template>
@@ -353,32 +324,5 @@ const save = async () => {
         }"
       />
     </ContentWrap>
-
-    <Dialog v-model="dialogVisible" :title="dialogTitle">
-      <Write
-        v-if="actionType !== 'detail'"
-        ref="writeRef"
-        :form-schema="allSchemas.formSchema"
-        :current-row="currentRow"
-      />
-
-      <Detail
-        v-if="actionType === 'detail'"
-        :detail-schema="allSchemas.detailSchema"
-        :current-row="currentRow"
-      />
-
-      <template #footer>
-        <BaseButton
-          v-if="actionType !== 'detail'"
-          type="primary"
-          :loading="saveLoading"
-          @click="save"
-        >
-          {{ t('exampleDemo.save') }}
-        </BaseButton>
-        <BaseButton @click="dialogVisible = false">{{ t('dialogDemo.close') }}</BaseButton>
-      </template>
-    </Dialog>
   </div>
 </template>

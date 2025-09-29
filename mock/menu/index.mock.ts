@@ -224,41 +224,6 @@ export default [
               },
               children: [
                 {
-                  path: 'example-dialog',
-                  component: 'views/Example/Dialog/ExampleDialog',
-                  name: 'ExampleDialog',
-                  status: Mock.Random.integer(0, 1),
-                  id: 13,
-                  type: 1,
-                  parentId: 12,
-                  title: '综合示例-弹窗',
-                  permissionList: [
-                    {
-                      id: 1,
-                      label: '新增',
-                      value: 'add'
-                    },
-                    {
-                      id: 2,
-                      label: '编辑',
-                      value: 'edit'
-                    },
-                    {
-                      id: 3,
-                      label: '删除',
-                      value: 'delete'
-                    },
-                    {
-                      id: 4,
-                      label: '查看',
-                      value: 'view'
-                    }
-                  ],
-                  meta: {
-                    title: '综合示例-弹窗'
-                  }
-                },
-                {
                   path: 'example-page',
                   component: 'views/Example/Page/ExamplePage',
                   name: 'ExamplePage',

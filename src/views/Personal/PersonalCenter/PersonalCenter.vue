@@ -1,10 +1,8 @@
 <script setup lang="ts">
 import { ContentWrap } from '@/components/ContentWrap'
-import { ref, unref } from 'vue'
-import { ElDivider, ElImage, ElTag, ElTabPane, ElTabs, ElButton, ElMessage } from 'element-plus'
+import { ref } from 'vue'
+import { ElDivider, ElImage, ElTag, ElTabPane, ElTabs } from 'element-plus'
 import defaultAvatar from '@/assets/imgs/avatar.jpg'
-import UploadAvatar from './components/UploadAvatar.vue'
-import { Dialog } from '@/components/Dialog'
 import EditInfo from './components/EditInfo.vue'
 import EditPassword from './components/EditPassword.vue'
 
@@ -25,36 +23,13 @@ const fetchDetailUserApi = async () => {
 fetchDetailUserApi()
 
 const activeName = ref('first')
-
-const dialogVisible = ref(false)
-
-const uploadAvatarRef = ref<ComponentRef<typeof UploadAvatar>>()
-const avatarLoading = ref(false)
-const saveAvatar = async () => {
-  try {
-    avatarLoading.value = true
-    const base64 = unref(uploadAvatarRef)?.getBase64()
-    console.log(base64)
-    // 这里可以调用修改头像接口
-    fetchDetailUserApi()
-    ElMessage.success('修改成功')
-    dialogVisible.value = false
-  } catch (error) {
-    console.log(error)
-  } finally {
-    avatarLoading.value = false
-  }
-}
 </script>
 
 <template>
   <div class="flex w-100% h-100%">
     <ContentWrap title="个人信息" class="w-400px">
       <div class="flex justify-center items-center">
-        <div
-          class="avatar w-[150px] h-[150px] relative cursor-pointer"
-          @click="dialogVisible = true"
-        >
+        <div class="avatar w-[150px] h-[150px] relative">
           <ElImage
             class="w-[150px] h-[150px] rounded-full"
             :src="userInfo?.avatarUrl || defaultAvatar"
@@ -107,15 +82,6 @@ const saveAvatar = async () => {
       </ElTabs>
     </ContentWrap>
   </div>
-
-  <Dialog v-model="dialogVisible" title="修改头像" width="800px">
-    <UploadAvatar ref="uploadAvatarRef" :url="userInfo?.avatarUrl || defaultAvatar" />
-
-    <template #footer>
-      <ElButton type="primary" :loading="avatarLoading" @click="saveAvatar"> 保存 </ElButton>
-      <ElButton @click="dialogVisible = false">关闭</ElButton>
-    </template>
-  </Dialog>
 </template>
 
 <style lang="less" scoped>

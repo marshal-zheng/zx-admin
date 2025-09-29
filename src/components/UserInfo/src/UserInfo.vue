@@ -2,7 +2,6 @@
 import { ElDropdown, ElDropdownMenu, ElDropdownItem } from 'element-plus'
 import { useI18n } from '@/hooks/web/useI18n'
 import { useDesign } from '@/hooks/web/useDesign'
-import LockDialog from './components/LockDialog.vue'
 import { ref, computed } from 'vue'
 import LockPage from './components/LockPage.vue'
 import { useLockStore } from '@/store/modules/lock'
@@ -75,7 +74,6 @@ const toPage = (path: string) => {
     </template>
   </ElDropdown>
 
-  <LockDialog v-if="dialogVisible" v-model="dialogVisible" />
   <teleport to="body">
     <transition name="fade-bottom" mode="out-in">
       <LockPage v-if="getIsLock" />

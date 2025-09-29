@@ -142,7 +142,6 @@ export default {
     echart: 'Echart',
     countTo: 'Count to',
     watermark: 'Watermark',
-    qrcode: 'Qrcode',
     highlight: 'Highlight',
     infotip: 'Infotip',
     form: 'Form',
@@ -380,19 +379,6 @@ export default {
     createdWatermark: 'Created watermark',
     clearWatermark: 'Clear watermark',
     resetWatermark: 'Reset watermark'
-  },
-  qrcodeDemo: {
-    qrcode: 'Qrcode',
-    qrcodeDes: 'Secondary packaging based on qrcode',
-    basicUsage: 'Basic usage',
-    imgTag: 'Img tag',
-    style: 'Style config',
-    click: 'Click event',
-    asynchronousContent: 'Asynchronous content',
-    invalid: 'Invalid',
-    logoConfig: 'Logo config',
-    logoStyle: 'Logo style',
-    size: 'size config'
   },
   treeDemo: {
     treeTitle: 'Tree control (right-click node to customize menu options)',

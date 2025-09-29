@@ -373,19 +373,6 @@ export default {
     clearWatermark: '清除水印',
     resetWatermark: '重置水印'
   },
-  qrcodeDemo: {
-    qrcode: '二维码',
-    qrcodeDes: '基于 qrcode 二次封装',
-    basicUsage: '基础用法',
-    imgTag: 'img标签',
-    style: '样式配置',
-    click: '点击事件',
-    asynchronousContent: '异步内容',
-    invalid: '失效',
-    logoConfig: 'logo配置',
-    logoStyle: 'logo样式',
-    size: '大小配置'
-  },
   treeDemo: {
     treeTitle: '树形控件（节点右键可自定义菜单选项）',
     message: '基于 ElementPlus 的 Tree 组件二次封装'

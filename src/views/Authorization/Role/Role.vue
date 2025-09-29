@@ -1,5 +1,5 @@
 <script setup lang="tsx">
-import { reactive, ref, unref } from 'vue'
+import { reactive, ref } from 'vue'
 import { getRoleListApi } from '@/api/role'
 import { useTable } from '@/hooks/web/useTable'
 import { useI18n } from '@/hooks/web/useI18n'
@@ -8,9 +8,9 @@ import { ElTag } from 'element-plus'
 import { Search } from '@/components/Search'
 import { FormSchema } from '@/components/Form'
 import { ContentWrap } from '@/components/ContentWrap'
-import Write from './components/Write.vue'
-import Detail from './components/Detail.vue'
-import { Dialog } from '@/components/Dialog'
+// import Write from './components/Write.vue'
+// import Detail from './components/Detail.vue'
+// import { Dialog } from '@/components/Dialog'
 import { BaseButton } from '@/components/Button'
 
 const { t } = useI18n()
@@ -104,9 +104,9 @@ const dialogTitle = ref('')
 const currentRow = ref()
 const actionType = ref('')
 
-const writeRef = ref<ComponentRef<typeof Write>>()
+// const writeRef = ref<ComponentRef<typeof Write>>()
 
-const saveLoading = ref(false)
+// const saveLoading = ref(false)
 
 const action = (row: any, type: string) => {
   dialogTitle.value = t(type === 'edit' ? 'exampleDemo.edit' : 'exampleDemo.detail')
@@ -122,17 +122,17 @@ const AddAction = () => {
   actionType.value = ''
 }
 
-const save = async () => {
-  const write = unref(writeRef)
-  const formData = await write?.submit()
-  if (formData) {
-    saveLoading.value = true
-    setTimeout(() => {
-      saveLoading.value = false
-      dialogVisible.value = false
-    }, 1000)
-  }
-}
+// const save = async () => {
+//   const write = unref(writeRef)
+//   const formData = await write?.submit()
+//   if (formData) {
+//     saveLoading.value = true
+//     setTimeout(() => {
+//       saveLoading.value = false
+//       dialogVisible.value = false
+//     }, 1000)
+//   }
+// }
 </script>
 
 <template>
@@ -153,7 +153,7 @@ const save = async () => {
       @register="tableRegister"
     />
   </ContentWrap>
-
+  <!-- 
   <Dialog v-model="dialogVisible" :title="dialogTitle">
     <Write v-if="actionType !== 'detail'" ref="writeRef" :current-row="currentRow" />
     <Detail v-else :current-row="currentRow" />
@@ -169,5 +169,5 @@ const save = async () => {
       </BaseButton>
       <BaseButton @click="dialogVisible = false">{{ t('dialogDemo.close') }}</BaseButton>
     </template>
-  </Dialog>
+  </Dialog> -->
 </template>

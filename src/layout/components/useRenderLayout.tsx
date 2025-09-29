@@ -45,19 +45,17 @@ export const useRenderLayout = () => {
             { '!fixed z-3000': mobile.value }
           ]}
         >
-          {logo.value ? (
-            <Logo
-              class={[
-                'bg-[var(--left-menu-bg-color)] relative',
-                {
-                  '!pl-0': mobile.value && collapse.value,
-                  'w-[var(--left-menu-min-width)]': appStore.getCollapse,
-                  'w-[var(--left-menu-max-width)]': !appStore.getCollapse
-                }
-              ]}
-              style="transition: all var(--transition-time-02);"
-            ></Logo>
-          ) : undefined}
+          <Logo
+            class={[
+              'bg-[var(--left-menu-bg-color)] relative',
+              {
+                '!pl-0': mobile.value && collapse.value,
+                'w-[var(--left-menu-min-width)]': appStore.getCollapse,
+                'w-[var(--left-menu-max-width)]': !appStore.getCollapse
+              }
+            ]}
+            style="transition: all var(--transition-time-02);"
+          />
           <Menu class={[{ '!h-[calc(100%-var(--logo-height))]': logo.value }]}></Menu>
         </div>
         <div
@@ -122,7 +120,7 @@ export const useRenderLayout = () => {
     return (
       <>
         <div class="flex items-center bg-[var(--top-header-bg-color)] relative layout-border__bottom dark:bg-[var(--el-bg-color)]">
-          {logo.value ? <Logo class="custom-hover"></Logo> : undefined}
+          <Logo class="custom-hover" />
 
           <ToolHeader class="flex-1"></ToolHeader>
         </div>
@@ -186,7 +184,7 @@ export const useRenderLayout = () => {
             }
           ]}
         >
-          {logo.value ? <Logo class="custom-hover"></Logo> : undefined}
+          <Logo class="custom-hover" />
           <Menu class="flex-1 px-10px h-[var(--top-tool-height)]"></Menu>
           <ToolHeader></ToolHeader>
         </div>
@@ -234,7 +232,7 @@ export const useRenderLayout = () => {
     return (
       <>
         <div class="flex items-center bg-[var(--top-header-bg-color)] relative layout-border__bottom">
-          {logo.value ? <Logo class="custom-hover !pr-15px"></Logo> : undefined}
+          <Logo class="custom-hover !pr-15px" />
 
           <ToolHeader class="flex-1"></ToolHeader>
         </div>

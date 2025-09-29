@@ -17,7 +17,10 @@ const layout = computed(() => appStore.getLayout)
 
 const collapse = computed(() => appStore.getCollapse)
 
+const logo = computed(() => appStore.getLogo)
+
 onMounted(() => {
+  console.log('logo', logo.value)
   if (unref(collapse)) show.value = false
 })
 
@@ -58,7 +61,9 @@ watch(
       ]"
       to="/"
     >
+      <!-- logo是否显示, 加上v-if从app.ts中的状态取 -->
       <img
+        v-if="logo"
         src="@/assets/imgs/logo.png"
         class="w-[calc(var(--logo-height)-10px)] h-[calc(var(--logo-height)-10px)]"
       />
