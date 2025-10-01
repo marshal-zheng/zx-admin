@@ -1,0 +1,85 @@
+// ZxDetailCard 组件 CSS 变量定义
+// 基于 Element Plus 变量系统的主题变量
+
+// 所有样式包装在 zx-detail-card-wrapper 下
+.zx-detail-card-wrapper {
+  // ========== 内部组件变量 (--cmp 开头) ==========
+
+  // 基础样式变量 - 跟随 Element Plus 系统主题
+  --cmp-detail-card-bg: var(--zx-detail-card-bg, var(--el-bg-color, #ffffff));
+  --cmp-detail-card-border-radius: var(
+    --zx-detail-card-border-radius,
+    var(--el-border-radius-base, 8px)
+  );
+  --cmp-detail-card-padding: var(--zx-detail-card-padding, 16px);
+  --cmp-detail-card-gap: var(--zx-detail-card-gap, 8px);
+  --cmp-detail-card-border: var(--zx-detail-card-border, 1px solid var(--el-border-color, #e4e7ed));
+  --cmp-detail-card-shadow: var(
+    --zx-detail-card-shadow,
+    var(--el-box-shadow-light, 0 2px 4px rgba(0, 0, 0, 0.12), 0 0 6px rgba(0, 0, 0, 0.04))
+  );
+
+  // 标题相关变量 - 跟随 Element Plus 文本颜色
+  --cmp-detail-card-title-color: var(
+    --zx-detail-card-title-color,
+    var(--el-text-color-primary, #303133)
+  );
+  --cmp-detail-card-title-font-size: var(
+    --zx-detail-card-title-font-size,
+    var(--el-font-size-base, 16px)
+  );
+  --cmp-detail-card-title-font-weight: var(
+    --zx-detail-card-title-font-weight,
+    var(--el-font-weight-primary, 500)
+  );
+  --cmp-detail-card-title-gap: var(--zx-detail-card-title-gap, 16px);
+
+  // 描述标签相关变量 - 跟随 Element Plus 文本颜色
+  --cmp-detail-card-label-color: var(
+    --zx-detail-card-label-color,
+    var(--el-text-color-regular, #606266)
+  );
+  --cmp-detail-card-label-font-size: var(
+    --zx-detail-card-label-font-size,
+    var(--el-font-size-small, 14px)
+  );
+
+  // 描述值相关变量 - 跟随 Element Plus 文本颜色
+  --cmp-detail-card-value-color: var(
+    --zx-detail-card-value-color,
+    var(--el-text-color-primary, #303133)
+  );
+  --cmp-detail-card-value-font-size: var(
+    --zx-detail-card-value-font-size,
+    var(--el-font-size-small, 14px)
+  );
+
+  // 描述项布局变量
+  --cmp-detail-card-desc-gap: var(--zx-detail-card-desc-gap, 8px);
+  --cmp-detail-card-desc-item-padding: var(--zx-detail-card-desc-item-padding, 24px);
+  --cmp-detail-card-desc-item-margin-bottom: var(--zx-detail-card-desc-item-margin-bottom, 12px);
+
+  // 更多按钮相关变量 - 跟随 Element Plus 主色调
+  --cmp-detail-card-more-btn-color: var(
+    --zx-detail-card-more-btn-color,
+    var(--el-color-primary, #409eff)
+  );
+  --cmp-detail-card-more-btn-font-size: var(--zx-detail-card-more-btn-font-size, 12px);
+  --cmp-detail-card-more-btn-line-height: var(--zx-detail-card-more-btn-line-height, 16px);
+  --cmp-detail-card-more-btn-hover-opacity: var(--zx-detail-card-more-btn-hover-opacity, 0.8);
+
+  // 响应式断点变量
+  --cmp-detail-card-mobile-breakpoint: var(--zx-detail-card-mobile-breakpoint, 768px);
+  --cmp-detail-card-tablet-breakpoint: var(--zx-detail-card-tablet-breakpoint, 1200px);
+
+  // 响应式布局变量
+  --cmp-detail-card-mobile-item-width: var(--zx-detail-card-mobile-item-width, 100%);
+  --cmp-detail-card-tablet-item-width: var(--zx-detail-card-tablet-item-width, 50%);
+  --cmp-detail-card-desktop-item-width: var(--zx-detail-card-desktop-item-width, calc(100% / 3));
+
+  // 过渡动画变量
+  --cmp-detail-card-transition: var(
+    --zx-detail-card-transition,
+    all 0.3s cubic-bezier(0.645, 0.045, 0.355, 1)
+  );
+}

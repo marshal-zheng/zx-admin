@@ -1,0 +1,114 @@
+// ZxSearch 组件 CSS 变量定义
+// 基于 Element Plus 变量系统的主题变量
+
+// 所有样式包装在 search-class 下
+.zx-search {
+  // ========== 内部组件变量 (--cmp 开头) ==========
+  // 基础样式变量
+  --cmp-search-primary-color: var(--zx-search-primary-color, var(--el-color-primary, #409eff));
+  --cmp-search-text-color: var(--zx-search-text-color, var(--el-text-color-primary, #303133));
+  --cmp-search-text-secondary: var(
+    --zx-search-text-secondary,
+    var(--el-text-color-secondary, #909399)
+  );
+  --cmp-search-border-color: var(--zx-search-border-color, var(--el-border-color, #dcdfe6));
+  --cmp-search-bg-color: var(--zx-search-bg-color, var(--el-bg-color, #ffffff));
+  --cmp-search-disabled-bg: var(--zx-search-disabled-bg, var(--el-disabled-bg-color, #f5f7fa));
+  --cmp-search-disabled-color: var(
+    --zx-search-disabled-color,
+    var(--el-disabled-text-color, #c0c4cc)
+  );
+
+  // 输入框样式变量
+  --cmp-search-input-bg: var(--zx-search-input-bg, var(--el-fill-color-blank, #ffffff));
+  --cmp-search-input-border: var(--zx-search-input-border, var(--el-border-color, #dcdfe6));
+  --cmp-search-input-border-hover: var(
+    --zx-search-input-border-hover,
+    var(--el-border-color-hover, #c0c4cc)
+  );
+  --cmp-search-input-border-focus: var(
+    --zx-search-input-border-focus,
+    var(--el-color-primary, #409eff)
+  );
+  --cmp-search-input-radius: var(--zx-search-input-radius, var(--el-border-radius-base, 4px));
+  --cmp-search-input-padding: var(--zx-search-input-padding, 8px 12px);
+  --cmp-search-input-font-size: var(--zx-search-input-font-size, var(--el-font-size-base, 14px));
+  --cmp-search-input-height: var(--zx-search-input-height, var(--el-component-size, 32px));
+
+  // 按钮样式变量
+  --cmp-search-button-bg: var(--zx-search-button-bg, var(--el-color-primary, #409eff));
+  --cmp-search-button-bg-hover: var(
+    --zx-search-button-bg-hover,
+    var(--el-color-primary-light-3, #79bbff)
+  );
+  --cmp-search-button-bg-active: var(
+    --zx-search-button-bg-active,
+    var(--el-color-primary-dark-2, #337ecc)
+  );
+  --cmp-search-button-text-color: var(--zx-search-button-text-color, #ffffff);
+  --cmp-search-button-border: var(--zx-search-button-border, var(--el-color-primary, #409eff));
+  --cmp-search-button-border-hover: var(
+    --zx-search-button-border-hover,
+    var(--el-color-primary-light-3, #79bbff)
+  );
+  --cmp-search-button-border-active: var(
+    --zx-search-button-border-active,
+    var(--el-color-primary-dark-2, #337ecc)
+  );
+  --cmp-search-button-radius: var(--zx-search-button-radius, var(--el-border-radius-base, 4px));
+  --cmp-search-button-padding: var(--zx-search-button-padding, 8px 16px);
+
+  // 图标样式变量
+  --cmp-search-icon-color: var(--zx-search-icon-color, var(--el-text-color-regular, #606266));
+  --cmp-search-icon-hover-color: var(
+    --zx-search-icon-hover-color,
+    var(--el-color-primary, #409eff)
+  );
+  --cmp-search-icon-size: var(--zx-search-icon-size, 16px);
+
+  // 占位符样式变量
+  --cmp-search-placeholder-color: var(
+    --zx-search-placeholder-color,
+    var(--el-text-color-placeholder, #a8abb2)
+  );
+
+  // 清除按钮样式变量
+  --cmp-search-clear-color: var(--zx-search-clear-color, var(--el-text-color-placeholder, #a8abb2));
+  --cmp-search-clear-hover-color: var(
+    --zx-search-clear-hover-color,
+    var(--el-text-color-regular, #606266)
+  );
+
+  // 加载状态变量
+  --cmp-search-loading-color: var(--zx-search-loading-color, var(--el-color-primary, #409eff));
+  --cmp-search-loading-bg: var(--zx-search-loading-bg, rgba(255, 255, 255, 0.8));
+
+  // 尺寸变量
+  --cmp-search-gap: var(--zx-search-gap, 8px);
+  --cmp-search-large-height: var(--zx-search-large-height, var(--el-component-size-large, 40px));
+  --cmp-search-small-height: var(--zx-search-small-height, var(--el-component-size-small, 24px));
+  --cmp-search-large-font-size: var(--zx-search-large-font-size, 16px);
+  --cmp-search-small-font-size: var(--zx-search-small-font-size, 12px);
+
+  // 阴影效果变量
+  --cmp-search-shadow: var(
+    --zx-search-shadow,
+    var(--el-box-shadow-light, 0 2px 4px rgba(0, 0, 0, 0.12), 0 0 6px rgba(0, 0, 0, 0.04))
+  );
+  --cmp-search-shadow-focus: var(--zx-search-shadow-focus, 0 0 0 2px rgba(64, 158, 255, 0.2));
+
+  // 动画变量
+  --cmp-search-transition-duration: var(
+    --zx-search-transition-duration,
+    var(--el-transition-duration, 0.3s)
+  );
+  --cmp-search-transition-timing: var(
+    --zx-search-transition-timing,
+    var(--el-transition-function-ease-in-out-bezier, cubic-bezier(0.645, 0.045, 0.355, 1))
+  );
+
+  // 响应式设计变量
+  --cmp-search-mobile-gap: var(--zx-search-mobile-gap, 8px);
+  --cmp-search-mobile-padding: var(--zx-search-mobile-padding, 12px);
+  --cmp-search-mobile-font-size: var(--zx-search-mobile-font-size, 14px);
+}

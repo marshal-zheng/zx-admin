@@ -1,0 +1,67 @@
+.zx-dashboard-grid {
+  /* Base surfaces */
+  --dg-panel-bg: var(--app-background-color-card-default, var(--el-fill-color-blank, #ffffff));
+
+  /* Borders */
+  --dg-panel-container-border-color: var(
+    --app-panel-container-border-color,
+    var(--el-color-primary, #409eff)
+  );
+
+  /* Grid placeholders and elevation */
+  --dg-grid-placeholder-bg: var(--app-grid-placeholder-bg, var(--el-color-primary, #409eff));
+  --dg-grid-placeholder-opacity: var(--app-grid-placeholder-opacity, 0.2);
+  --dg-grid-placeholder-shadow-color: var(
+    --app-grid-placeholder-shadow-color,
+    var(--el-color-primary, #409eff)
+  );
+  --dg-grid-placeholder-bg-translucent: var(
+    --app-grid-placeholder-bg-translucent,
+    rgba(31, 96, 196, 0.2)
+  );
+
+  /* Handles */
+  --dg-resize-handle-color: var(--app-resize-handle-color, #acb6bf);
+  --dg-resize-handle-color-hover: var(--app-resize-handle-color-hover, #c0c8cf);
+  --dg-panel-header-hover-bg: var(--app-panel-header-hover-bg, var(--el-fill-color-light, #f1f5f9));
+  --dg-panel-header-border-color: var(
+    --app-panel-header-border-color,
+    var(--el-border-color-light, #e4e7ed)
+  );
+  --dg-panel-content-padding: var(--app-panel-content-padding, 10px);
+
+  /* Draggable Palette Colors */
+  --dg-color-danger: var(--app-color-danger, var(--el-color-danger, #f56c6c));
+  --dg-color-warning: var(--app-color-warning, var(--el-color-warning, #e6a23c));
+  --dg-color-success: var(--app-color-success, var(--el-color-success, #67c23a));
+  --dg-color-primary: var(--app-color-primary, var(--el-color-primary, #409eff));
+  --dg-color-info: var(--app-color-info, var(--el-color-info, #909399));
+  --dg-color-purple: var(--app-color-purple, #722ed1);
+
+  /* Palette UI */
+  --dg-palette-bg: var(--app-palette-bg, var(--el-bg-color, #ffffff));
+  --dg-palette-border-color: var(--app-palette-border-color, var(--el-border-color, #dcdfe6));
+  --dg-heading-color: var(--app-heading-color, var(--el-text-color-primary, #303133));
+  --dg-subheading-color: var(--app-subheading-color, var(--el-text-color-regular, #606266));
+  --dg-text-primary: var(--app-text-primary, var(--el-text-color-primary, #303133));
+  --dg-text-on-accent: var(--app-text-on-accent, #ffffff);
+  --dg-text-shadow-on-accent: var(--app-text-shadow-on-accent, 0 1px 2px rgba(0, 0, 0, 0.3));
+
+  /* Card styles */
+  --dg-card-bg: var(--app-card-bg, var(--el-bg-color-page, #f2f3f5));
+  --dg-card-border: var(--app-card-border, var(--el-border-color-light, #e4e7ed));
+  --dg-card-bg-hover: var(--app-card-bg-hover, var(--el-fill-color-light, #f5f7fa));
+  --dg-card-border-hover: var(--app-card-border-hover, var(--el-color-primary-light-7, #c6e2ff));
+}
+
+.zx-dashboard-grid__panel-header-menu {
+  --panel-header-menu-icon-color: var(
+    --app-panel-header-menu-icon-color,
+    var(--el-text-color-secondary)
+  );
+  --panel-header-menu-icon-hover-color: var(
+    --app-panel-header-menu-icon-hover-color,
+    var(--el-text-color-primary)
+  );
+  --panel-header-menu-icon-size: var(--app-panel-header-menu-icon-size, 16px);
+}

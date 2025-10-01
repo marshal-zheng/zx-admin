@@ -1,0 +1,279 @@
+// ZxUpload 组件样式
+@import './var.scss';
+
+.zx-upload {
+  width: 100%;
+
+  // 上传组件包装器
+  .zx-upload-wrapper {
+    width: 100%;
+
+    // 尺寸变体
+    &.zx-upload--large {
+      .zx-upload-dragger {
+        min-height: var(--cmp-upload-large-min-height);
+      }
+
+      .zx-upload-icon-inner {
+        font-size: var(--cmp-upload-icon-size-large);
+      }
+
+      .zx-upload-main-text {
+        font-size: var(--cmp-upload-main-text-size-large);
+      }
+    }
+
+    &.zx-upload--small {
+      .zx-upload-dragger {
+        min-height: var(--cmp-upload-small-min-height);
+      }
+
+      .zx-upload-icon-inner {
+        font-size: var(--cmp-upload-icon-size-small);
+      }
+
+      .zx-upload-main-text {
+        font-size: var(--cmp-upload-main-text-size-small);
+      }
+    }
+
+    // 禁用状态
+    &.zx-upload--disabled {
+      .zx-upload-dragger {
+        background-color: var(--cmp-upload-disabled-bg);
+        border-color: var(--cmp-upload-disabled-border);
+        color: var(--cmp-upload-disabled-text);
+        cursor: not-allowed;
+      }
+    }
+  }
+
+  // 拖拽上传区域
+  .zx-upload-dragger {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    min-height: var(--cmp-upload-dragger-min-height);
+    padding: var(--cmp-upload-dragger-padding);
+    border: 2px dashed var(--cmp-upload-dragger-border);
+    border-radius: var(--cmp-upload-dragger-border-radius);
+    background-color: var(--cmp-upload-dragger-bg);
+    transition: all var(--cmp-upload-transition-duration) var(--cmp-upload-transition-timing);
+    cursor: pointer;
+
+    &:hover {
+      border-color: var(--cmp-upload-dragger-hover-border);
+      background-color: var(--cmp-upload-dragger-hover-bg);
+    }
+
+    &:focus {
+      border-color: var(--cmp-upload-dragger-hover-border);
+      outline: none;
+    }
+  }
+
+  // 上传图标
+  .zx-upload-icon {
+    margin-bottom: var(--cmp-upload-icon-margin);
+
+    .zx-upload-icon-inner {
+      font-size: var(--cmp-upload-icon-size);
+      color: var(--cmp-upload-icon-color);
+      transition: color var(--cmp-upload-transition-duration);
+    }
+  }
+
+  // 上传文本
+  .zx-upload-text {
+    text-align: center;
+
+    .zx-upload-main-text {
+      margin-bottom: var(--cmp-upload-main-text-margin);
+      font-size: var(--cmp-upload-main-text-size);
+      font-weight: var(--cmp-upload-main-text-weight);
+      color: var(--cmp-upload-text-color);
+      line-height: 1.4;
+    }
+
+    .zx-upload-sub-text {
+      font-size: var(--cmp-upload-sub-text-size);
+      color: var(--cmp-upload-text-regular);
+      line-height: 1.4;
+    }
+  }
+
+  // 自定义文件列表
+  .zx-upload-file-list {
+    margin-top: var(--cmp-upload-file-list-margin);
+
+    .zx-upload-file-item {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      padding: var(--cmp-upload-file-item-padding);
+      margin-bottom: var(--cmp-upload-file-item-margin);
+      border: 1px solid var(--cmp-upload-file-item-border);
+      border-radius: var(--cmp-upload-file-item-border-radius);
+      background-color: var(--cmp-upload-file-item-bg);
+      transition: all var(--cmp-upload-transition-duration);
+
+      &:hover {
+        border-color: var(--cmp-upload-file-item-hover-border);
+        background-color: var(--cmp-upload-file-item-hover-bg);
+      }
+
+      &.is-success {
+        border-color: var(--cmp-upload-success-border);
+        background-color: var(--cmp-upload-success-bg);
+
+        .zx-upload-file-icon {
+          color: var(--cmp-upload-success-color);
+        }
+      }
+
+      &.is-error {
+        border-color: var(--cmp-upload-error-border);
+        background-color: var(--cmp-upload-error-bg);
+
+        .zx-upload-file-icon {
+          color: var(--cmp-upload-error-color);
+        }
+      }
+
+      &.is-uploading {
+        border-color: var(--cmp-upload-uploading-border);
+        background-color: var(--cmp-upload-uploading-bg);
+
+        .zx-upload-file-icon {
+          color: var(--cmp-upload-uploading-color);
+        }
+      }
+    }
+
+    .zx-upload-file-info {
+      display: flex;
+      align-items: center;
+      flex: 1;
+      min-width: 0;
+
+      .zx-upload-file-icon {
+        margin-right: var(--cmp-upload-file-icon-margin);
+        font-size: var(--cmp-upload-file-icon-size);
+        color: var(--cmp-upload-text-regular);
+        flex-shrink: 0;
+      }
+
+      .zx-upload-file-name {
+        flex: 1;
+        margin-right: var(--cmp-upload-file-icon-margin);
+        font-size: var(--cmp-upload-file-name-size);
+        color: var(--cmp-upload-text-color);
+        white-space: nowrap;
+        overflow: hidden;
+        text-overflow: ellipsis;
+      }
+
+      .zx-upload-file-size {
+        font-size: var(--cmp-upload-file-size-size);
+        color: var(--cmp-upload-text-regular);
+        flex-shrink: 0;
+      }
+    }
+
+    .zx-upload-file-actions {
+      display: flex;
+      flex-direction: column;
+      align-items: flex-end;
+
+      .zx-upload-progress {
+        width: var(--cmp-upload-progress-width);
+        margin-bottom: var(--cmp-upload-main-text-margin);
+      }
+
+      .zx-upload-file-buttons {
+        display: flex;
+        gap: var(--cmp-upload-button-gap);
+
+        .el-button {
+          padding: var(--cmp-upload-button-padding);
+          min-height: auto;
+
+          .el-icon {
+            font-size: var(--cmp-upload-button-icon-size);
+          }
+        }
+      }
+    }
+  }
+
+  // 响应式设计
+  @media (max-width: 768px) {
+    .zx-upload-dragger {
+      min-height: var(--cmp-upload-mobile-min-height);
+      padding: var(--cmp-upload-mobile-padding);
+    }
+
+    .zx-upload-icon .zx-upload-icon-inner {
+      font-size: var(--cmp-upload-icon-size-small);
+    }
+
+    .zx-upload-text {
+      .zx-upload-main-text {
+        font-size: var(--cmp-upload-main-text-size-small);
+      }
+
+      .zx-upload-sub-text {
+        font-size: var(--cmp-upload-sub-text-size-small);
+      }
+    }
+
+    .zx-upload-file-list {
+      .zx-upload-file-item {
+        padding: var(--cmp-upload-mobile-file-padding);
+        flex-direction: column;
+        align-items: flex-start;
+
+        .zx-upload-file-actions {
+          width: 100%;
+          margin-top: var(--cmp-upload-main-text-margin);
+
+          .zx-upload-progress {
+            width: 100%;
+          }
+
+          .zx-upload-file-buttons {
+            align-self: flex-end;
+          }
+        }
+      }
+    }
+  }
+}
+
+// Element Plus 上传组件样式覆盖
+.el-upload {
+  width: 100%;
+
+  .el-upload-dragger {
+    width: 100%;
+    border: none;
+    background: none;
+  }
+
+  .el-upload__tip {
+    margin-top: var(--cmp-upload-main-text-margin);
+    font-size: var(--cmp-upload-sub-text-size);
+    color: var(--cmp-upload-text-regular);
+    line-height: 1.4;
+  }
+}
+
+// 图片卡片模式样式
+.el-upload--picture-card {
+  .el-upload {
+    width: var(--cmp-upload-card-size);
+    height: var(--cmp-upload-card-size);
+    border-radius: var(--cmp-upload-card-border-radius);
+  }
+}

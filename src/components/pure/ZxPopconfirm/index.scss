@@ -1,0 +1,253 @@
+// ZxPopconfirm 确认弹框组件样式
+// 纯净组件样式，充分利用 Element Plus 的品牌色 CSS3 变量
+
+// 导入变量定义
+@import './var.scss';
+
+// 确认弹框容器样式
+.zx-popconfirm {
+  &__content {
+    padding: var(--cmp-popconfirm-padding);
+    background-color: var(--cmp-popconfirm-bg);
+    border-radius: var(--cmp-popconfirm-border-radius);
+    box-shadow: var(--cmp-popconfirm-shadow);
+  }
+
+  &__header {
+    display: flex;
+    align-items: center;
+    gap: var(--cmp-popconfirm-header-gap);
+    margin-bottom: var(--cmp-popconfirm-header-margin-bottom);
+  }
+
+  &__icon {
+    font-size: var(--cmp-popconfirm-icon-size);
+    color: var(--cmp-popconfirm-icon-color);
+    flex-shrink: 0;
+
+    // 危险操作图标颜色
+    &--danger {
+      color: var(--cmp-popconfirm-icon-danger-color);
+    }
+
+    // 主要操作图标颜色
+    &--primary {
+      color: var(--cmp-popconfirm-icon-primary-color);
+    }
+  }
+
+  &__title {
+    color: var(--cmp-popconfirm-title-color);
+    font-size: var(--cmp-popconfirm-title-font-size);
+    font-weight: var(--cmp-popconfirm-title-font-weight);
+    line-height: var(--cmp-popconfirm-title-line-height);
+    flex: 1;
+    margin: 0;
+  }
+
+  &__subtitle {
+    color: var(--cmp-popconfirm-subtitle-color);
+    font-size: var(--cmp-popconfirm-subtitle-font-size);
+    line-height: var(--cmp-popconfirm-subtitle-line-height);
+    margin-top: var(--cmp-popconfirm-subtitle-margin-top);
+    margin-left: var(--cmp-popconfirm-subtitle-margin-left);
+  }
+
+  &__form {
+    margin-top: var(--cmp-popconfirm-form-margin-top);
+
+    .el-form-item {
+      margin-bottom: 0;
+
+      // 表单验证错误状态
+      &.is-error {
+        .el-input__wrapper {
+          border-color: var(--cmp-popconfirm-error-color);
+          box-shadow: 0 0 0 1px var(--cmp-popconfirm-error-color) inset;
+        }
+      }
+
+      // 表单验证成功状态
+      &.is-success {
+        .el-input__wrapper {
+          border-color: var(--cmp-popconfirm-success-color);
+          box-shadow: 0 0 0 1px var(--cmp-popconfirm-success-color) inset;
+        }
+      }
+    }
+  }
+
+  &__input,
+  &__textarea {
+    width: var(--cmp-popconfirm-input-width);
+
+    // 焦点状态
+    &:focus-within {
+      .el-input__wrapper {
+        outline: var(--cmp-popconfirm-focus-outline-width) solid
+          var(--cmp-popconfirm-focus-outline-color);
+        outline-offset: var(--cmp-popconfirm-focus-outline-offset);
+      }
+    }
+  }
+
+  // 禁用状态
+  &--disabled {
+    opacity: var(--cmp-popconfirm-disabled-opacity);
+    cursor: var(--cmp-popconfirm-disabled-cursor);
+
+    .zx-popconfirm__input,
+    .zx-popconfirm__textarea {
+      pointer-events: none;
+    }
+  }
+
+  // 加载状态
+  &--loading {
+    opacity: var(--cmp-popconfirm-loading-opacity);
+    cursor: var(--cmp-popconfirm-loading-cursor);
+
+    .zx-popconfirm__input,
+    .zx-popconfirm__textarea {
+      pointer-events: none;
+    }
+  }
+}
+
+// Element Plus Popconfirm 样式覆盖
+:deep(.el-popconfirm) {
+  // 弹框容器样式
+  .el-popper {
+    background-color: var(--cmp-popconfirm-bg);
+    border: 1px solid var(--cmp-popconfirm-border-color);
+    border-radius: var(--cmp-popconfirm-border-radius);
+    box-shadow: var(--cmp-popconfirm-shadow);
+
+    // 默认宽度
+    min-width: var(--cmp-popconfirm-width-default);
+    max-width: var(--cmp-popconfirm-max-width);
+
+    // 删除操作时的宽度
+    &.is-delete {
+      min-width: var(--cmp-popconfirm-width-delete);
+    }
+  }
+
+  // 主要内容区域
+  .el-popconfirm__main {
+    padding: 0;
+
+    // 隐藏默认图标和标题，使用自定义的
+    .el-popconfirm__icon {
+      display: none;
+    }
+
+    .el-popconfirm__title {
+      display: none;
+    }
+  }
+
+  // 操作按钮区域
+  .el-popconfirm__action {
+    margin-top: var(--cmp-popconfirm-action-margin-top);
+    text-align: var(--cmp-popconfirm-action-text-align);
+
+    .el-button {
+      margin-left: var(--cmp-popconfirm-action-button-gap);
+      transition: all var(--cmp-popconfirm-transition-duration)
+        var(--cmp-popconfirm-transition-timing);
+
+      &:first-child {
+        margin-left: 0;
+      }
+
+      // 按钮焦点状态
+      &:focus-visible {
+        outline: var(--cmp-popconfirm-focus-outline-width) solid
+          var(--cmp-popconfirm-focus-outline-color);
+        outline-offset: var(--cmp-popconfirm-focus-outline-offset);
+      }
+    }
+  }
+}
+
+// 响应式设计
+@media (max-width: 768px) {
+  .zx-popconfirm {
+    &__input,
+    &__textarea {
+      width: var(--cmp-popconfirm-input-mobile-width);
+    }
+
+    &__content {
+      padding: var(--cmp-popconfirm-mobile-padding);
+    }
+
+    &__subtitle {
+      margin-left: 0; // 移动端不需要左边距
+    }
+  }
+
+  :deep(.el-popconfirm) {
+    .el-popper {
+      max-width: var(--cmp-popconfirm-mobile-max-width);
+    }
+  }
+}
+
+// 动画效果
+.zx-popconfirm {
+  &__content {
+    transition: all var(--cmp-popconfirm-transition-duration)
+      var(--cmp-popconfirm-transition-timing);
+  }
+
+  &__icon {
+    transition: color var(--cmp-popconfirm-transition-duration)
+      var(--cmp-popconfirm-transition-timing);
+  }
+
+  &__title {
+    transition: color var(--cmp-popconfirm-transition-duration)
+      var(--cmp-popconfirm-transition-timing);
+  }
+
+  &__subtitle {
+    transition: color var(--cmp-popconfirm-transition-duration)
+      var(--cmp-popconfirm-transition-timing);
+  }
+}
+
+// 无障碍支持
+.zx-popconfirm {
+  // 键盘导航支持
+  &__input,
+  &__textarea {
+    &:focus {
+      outline: var(--cmp-popconfirm-focus-outline-width) solid
+        var(--cmp-popconfirm-focus-outline-color);
+      outline-offset: var(--cmp-popconfirm-focus-outline-offset);
+    }
+  }
+
+  // 高对比度模式支持
+  @media (prefers-contrast: high) {
+    &__content {
+      border: 2px solid var(--cmp-popconfirm-border-color);
+    }
+
+    &__title {
+      font-weight: 600;
+    }
+  }
+
+  // 减少动画模式支持
+  @media (prefers-reduced-motion: reduce) {
+    &__content,
+    &__icon,
+    &__title,
+    &__subtitle {
+      transition: none;
+    }
+  }
+}

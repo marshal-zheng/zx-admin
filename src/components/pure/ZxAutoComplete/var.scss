@@ -1,0 +1,114 @@
+// ZxAutoComplete 组件 CSS 变量定义
+// 基于 Element Plus 变量系统的主题变量
+
+// 所有样式包装在 zx-auto-complete-wrapper 下
+.zx-auto-complete-wrapper {
+  // ========== 内部组件变量 (--cmp 开头) ==========
+  // 基础样式变量
+  --cmp-auto-complete-border-radius: var(
+    --zx-auto-complete-border-radius,
+    var(--el-border-radius-base, 4px)
+  );
+  --cmp-auto-complete-font-size: var(--zx-auto-complete-font-size, var(--el-font-size-base, 14px));
+  --cmp-auto-complete-line-height: var(
+    --zx-auto-complete-line-height,
+    var(--el-component-size-small, 24px)
+  );
+  --cmp-auto-complete-padding: var(--zx-auto-complete-padding, 8px 12px);
+  --cmp-auto-complete-min-height: var(
+    --zx-auto-complete-min-height,
+    var(--el-component-size, 32px)
+  );
+
+  // 使用 Element Plus 的品牌色变量 - 跟随系统主题
+  // 边框相关变量
+  --cmp-auto-complete-border-color: var(
+    --zx-auto-complete-border-color,
+    var(--el-border-color, #dcdfe6)
+  );
+  --cmp-auto-complete-border-color-hover: var(
+    --zx-auto-complete-border-color-hover,
+    var(--el-border-color-hover, #c0c4cc)
+  );
+  --cmp-auto-complete-border-color-focus: var(
+    --zx-auto-complete-border-color-focus,
+    var(--el-color-primary, #409eff)
+  );
+
+  // 背景和文字颜色
+  --cmp-auto-complete-background-color: var(
+    --zx-auto-complete-background-color,
+    var(--el-bg-color, #ffffff)
+  );
+  --cmp-auto-complete-text-color: var(
+    --zx-auto-complete-text-color,
+    var(--el-text-color-regular, #606266)
+  );
+  --cmp-auto-complete-placeholder-color: var(
+    --zx-auto-complete-placeholder-color,
+    var(--el-text-color-placeholder, #a8abb2)
+  );
+
+  // 禁用状态
+  --cmp-auto-complete-disabled-background: var(
+    --zx-auto-complete-disabled-background,
+    var(--el-disabled-bg-color, #f5f7fa)
+  );
+  --cmp-auto-complete-disabled-text-color: var(
+    --zx-auto-complete-disabled-text-color,
+    var(--el-disabled-text-color, #c0c4cc)
+  );
+
+  // 焦点状态阴影
+  --cmp-auto-complete-box-shadow-focus: var(
+    --zx-auto-complete-box-shadow-focus,
+    0 0 0 2px var(--el-color-primary-light-8, rgba(64, 158, 255, 0.2))
+  );
+
+  // 下拉面板相关变量
+  --cmp-auto-complete-dropdown-bg: var(
+    --zx-auto-complete-dropdown-bg,
+    var(--el-bg-color-overlay, #ffffff)
+  );
+  --cmp-auto-complete-dropdown-border: var(
+    --zx-auto-complete-dropdown-border,
+    1px solid var(--el-border-color-light, #e4e7ed)
+  );
+  --cmp-auto-complete-dropdown-border-radius: var(
+    --zx-auto-complete-dropdown-border-radius,
+    var(--el-border-radius-base, 4px)
+  );
+  --cmp-auto-complete-dropdown-box-shadow: var(
+    --zx-auto-complete-dropdown-box-shadow,
+    var(--el-box-shadow-light, 0px 0px 12px rgba(0, 0, 0, 0.12))
+  );
+  --cmp-auto-complete-dropdown-max-height: var(--zx-auto-complete-dropdown-max-height, 200px);
+
+  // 选项相关变量
+  --cmp-auto-complete-option-padding: var(--zx-auto-complete-option-padding, 8px 12px);
+  --cmp-auto-complete-option-hover-bg: var(
+    --zx-auto-complete-option-hover-bg,
+    var(--el-fill-color-light, #f5f7fa)
+  );
+  --cmp-auto-complete-option-selected-bg: var(
+    --zx-auto-complete-option-selected-bg,
+    var(--el-color-primary-light-9, #ecf5ff)
+  );
+  --cmp-auto-complete-option-selected-color: var(
+    --zx-auto-complete-option-selected-color,
+    var(--el-color-primary, #409eff)
+  );
+
+  // 过渡动画
+  --cmp-auto-complete-transition: var(
+    --zx-auto-complete-transition,
+    all 0.3s cubic-bezier(0.645, 0.045, 0.355, 1)
+  );
+
+  // 响应式变量
+  --cmp-auto-complete-mobile-font-size: var(--zx-auto-complete-mobile-font-size, 16px);
+  --cmp-auto-complete-mobile-dropdown-max-height: var(
+    --zx-auto-complete-mobile-dropdown-max-height,
+    150px
+  );
+}

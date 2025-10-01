@@ -1,0 +1,48 @@
+.panel-chrome-angular {
+  background-color: var(--dg-panel-bg);
+  // border: 1px solid #dce1e6;
+  border-radius: 3px;
+  flex: 1 1 0;
+  height: 100%;
+  width: 100%;
+  display: flex;
+  flex-direction: column;
+  position: relative;
+
+  .panel-content {
+    // padding: 10px 20px 30px 20px;
+    padding: var(--dg-panel-content-padding, 10px);
+    // height: 100%;
+    // display: flex;
+    // align-items: center;
+    height: 100%;
+    overflow: hidden;
+    box-sizing: border-box;
+
+    &.panel-content--no-padding {
+      padding: 46px 0 0 0; // 只保留top padding为header留出空间
+    }
+  }
+
+  .v-resizable-handle {
+    background-image: none;
+
+    &::after {
+      border-right: 2px solid var(--dg-resize-handle-color);
+      border-bottom: 2px solid var(--dg-resize-handle-color);
+      content: '';
+      position: absolute;
+      right: 3px;
+      bottom: 3px;
+      width: 5px;
+      height: 5px;
+    }
+  }
+
+  &.v-grid-placeholder {
+    box-shadow: 0 0 4px var(--dg-grid-placeholder-shadow-color);
+    background: var(--dg-grid-placeholder-bg-translucent);
+    z-index: 0;
+    // opacity: unset;
+  }
+}

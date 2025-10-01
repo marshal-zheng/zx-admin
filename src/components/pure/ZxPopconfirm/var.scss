@@ -1,0 +1,113 @@
+// ZxPopconfirm 组件 CSS 变量定义
+// 基于 Element Plus 变量系统的主题变量
+
+// 所有样式包装在 popconfirm-class 下
+.zx-popconfirm {
+  // ========== 内部组件变量 (--cmp 开头) ==========
+  // 基础样式变量
+  --cmp-popconfirm-bg: var(--zx-popconfirm-bg, var(--el-bg-color, #ffffff));
+  --cmp-popconfirm-border-color: var(--zx-popconfirm-border-color, var(--el-border-color, #e4e7ed));
+  --cmp-popconfirm-border-radius: var(
+    --zx-popconfirm-border-radius,
+    var(--el-border-radius-base, 4px)
+  );
+  --cmp-popconfirm-padding: var(--zx-popconfirm-padding, 16px);
+  --cmp-popconfirm-shadow: var(
+    --zx-popconfirm-shadow,
+    var(--el-box-shadow-light, 0 2px 12px 0 rgba(0, 0, 0, 0.1))
+  );
+
+  // 标题样式变量
+  --cmp-popconfirm-title-color: var(
+    --zx-popconfirm-title-color,
+    var(--el-text-color-primary, #303133)
+  );
+  --cmp-popconfirm-title-font-size: var(
+    --zx-popconfirm-title-font-size,
+    var(--el-font-size-base, 14px)
+  );
+  --cmp-popconfirm-title-font-weight: var(--zx-popconfirm-title-font-weight, 500);
+  --cmp-popconfirm-title-line-height: var(--zx-popconfirm-title-line-height, 22px);
+
+  // 图标样式变量
+  --cmp-popconfirm-icon-size: var(--zx-popconfirm-icon-size, 18px);
+  --cmp-popconfirm-icon-color: var(--zx-popconfirm-icon-color, var(--el-color-warning, #e6a23c));
+  --cmp-popconfirm-icon-margin-right: var(--zx-popconfirm-icon-margin-right, 8px);
+  --cmp-popconfirm-icon-danger-color: var(
+    --zx-popconfirm-icon-danger-color,
+    var(--el-color-danger, #f56c6c)
+  );
+  --cmp-popconfirm-icon-primary-color: var(
+    --zx-popconfirm-icon-primary-color,
+    var(--el-color-primary, #409eff)
+  );
+
+  // 副标题样式变量
+  --cmp-popconfirm-subtitle-color: var(
+    --zx-popconfirm-subtitle-color,
+    var(--el-text-color-regular, #606266)
+  );
+  --cmp-popconfirm-subtitle-font-size: var(
+    --zx-popconfirm-subtitle-font-size,
+    var(--el-font-size-small, 12px)
+  );
+  --cmp-popconfirm-subtitle-margin-top: var(--zx-popconfirm-subtitle-margin-top, 8px);
+  --cmp-popconfirm-subtitle-margin-left: var(--zx-popconfirm-subtitle-margin-left, 26px);
+  --cmp-popconfirm-subtitle-line-height: var(--zx-popconfirm-subtitle-line-height, 1.4);
+
+  // 表单样式变量
+  --cmp-popconfirm-form-margin-top: var(--zx-popconfirm-form-margin-top, 12px);
+  --cmp-popconfirm-input-width: var(--zx-popconfirm-input-width, 245px);
+  --cmp-popconfirm-input-mobile-width: var(--zx-popconfirm-input-mobile-width, 200px);
+
+  // 头部布局变量
+  --cmp-popconfirm-header-margin-bottom: var(--zx-popconfirm-header-margin-bottom, 8px);
+  --cmp-popconfirm-header-gap: var(--zx-popconfirm-header-gap, 8px);
+
+  // 操作按钮区域变量
+  --cmp-popconfirm-action-margin-top: var(--zx-popconfirm-action-margin-top, 16px);
+  --cmp-popconfirm-action-text-align: var(--zx-popconfirm-action-text-align, right);
+  --cmp-popconfirm-action-button-gap: var(--zx-popconfirm-action-button-gap, 8px);
+
+  // 弹出框尺寸变量
+  --cmp-popconfirm-width-default: var(--zx-popconfirm-width-default, 200px);
+  --cmp-popconfirm-width-delete: var(--zx-popconfirm-width-delete, 352px);
+  --cmp-popconfirm-max-width: var(--zx-popconfirm-max-width, 400px);
+
+  // 响应式设计变量
+  --cmp-popconfirm-mobile-padding: var(--zx-popconfirm-mobile-padding, 12px);
+  --cmp-popconfirm-mobile-max-width: var(--zx-popconfirm-mobile-max-width, 280px);
+
+  // 动画变量
+  --cmp-popconfirm-transition-duration: var(
+    --zx-popconfirm-transition-duration,
+    var(--el-transition-duration, 0.3s)
+  );
+  --cmp-popconfirm-transition-timing: var(
+    --zx-popconfirm-transition-timing,
+    var(--el-transition-function-ease-in-out-bezier, cubic-bezier(0.645, 0.045, 0.355, 1))
+  );
+
+  // 表单验证样式变量
+  --cmp-popconfirm-error-color: var(--zx-popconfirm-error-color, var(--el-color-danger, #f56c6c));
+  --cmp-popconfirm-success-color: var(
+    --zx-popconfirm-success-color,
+    var(--el-color-success, #67c23a)
+  );
+
+  // 禁用状态变量
+  --cmp-popconfirm-disabled-opacity: var(--zx-popconfirm-disabled-opacity, 0.6);
+  --cmp-popconfirm-disabled-cursor: var(--zx-popconfirm-disabled-cursor, not-allowed);
+
+  // 焦点状态变量
+  --cmp-popconfirm-focus-outline-color: var(
+    --zx-popconfirm-focus-outline-color,
+    var(--el-color-primary, #409eff)
+  );
+  --cmp-popconfirm-focus-outline-width: var(--zx-popconfirm-focus-outline-width, 2px);
+  --cmp-popconfirm-focus-outline-offset: var(--zx-popconfirm-focus-outline-offset, 2px);
+
+  // 加载状态变量
+  --cmp-popconfirm-loading-opacity: var(--zx-popconfirm-loading-opacity, 0.7);
+  --cmp-popconfirm-loading-cursor: var(--zx-popconfirm-loading-cursor, wait);
+}

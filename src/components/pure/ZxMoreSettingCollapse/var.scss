@@ -1,0 +1,110 @@
+// ZxMoreSettingCollapse 组件 CSS 变量定义
+// 基于 Element Plus 变量系统的主题变量
+
+// 所有样式包装在 more-setting-collapse-class 下
+.zx-more-setting-collapse {
+  // ========== 内部组件变量 (--cmp 开头) ==========
+  // 基础样式变量
+  --cmp-more-setting-collapse-bg-color: var(--zx-more-setting-collapse-bg-color, transparent);
+  --cmp-more-setting-collapse-border-color: var(
+    --zx-more-setting-collapse-border-color,
+    transparent
+  );
+  --cmp-more-setting-collapse-border-radius: var(
+    --zx-more-setting-collapse-border-radius,
+    var(--el-border-radius-base, 4px)
+  );
+  --cmp-more-setting-collapse-padding: var(--zx-more-setting-collapse-padding, 16px);
+  --cmp-more-setting-collapse-margin: var(--zx-more-setting-collapse-margin, 18px 0 0 0);
+
+  // 触发器样式变量
+  --cmp-more-setting-collapse-trigger-color: var(
+    --zx-more-setting-collapse-trigger-color,
+    var(--el-color-primary, #409eff)
+  );
+  --cmp-more-setting-collapse-trigger-hover-color: var(
+    --zx-more-setting-collapse-trigger-hover-color,
+    var(--el-color-primary-light-3, #79bbff)
+  );
+  --cmp-more-setting-collapse-trigger-font-size: var(
+    --zx-more-setting-collapse-trigger-font-size,
+    var(--el-font-size-base, 14px)
+  );
+  --cmp-more-setting-collapse-trigger-font-weight: var(
+    --zx-more-setting-collapse-trigger-font-weight,
+    400
+  );
+  --cmp-more-setting-collapse-trigger-padding: var(--zx-more-setting-collapse-trigger-padding, 0);
+  --cmp-more-setting-collapse-trigger-hover-bg: var(
+    --zx-more-setting-collapse-trigger-hover-bg,
+    var(--el-color-primary-light-9, #ecf5ff)
+  );
+  --cmp-more-setting-collapse-trigger-hover-border: var(
+    --zx-more-setting-collapse-trigger-hover-border,
+    var(--el-color-primary-light-5, #b3d8ff)
+  );
+
+  // 折叠项头部样式变量
+  --cmp-more-setting-collapse-header-bg: var(
+    --zx-more-setting-collapse-header-bg,
+    var(--el-bg-color-page, #ffffff)
+  );
+  --cmp-more-setting-collapse-header-padding: var(
+    --zx-more-setting-collapse-header-padding,
+    0 18px
+  );
+  // --cmp-more-setting-collapse-header-bg: var(--zx-more-setting-collapse-header-bg, var(--el-bg-color-page, #ffffff));
+
+  // 图标样式变量
+  --cmp-more-setting-collapse-icon-size: var(--zx-more-setting-collapse-icon-size, 14px);
+  --cmp-more-setting-collapse-icon-margin-left: var(
+    --zx-more-setting-collapse-icon-margin-left,
+    4px
+  );
+  --cmp-more-setting-collapse-icon-color: var(
+    --zx-more-setting-collapse-icon-color,
+    var(--el-color-primary, #409eff)
+  );
+
+  // 内容区域变量
+  --cmp-more-setting-collapse-content-padding: var(
+    --zx-more-setting-collapse-content-padding,
+    16px 18px
+  );
+  --cmp-more-setting-collapse-content-bg: var(
+    --zx-more-setting-collapse-content-bg,
+    var(--el-bg-color-page, #f2f3f5)
+  );
+  --cmp-more-setting-collapse-content-border: var(
+    --zx-more-setting-collapse-content-border,
+    1px solid var(--el-border-color-light, #e4e7ed)
+  );
+  --cmp-more-setting-collapse-content-shadow: var(
+    --zx-more-setting-collapse-content-shadow,
+    var(--el-box-shadow-light, 0 2px 12px 0 rgba(0, 0, 0, 0.1))
+  );
+
+  // 过渡动画变量
+  --cmp-more-setting-collapse-transition-all: var(
+    --zx-more-setting-collapse-transition-all,
+    all 0.3s ease
+  );
+  --cmp-more-setting-collapse-transition-transform: var(
+    --zx-more-setting-collapse-transition-transform,
+    transform 0.3s ease
+  );
+
+  // 响应式设计变量
+  --cmp-more-setting-collapse-mobile-font-size: var(
+    --zx-more-setting-collapse-mobile-font-size,
+    13px
+  );
+  --cmp-more-setting-collapse-mobile-margin: var(
+    --zx-more-setting-collapse-mobile-margin,
+    16px 0 0 0
+  );
+  --cmp-more-setting-collapse-mobile-content-padding: var(
+    --zx-more-setting-collapse-mobile-content-padding,
+    12px 0
+  );
+}

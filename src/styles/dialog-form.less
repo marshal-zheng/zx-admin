@@ -1,0 +1,252 @@
+// 弹框表单统一样式配置
+// 用于确保系统中所有弹框表单保持一致的视觉效果和用户体验
+
+// CSS 变量定义 - 弹框表单相关
+:root {
+  // 弹框表单容器
+  --dialog-form-min-height: 400px;
+  --dialog-form-max-height: 70vh;
+  --dialog-form-padding: 0;
+  --dialog-form-gap: 20px;
+
+  // 表单项配置
+  --dialog-form-label-width: 120px;
+  --dialog-form-item-margin-bottom: 20px;
+  --dialog-form-input-height: 40px;
+
+  // 表单分组
+  --dialog-form-section-margin-bottom: 32px;
+  --dialog-form-section-title-margin-bottom: 16px;
+  --dialog-form-section-title-font-size: 16px;
+  --dialog-form-section-title-font-weight: 600;
+  --dialog-form-section-title-color: var(--el-text-color-primary);
+
+  // 响应式断点
+  --dialog-form-mobile-breakpoint: 768px;
+  --dialog-form-mobile-label-width: 80px;
+  --dialog-form-mobile-padding: 16px;
+}
+
+// 统一弹框表单样式类
+.dialog-form-container {
+  min-height: var(--dialog-form-min-height);
+  max-height: var(--dialog-form-max-height);
+  padding: var(--dialog-form-padding);
+
+  // 表单基础样式
+  .el-form {
+    // 标签宽度统一
+    &.el-form--label-right {
+      .el-form-item__label {
+        width: var(--dialog-form-label-width);
+        text-align: right;
+        padding-right: 12px;
+        font-weight: 500;
+        color: var(--el-text-color-regular);
+      }
+    }
+
+    // 表单项间距统一
+    .el-form-item {
+      margin-bottom: var(--dialog-form-item-margin-bottom);
+
+      // 输入框高度统一
+      .el-input__inner,
+      .el-textarea__inner,
+      .el-select .el-input__inner {
+        min-height: var(--dialog-form-input-height);
+      }
+
+      // 必填项标识样式优化
+      &.is-required .el-form-item__label::before {
+        content: '*';
+        color: var(--el-color-danger);
+        margin-right: 4px;
+      }
+    }
+  }
+
+  // 表单分组样式
+  .form-section {
+    margin-bottom: var(--dialog-form-section-margin-bottom);
+
+    &:last-child {
+      margin-bottom: 0;
+    }
+
+    .section-title {
+      margin: 0 0 var(--dialog-form-section-title-margin-bottom) 0;
+      font-size: var(--dialog-form-section-title-font-size);
+      font-weight: var(--dialog-form-section-title-font-weight);
+      color: var(--dialog-form-section-title-color);
+      border-bottom: 1px solid var(--el-border-color-lighter);
+      padding-bottom: 8px;
+    }
+  }
+
+  // 表单输入框统一样式
+  .form-input {
+    width: 100%;
+
+    // 选择器样式优化
+    &.el-select {
+      .el-input__inner {
+        cursor: pointer;
+      }
+    }
+
+    // 文本域样式优化
+    &.el-textarea {
+      .el-textarea__inner {
+        resize: vertical;
+        min-height: 80px;
+      }
+    }
+  }
+
+  // 响应式适配
+  @media (max-width: 768px) {
+    padding: var(--dialog-form-mobile-padding);
+
+    .el-form {
+      &.el-form--label-right {
+        .el-form-item__label {
+          width: var(--dialog-form-mobile-label-width);
+        }
+      }
+    }
+
+    .form-section .section-title {
+      font-size: 14px;
+    }
+  }
+}
+
+// 特定弹框尺寸的表单样式
+.dialog-form-small {
+  .dialog-form-container {
+    min-height: 300px;
+    padding: 20px;
+
+    .el-form .el-form-item {
+      margin-bottom: 16px;
+    }
+
+    .form-section {
+      margin-bottom: 24px;
+    }
+  }
+}
+
+.dialog-form-large {
+  .dialog-form-container {
+    min-height: 500px;
+    max-height: 80vh;
+    padding: 32px;
+
+    .el-form .el-form-item {
+      margin-bottom: 24px;
+    }
+
+    .form-section {
+      margin-bottom: 40px;
+    }
+  }
+}
+
+// 只读模式表单样式
+.dialog-form-readonly {
+  .dialog-form-container {
+    .el-form-item {
+      .el-input,
+      .el-select,
+      .el-textarea {
+        .el-input__inner,
+        .el-textarea__inner {
+          background-color: var(--el-fill-color-light);
+          border-color: var(--el-border-color-lighter);
+          color: var(--el-text-color-regular);
+          cursor: not-allowed;
+        }
+      }
+    }
+  }
+}
+
+// 表单验证错误状态优化
+.dialog-form-container {
+  .el-form-item.is-error {
+    .el-form-item__error {
+      position: static;
+      margin-top: 4px;
+      padding-left: 0;
+      font-size: 12px;
+      line-height: 1.4;
+    }
+  }
+}
+
+// 弹框表单底部操作区域
+.dialog-form-footer {
+  display: flex;
+  justify-content: flex-end;
+  gap: 12px;
+  padding: 16px 24px 0;
+  border-top: 1px solid var(--el-border-color-lighter);
+  margin-top: 24px;
+
+  .el-button {
+    min-width: 80px;
+  }
+
+  @media (max-width: 768px) {
+    padding: 12px 16px 0;
+
+    .el-button {
+      flex: 1;
+      min-width: auto;
+    }
+  }
+}
+
+// 特殊表单控件样式优化
+.dialog-form-container {
+  // 日期选择器
+  .el-date-editor {
+    width: 100%;
+  }
+
+  // 数字输入框
+  .el-input-number {
+    width: 100%;
+  }
+
+  // 开关组件
+  .el-switch {
+    height: var(--dialog-form-input-height);
+    display: flex;
+    align-items: center;
+  }
+
+  // 单选框组
+  .el-radio-group {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 16px;
+
+    .el-radio {
+      margin-right: 0;
+    }
+  }
+
+  // 复选框组
+  .el-checkbox-group {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 16px;
+
+    .el-checkbox {
+      margin-right: 0;
+    }
+  }
+}

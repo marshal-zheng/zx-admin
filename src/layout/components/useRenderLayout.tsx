@@ -78,7 +78,9 @@ export const useRenderLayout = () => {
               `${prefixCls}-content-scrollbar`,
               {
                 '!h-[calc(100%-var(--top-tool-height)-var(--tags-view-height))] mt-[calc(var(--top-tool-height)+var(--tags-view-height))]':
-                  fixedHeader.value
+                  fixedHeader.value && tagsView.value,
+                '!h-[calc(100%-var(--top-tool-height))] mt-[var(--top-tool-height)]':
+                  fixedHeader.value && !tagsView.value
               }
             ]}
           >
@@ -193,8 +195,9 @@ export const useRenderLayout = () => {
             `${prefixCls}-content`,
             'w-full',
             {
-              'h-[calc(100%-var(--top-tool-height))]': !fixedHeader.value,
-              'h-[calc(100%-var(--tags-view-height)-var(--top-tool-height))]': fixedHeader.value
+              'h-[calc(100%-var(--top-tool-height))]': !fixedHeader.value || !tagsView.value,
+              'h-[calc(100%-var(--tags-view-height)-var(--top-tool-height))]':
+                fixedHeader.value && tagsView.value
             }
           ]}
         >
@@ -204,7 +207,8 @@ export const useRenderLayout = () => {
               `${prefixCls}-content-scrollbar`,
               {
                 'mt-[var(--tags-view-height)] !pb-[calc(var(--tags-view-height)+var(--app-footer-height))]':
-                  fixedHeader.value,
+                  fixedHeader.value && tagsView.value,
+                '!pb-[var(--app-footer-height)]': fixedHeader.value && !tagsView.value,
                 'pb-[var(--app-footer-height)]': !fixedHeader.value
               }
             ]}

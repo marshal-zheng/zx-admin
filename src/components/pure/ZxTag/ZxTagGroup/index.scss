@@ -1,0 +1,74 @@
+// 导入 CSS3 变量定义
+@import '../var.scss';
+
+.zx-tag-group {
+  display: flex;
+  flex-direction: row;
+  flex-wrap: nowrap;
+  align-items: center;
+  overflow: hidden;
+  max-width: var(--cmp-tag-group-max-width, 440px);
+  white-space: nowrap;
+  width: 100%;
+  gap: var(--cmp-tag-group-gap);
+  margin: var(--cmp-tag-group-margin);
+  padding: var(--cmp-tag-group-padding);
+  border-radius: var(--cmp-tag-group-border-radius);
+  transition: var(--cmp-tag-transition);
+
+  &.zx-tag-group-editable {
+    cursor: pointer;
+    background-color: var(--cmp-tag-group-edit-bg);
+    border: var(--cmp-tag-group-edit-border);
+
+    &:hover {
+      background-color: var(--cmp-tag-group-edit-hover-bg);
+      border-color: var(--cmp-tag-group-edit-hover-border);
+    }
+  }
+
+  .zx-tag-group-item {
+    min-width: min-content !important;
+    max-width: var(--cmp-tag-max-width, 144px) !important;
+    transition: var(--cmp-tag-transition);
+
+    &:hover {
+      transform: var(--cmp-tag-group-item-hover-transform);
+    }
+  }
+
+  .zx-tag-group-number {
+    flex-shrink: 0;
+  }
+
+  // 响应式设计
+  @media (max-width: 768px) {
+    gap: var(--cmp-tag-group-mobile-gap);
+
+    .zx-tag-group-item {
+      max-width: var(--cmp-tag-mobile-max-width) !important;
+    }
+  }
+}
+
+.zx-tag-group-empty {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: var(--cmp-tag-group-empty-color);
+  background-color: var(--cmp-tag-group-empty-bg);
+  border: var(--cmp-tag-group-empty-border);
+  border-radius: var(--cmp-tag-border-radius);
+  transition: var(--cmp-tag-transition);
+
+  &.zx-tag-group-editable {
+    min-height: var(--cmp-tag-height-default, 24px);
+    cursor: pointer;
+
+    &:hover {
+      color: var(--cmp-tag-group-empty-hover-color);
+      background-color: var(--cmp-tag-group-empty-hover-bg);
+      border-color: var(--cmp-tag-group-empty-hover-border);
+    }
+  }
+}

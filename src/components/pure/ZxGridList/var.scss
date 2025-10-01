@@ -1,0 +1,88 @@
+// ZxGridList 组件 CSS 变量定义
+// 基于 Element Plus 变量系统的主题变量
+
+// 所有样式包装在 zx-grid-list-wrapper 下
+.zx-grid-list-wrapper {
+  // ========== 内部组件变量 (--cmp 开头) ==========
+
+  // 基础布局变量
+  --cmp-grid-list-gap: var(--zx-grid-list-gap, 12px);
+  --cmp-grid-list-margin-bottom: var(--zx-grid-list-margin-bottom, 16px);
+  --cmp-grid-list-border-radius: var(
+    --zx-grid-list-border-radius,
+    var(--el-border-radius-base, 4px)
+  );
+
+  // 工具栏样式变量
+  --cmp-grid-list-toolbar-gap: var(--zx-grid-list-toolbar-gap, 12px);
+  --cmp-grid-list-toolbar-margin-bottom: var(--zx-grid-list-toolbar-margin-bottom, 16px);
+  --cmp-grid-list-master-btns-gap: var(--zx-grid-list-master-btns-gap, 8px);
+  --cmp-grid-list-master-btns-margin-bottom: var(--zx-grid-list-master-btns-margin-bottom, 8px);
+
+  // 表格区域样式变量 - 跟随系统主题
+  --cmp-grid-list-table-bg: var(--zx-grid-list-table-bg, var(--el-bg-color, #ffffff));
+  --cmp-grid-list-table-border: var(--zx-grid-list-table-border, var(--el-border-color, #dcdfe6));
+  --cmp-grid-list-table-text: var(--zx-grid-list-table-text, var(--el-text-color-primary, #303133));
+
+  // 表格内边框样式变量
+  --cmp-grid-list-table-inner-border-color: var(
+    --zx-grid-list-table-inner-border-color,
+    var(--el-border-color, #dcdfe6)
+  );
+  --cmp-grid-list-table-inner-border-width: var(--zx-grid-list-table-inner-border-width, 1px);
+
+  // 空状态样式变量
+  --cmp-grid-list-empty-min-height: var(--zx-grid-list-empty-min-height, 300px);
+  --cmp-grid-list-empty-padding: var(--zx-grid-list-empty-padding, 40px 20px);
+  --cmp-grid-list-empty-bg: var(--zx-grid-list-empty-bg, var(--el-bg-color, #ffffff));
+  --cmp-grid-list-empty-text: var(
+    --zx-grid-list-empty-text,
+    var(--el-text-color-secondary, #606266)
+  );
+
+  // 分页区域样式变量 - 跟随系统主题
+  --cmp-grid-list-pagination-min-height: var(--zx-grid-list-pagination-min-height, 56px);
+  --cmp-grid-list-pagination-padding: var(--zx-grid-list-pagination-padding, 12px 0 0 0);
+  --cmp-grid-list-pagination-padding-right: var(--zx-grid-list-pagination-padding-right, 20px);
+  --cmp-grid-list-pagination-bg: var(--zx-grid-list-pagination-bg, var(--el-bg-color, #ffffff));
+  --cmp-grid-list-pagination-border-top: var(
+    --zx-grid-list-pagination-border-top,
+    1px solid var(--el-border-color-light, #e4e7ed)
+  );
+  --cmp-grid-list-pagination-z-index: var(--zx-grid-list-pagination-z-index, 10);
+
+  // 分页组件内部样式变量
+  --cmp-grid-list-pagination-font-size: var(--zx-grid-list-pagination-font-size, 14px);
+  --cmp-grid-list-pagination-font-size-mobile: var(
+    --zx-grid-list-pagination-font-size-mobile,
+    12px
+  );
+  --cmp-grid-list-pagination-select-width: var(--zx-grid-list-pagination-select-width, 84px);
+  --cmp-grid-list-pagination-sizes-margin: var(--zx-grid-list-pagination-sizes-margin, 16px);
+  --cmp-grid-list-pagination-jump-margin: var(--zx-grid-list-pagination-jump-margin, 16px);
+  --cmp-grid-list-pagination-mobile-margin: var(--zx-grid-list-pagination-mobile-margin, 8px);
+  --cmp-grid-list-pagination-padding-bottom: var(--zx-grid-list-pagination-padding-bottom, 2px);
+
+  // 加载状态样式变量
+  --cmp-grid-list-loading-min-height: var(--zx-grid-list-loading-min-height, 200px);
+  --cmp-grid-list-loading-bg: var(--zx-grid-list-loading-bg, var(--el-bg-color, #ffffff));
+
+  // 响应式断点
+  --cmp-grid-list-mobile-breakpoint: var(--zx-grid-list-mobile-breakpoint, 768px);
+
+  // 过渡动画
+  --cmp-grid-list-transition: var(
+    --zx-grid-list-transition,
+    all 0.3s cubic-bezier(0.645, 0.045, 0.355, 1)
+  );
+
+  // 阴影效果
+  --cmp-grid-list-box-shadow: var(
+    --zx-grid-list-box-shadow,
+    var(--el-box-shadow-light, 0 2px 12px 0 rgba(0, 0, 0, 0.1))
+  );
+  --cmp-grid-list-pagination-box-shadow: var(
+    --zx-grid-list-pagination-box-shadow,
+    0 -2px 8px rgba(0, 0, 0, 0.06)
+  );
+}

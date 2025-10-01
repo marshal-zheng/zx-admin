@@ -1,0 +1,14 @@
+// ZxButton 组件 CSS 变量定义
+// 基于 Element Plus 变量系统，跟随系统主题
+// 业务层可通过 --zx-button-* 变量进行自定义
+
+.zx-button-wrapper {
+  // ZX 按钮主题变量 - 仅定义必要的自定义变量
+  // 默认情况下完全跟随 Element Plus 的系统主题
+
+  // 可选的自定义变量，业务层可以覆盖
+  // --zx-button-border-radius: 自定义圆角
+  // --zx-button-font-weight: 自定义字重
+  // --zx-button-transition: 自定义过渡动画
+  // --zx-button-box-shadow: 自定义阴影效果
+}

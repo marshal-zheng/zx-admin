@@ -1,0 +1,50 @@
+// ZxEmpty 组件 CSS 变量定义
+// 基于 Element Plus 变量系统的主题变量
+
+// 所有样式包装在 zx-empty-wrapper 下
+.zx-empty-wrapper {
+  // ========== 内部组件变量 (--cmp 开头) ==========
+  // 基础样式变量
+  --cmp-empty-min-height: var(--zx-empty-min-height, 200px);
+  --cmp-empty-padding: var(--zx-empty-padding, 40px 0);
+  --cmp-empty-background: var(--zx-empty-background, transparent);
+
+  // 图片相关变量
+  --cmp-empty-image-size: var(--zx-empty-image-size, 100px);
+  --cmp-empty-image-margin: var(--zx-empty-image-margin, 0 0 20px 0);
+
+  // 描述文字样式 - 跟随系统主题
+  --cmp-empty-description-color: var(
+    --zx-empty-description-color,
+    var(--el-text-color-secondary, #909399)
+  );
+  --cmp-empty-description-font-size: var(
+    --zx-empty-description-font-size,
+    var(--el-font-size-base, 14px)
+  );
+  --cmp-empty-description-line-height: var(--zx-empty-description-line-height, 1.5);
+  --cmp-empty-description-margin: var(--zx-empty-description-margin, 0);
+
+  // 简洁模式变量
+  --cmp-empty-simple-min-height: var(--zx-empty-simple-min-height, 120px);
+  --cmp-empty-simple-padding: var(--zx-empty-simple-padding, 20px 0);
+  --cmp-empty-simple-image-size: var(--zx-empty-simple-image-size, 60px);
+  --cmp-empty-simple-description-font-size: var(--zx-empty-simple-description-font-size, 12px);
+  --cmp-empty-simple-description-color: var(
+    --zx-empty-simple-description-color,
+    var(--el-text-color-secondary, #909399)
+  );
+
+  // 内容区域样式
+  --cmp-empty-content-color: var(--zx-empty-content-color, var(--el-text-color-primary, #303133));
+  --cmp-empty-content-font-size: var(--zx-empty-content-font-size, var(--el-font-size-base, 14px));
+  --cmp-empty-content-margin: var(--zx-empty-content-margin, 20px 0 0 0);
+
+  // 动画效果
+  --cmp-empty-transition: var(--zx-empty-transition, all 0.3s ease);
+
+  // 响应式断点变量
+  --cmp-empty-mobile-min-height: var(--zx-empty-mobile-min-height, 150px);
+  --cmp-empty-mobile-padding: var(--zx-empty-mobile-padding, 30px 0);
+  --cmp-empty-mobile-image-size: var(--zx-empty-mobile-image-size, 80px);
+}

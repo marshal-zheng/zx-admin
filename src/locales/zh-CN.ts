@@ -187,7 +187,14 @@ export default {
     personal: '个人',
     avatars: '头像列表',
     iAgree: '我同意',
-    tree: 'Tree 树形控件'
+    tree: 'Tree 树形控件',
+    evaluationManagement: '评估任务管理',
+    taskManagement: '任务管理',
+    taskList: '任务列表',
+    evaluationDetail: '评估详情',
+    templateManagement: '模版管理',
+    templateList: '模版列表',
+    templateDetail: '模版详情'
   },
   permission: {
     hasPermission: '请设置操作权限值'

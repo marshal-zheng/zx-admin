@@ -1,0 +1,22 @@
+// ZxButton 按钮组件样式
+// 使用 Element Plus 原生样式，跟随系统主题
+
+// 导入变量定义
+@import './var.scss';
+
+.zx-button-wrapper {
+  display: inline-block;
+
+  // 可选的自定义样式，业务层可通过 CSS 变量覆盖
+  .el-button {
+    // 使用 zx- 前缀的自定义变量（如果定义了的话）
+    border-radius: var(--zx-button-border-radius, var(--el-border-radius-base));
+    font-weight: var(--zx-button-font-weight, var(--el-font-weight-primary));
+    transition: var(--zx-button-transition, var(--el-transition-all));
+
+    // 可选的阴影效果
+    &:not(.is-disabled):hover {
+      box-shadow: var(--zx-button-box-shadow, none);
+    }
+  }
+}

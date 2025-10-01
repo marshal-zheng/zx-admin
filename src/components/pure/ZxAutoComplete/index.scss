@@ -1,0 +1,161 @@
+// ZxAutoComplete 自动完成组件样式
+// 纯净组件样式，充分利用 Element Plus 的品牌色 CSS3 变量
+
+// 导入变量定义
+@import './var.scss';
+
+// 所有样式包装在 zx-auto-complete-wrapper 下
+.zx-auto-complete-wrapper {
+  display: inline-block;
+  width: 100%;
+  position: relative;
+
+  // 基础样式
+  .el-autocomplete {
+    width: 100%;
+
+    .el-input {
+      .el-input__wrapper {
+        border-radius: var(--cmp-auto-complete-border-radius);
+        border-color: var(--cmp-auto-complete-border-color);
+        background-color: var(--cmp-auto-complete-background-color);
+        transition: var(--cmp-auto-complete-transition);
+
+        &:hover {
+          border-color: var(--cmp-auto-complete-border-color-hover);
+        }
+
+        &.is-focus {
+          border-color: var(--cmp-auto-complete-border-color-focus);
+          box-shadow: var(--cmp-auto-complete-box-shadow-focus);
+        }
+      }
+
+      .el-input__inner {
+        color: var(--cmp-auto-complete-text-color);
+        font-size: var(--cmp-auto-complete-font-size);
+        line-height: var(--cmp-auto-complete-line-height);
+        padding: var(--cmp-auto-complete-padding);
+        min-height: var(--cmp-auto-complete-min-height);
+
+        &::placeholder {
+          color: var(--cmp-auto-complete-placeholder-color);
+        }
+      }
+
+      &.is-disabled {
+        .el-input__wrapper {
+          background-color: var(--cmp-auto-complete-disabled-background);
+          cursor: not-allowed;
+        }
+
+        .el-input__inner {
+          color: var(--cmp-auto-complete-disabled-text-color);
+          cursor: not-allowed;
+        }
+      }
+    }
+  }
+
+  // 带提示的样式
+  &.zx-auto-complete--with-tooltip {
+    .el-autocomplete {
+      .el-input {
+        .el-input__wrapper {
+          &:hover {
+            border-color: var(--cmp-auto-complete-border-color-focus);
+          }
+        }
+      }
+    }
+  }
+
+  // Loading 状态样式
+  .el-autocomplete {
+    .el-input {
+      .el-input__suffix {
+        .zx-auto-complete__loading {
+          color: var(--el-color-primary);
+          animation: zx-loading-rotate 2s linear infinite !important;
+          display: inline-flex;
+          align-items: center;
+          justify-content: center;
+
+          svg {
+            animation: zx-loading-rotate 2s linear infinite !important;
+            transform-origin: center;
+          }
+
+          &.is-loading {
+            animation: zx-loading-rotate 2s linear infinite !important;
+
+            svg {
+              animation: zx-loading-rotate 2s linear infinite !important;
+            }
+          }
+        }
+      }
+    }
+  }
+}
+
+// Loading 动画
+@keyframes zx-loading-rotate {
+  0% {
+    transform: rotate(0deg);
+  }
+  100% {
+    transform: rotate(360deg);
+  }
+}
+
+// 下拉面板样式（全局样式，因为下拉面板是挂载到 body 的）
+.el-autocomplete-suggestion {
+  background: var(--cmp-auto-complete-dropdown-bg);
+  border: var(--cmp-auto-complete-dropdown-border);
+  border-radius: var(--cmp-auto-complete-dropdown-border-radius);
+  box-shadow: var(--cmp-auto-complete-dropdown-box-shadow);
+  max-height: var(--cmp-auto-complete-dropdown-max-height);
+  overflow-y: auto;
+
+  .el-autocomplete-suggestion__wrap {
+    max-height: var(--cmp-auto-complete-dropdown-max-height);
+  }
+
+  .el-autocomplete-suggestion__list {
+    .el-autocomplete-suggestion__item {
+      padding: var(--cmp-auto-complete-option-padding);
+      transition: var(--cmp-auto-complete-transition);
+
+      &:hover {
+        background-color: var(--cmp-auto-complete-option-hover-bg);
+      }
+
+      &.highlighted {
+        background-color: var(--cmp-auto-complete-option-selected-bg);
+        color: var(--cmp-auto-complete-option-selected-color);
+      }
+    }
+  }
+}
+
+// 响应式设计
+@media (max-width: 768px) {
+  .zx-auto-complete-wrapper {
+    .el-autocomplete {
+      .el-input {
+        .el-input__inner {
+          font-size: var(--cmp-auto-complete-mobile-font-size); // 防止 iOS Safari 缩放
+        }
+      }
+    }
+  }
+
+  .el-autocomplete-suggestion {
+    max-height: var(--cmp-auto-complete-mobile-dropdown-max-height);
+
+    .el-autocomplete-suggestion__wrap {
+      max-height: var(--cmp-auto-complete-mobile-dropdown-max-height);
+    }
+  }
+}

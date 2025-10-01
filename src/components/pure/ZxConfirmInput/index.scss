@@ -1,0 +1,249 @@
+// 导入变量文件
+@import './var.scss';
+
+.zx-confirm-input__dlg {
+  // 对话框整体样式 - GitLab 风格
+  &.el-dialog {
+    border-radius: var(--cmp-confirm-input-radius);
+    box-shadow: var(--cmp-confirm-input-shadow);
+    border: 1px solid var(--cmp-confirm-input-border);
+    background: var(--cmp-confirm-input-bg);
+  }
+
+  // Header 样式
+  .el-dialog__header {
+    padding: 15px;
+    border-bottom: none;
+    background: var(--cmp-confirm-input-bg);
+    border-bottom: 1px solid var(--cmp-confirm-input-border-light);
+
+    transition:
+      background-color 0.2s ease,
+      opacity 0.2s ease;
+
+    &:hover {
+      background-color: var(--el-fill-color-light, rgba(0, 0, 0, 0.02));
+    }
+
+    .el-dialog__title {
+      font-size: 16px;
+      font-weight: 600;
+      color: var(--cmp-confirm-input-text);
+      line-height: 1.4;
+    }
+
+    .el-dialog__headerbtn {
+      top: 20px;
+      right: 20px;
+      width: 28px;
+      height: 28px;
+      border-radius: 4px;
+      transition: all 0.15s ease;
+
+      &:hover {
+        background-color: var(--cmp-confirm-input-border-light);
+      }
+
+      .el-dialog__close {
+        font-size: 14px;
+        color: var(--cmp-confirm-input-text-muted);
+      }
+    }
+  }
+
+  // Body 样式
+  .el-dialog__body {
+    padding: 0;
+  }
+
+  // Footer 样式 - 带背景色区分
+  .el-dialog__footer {
+    border-top: none !important;
+  }
+
+  // 内容区域样式
+  .zx-confirm-input__content {
+    padding: 15px 15px 0;
+    color: var(--cmp-confirm-input-text);
+    background-color: var(--cmp-confirm-input-bg);
+  }
+
+  // 第一行：危险警告（红色加粗）
+  .zx-confirm-input__danger-warning {
+    font-size: 14px;
+    font-weight: 600;
+    color: var(--cmp-confirm-input-danger);
+    line-height: 1.5;
+    margin-bottom: 12px;
+  }
+
+  // 第二行：操作描述 + 输入提示
+  .zx-confirm-input__description {
+    font-size: 14px;
+    color: var(--cmp-confirm-input-text-secondary);
+    line-height: 1.5;
+    margin-bottom: 16px;
+
+    strong {
+      font-weight: 600;
+      color: var(--cmp-confirm-input-text);
+    }
+
+    .zx-confirm-input__keyword {
+      color: var(--cmp-confirm-input-danger) !important;
+    }
+  }
+
+  // 表单样式
+  .zx-confirm-input__form {
+    margin-bottom: 30px;
+
+    .zx-confirm-input__form-item {
+      margin-bottom: 0;
+
+      .el-form-item__content {
+        line-height: 1;
+      }
+    }
+  }
+
+  // 输入框样式 - 跟随系统主题，适中尺寸
+  .zx-confirm-input__input {
+    margin-bottom: 5px;
+
+    // 兼容 ZxInput 和 el-input 的样式
+    .el-input__wrapper,
+    .zx-input .el-input__wrapper {
+      box-shadow: none;
+      transition: all var(--el-transition-duration, 0.3s);
+      padding: 6px 10px;
+      background-color: var(--cmp-confirm-input-bg);
+      border: 1px solid var(--cmp-confirm-input-border);
+      min-height: 32px;
+      border-radius: var(--cmp-confirm-input-radius);
+
+      &:hover {
+        border-color: var(--el-border-color-hover, var(--cmp-confirm-input-border));
+      }
+
+      &.is-focus {
+        border-color: var(--el-color-primary, #409eff);
+        box-shadow: 0 0 0 2px var(--el-color-primary-light-8, rgba(64, 158, 255, 0.2));
+      }
+    }
+
+    // ZxInput 特定样式
+    &.zx-input {
+      .el-input__inner {
+        color: var(--cmp-confirm-input-text);
+        background-color: transparent;
+
+        &::placeholder {
+          color: var(--cmp-confirm-input-text-muted);
+        }
+      }
+    }
+  }
+
+  // 分割线样式
+  .zx-confirm-input__divider {
+    margin: 20px 0 0 0;
+    border-color: var(--cmp-confirm-input-border-light);
+  }
+
+  // 底部按钮区域
+  .zx-confirm-input__footer {
+    display: flex;
+    align-items: center;
+    justify-content: flex-end;
+  }
+
+  .zx-confirm-input__actions {
+    display: flex;
+    gap: 12px;
+  }
+
+  // 确认按钮样式 - 危险操作红色
+  .zx-confirm-input__confirm-btn {
+    // 直接针对 el-button 的样式
+    border-radius: 4px;
+    font-weight: 500;
+    padding: 8px 16px;
+    font-size: 14px;
+    transition: all 0.15s ease;
+    min-width: 100px;
+
+    // 危险操作样式
+    background: var(--cmp-confirm-input-danger) !important;
+    border-color: var(--cmp-confirm-input-danger) !important;
+    color: #ffffff !important;
+
+    &:hover:not(:disabled) {
+      background: var(--cmp-confirm-input-danger-strong) !important;
+      border-color: var(--cmp-confirm-input-danger-strong) !important;
+      transform: translateY(-1px);
+      box-shadow: 0 4px 8px rgba(220, 38, 38, 0.25) !important;
+    }
+
+    &:active:not(:disabled) {
+      transform: translateY(0);
+      box-shadow: 0 2px 4px rgba(220, 38, 38, 0.25) !important;
+    }
+
+    &:disabled {
+      background: var(--cmp-confirm-input-border) !important;
+      border-color: var(--cmp-confirm-input-border) !important;
+      color: var(--cmp-confirm-input-text-muted) !important;
+      cursor: not-allowed;
+      transform: none;
+      box-shadow: none !important;
+    }
+
+    // 圆角变体
+    &.zx-confirm-input__btn--rounded {
+      border-radius: 20px;
+    }
+  }
+
+  // 不同语气的样式变体
+  &.zx-confirm-input--danger {
+    padding: 0;
+    .zx-confirm-input__danger-warning {
+      color: var(--cmp-confirm-input-danger);
+    }
+  }
+
+  &.zx-confirm-input--warning {
+    .zx-confirm-input__danger-warning {
+      color: var(--cmp-confirm-input-warning);
+    }
+
+    .zx-confirm-input__confirm-btn {
+      background: var(--cmp-confirm-input-warning) !important;
+      border-color: var(--cmp-confirm-input-warning) !important;
+
+      &:hover:not(:disabled) {
+        background: var(--cmp-confirm-input-warning-strong) !important;
+        border-color: var(--cmp-confirm-input-warning-strong) !important;
+        box-shadow: 0 4px 8px rgba(245, 158, 11, 0.25) !important;
+      }
+    }
+  }
+
+  &.zx-confirm-input--info {
+    .zx-confirm-input__danger-warning {
+      color: var(--cmp-confirm-input-info);
+    }
+
+    .zx-confirm-input__confirm-btn {
+      background: var(--cmp-confirm-input-info) !important;
+      border-color: var(--cmp-confirm-input-info) !important;
+
+      &:hover:not(:disabled) {
+        background: var(--cmp-confirm-input-info-strong) !important;
+        border-color: var(--cmp-confirm-input-info-strong) !important;
+        box-shadow: 0 4px 8px rgba(37, 99, 235, 0.25) !important;
+      }
+    }
+  }
+}

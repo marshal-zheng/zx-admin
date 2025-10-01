@@ -14,6 +14,9 @@ import { createSvgIconsPlugin } from 'vite-plugin-svg-icons'
 import { createStyleImportPlugin, ElementPlusResolve } from 'vite-plugin-style-import'
 import UnoCSS from 'unocss/vite'
 import { visualizer } from 'rollup-plugin-visualizer'
+import AutoImport from 'unplugin-auto-import/vite'
+import Components from 'unplugin-vue-components/vite'
+import { ElementPlusResolver } from 'unplugin-vue-components/resolvers'
 
 // https://vitejs.dev/config/
 const root = process.cwd()
@@ -40,6 +43,20 @@ export default ({ command, mode }: ConfigEnv): UserConfig => {
         }
       }),
       VueJsx(),
+      AutoImport({
+        resolvers: [ElementPlusResolver()],
+        imports: ['vue', 'vue-router', 'pinia', '@vueuse/core'],
+        dts: 'types/auto-imports.d.ts',
+        eslintrc: {
+          enabled: true,
+          filepath: './.eslintrc-auto-import.json',
+          globalsPropValue: true
+        }
+      }),
+      Components({
+        resolvers: [ElementPlusResolver()],
+        dts: 'types/components.d.ts'
+      }),
       ServerUrlCopy(),
       progress(),
       env.VITE_USE_ALL_ELEMENT_PLUS_STYLE === 'false'

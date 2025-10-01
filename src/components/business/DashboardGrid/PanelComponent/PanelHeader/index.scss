@@ -1,0 +1,284 @@
+/* Panel Header - 通用面板头部组件样式 */
+.panel-header {
+  /* 基础布局 */
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  z-index: var(--panel-header-z-index, 10);
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  min-height: var(--panel-header-height, 46px);
+
+  /* 背景与边框 */
+  background-color: var(--panel-header-bg, var(--app-background-color-card-default, #ffffff));
+  border-radius: var(--panel-header-border-radius, 3px 3px 0 0);
+  border-bottom: var(--panel-header-border-bottom, 1px solid var(--el-border-color-lighter));
+
+  /* 拖拽光标 */
+  cursor: var、(--panel-header-cursor, default);
+
+  /* 过渡动画 */
+  transition: all var(--panel-header-transition-duration, var(--el-transition-duration)) ease;
+
+  /* 悬停状态（普通状态） */
+  &:hover:not(.panel-header--draggable) {
+    background-color: var(
+      --panel-header-hover-bg,
+      var(--app-panel-header-hover-bg, var(--el-fill-color-light))
+    );
+    box-shadow: var(--panel-header-hover-shadow, 0 2px 4px rgba(0, 0, 0, 0.1));
+
+    .panel-header__action-bar {
+      opacity: 1;
+      visibility: visible;
+    }
+  }
+
+  /* 可拖拽状态 */
+  &--draggable {
+    cursor: move;
+
+    /* 可拖拽状态下的悬停效果 */
+    &:hover {
+      background-color: var(
+        --panel-header-draggable-hover-bg,
+        var(--el-color-primary-light-9, #ecf5ff)
+      ) !important;
+      border-color: var(
+        --panel-header-draggable-hover-border,
+        var(--el-color-primary-light-7, #a0cfff)
+      ) !important;
+      box-shadow: var(
+        --panel-header-draggable-hover-shadow,
+        0 2px 8px rgba(64, 158, 255, 0.2)
+      ) !important;
+      transform: var(--panel-header-draggable-hover-transform, translateY(-1px));
+
+      /* 添加拖动指示器 */
+      &::before {
+        content: '';
+        position: absolute;
+        left: 8px;
+        top: 50%;
+        transform: translateY(-50%);
+        width: 4px;
+        height: 16px;
+        background: repeating-linear-gradient(
+          to bottom,
+          var(--el-color-primary, #409eff) 0px,
+          var(--el-color-primary, #409eff) 2px,
+          transparent 2px,
+          transparent 4px
+        );
+        border-radius: 2px;
+        opacity: 0.8;
+        transition: opacity var(--el-transition-duration-fast) ease;
+      }
+
+      /* 标题在可拖动悬停时的样式 */
+      .panel-header__title {
+        color: var(
+          --panel-header-draggable-title-hover-color,
+          var(--el-color-primary, #409eff)
+        ) !important;
+        font-weight: var(--panel-header-draggable-title-hover-weight, 600);
+      }
+
+      /* 调整主要内容区域的左边距，为拖动指示器让出空间 */
+      .panel-header__main {
+        padding-left: var(--panel-header-draggable-main-padding-left, 24px);
+      }
+
+      /* 确保操作栏在可拖动状态下也能显示 */
+      .panel-header__action-bar {
+        opacity: 1;
+        visibility: visible;
+      }
+    }
+
+    /* 拖动时的样式 */
+    &:active {
+      cursor: grabbing;
+      transform: var(--panel-header-draggable-active-transform, scale(1.02));
+      box-shadow: var(
+        --panel-header-draggable-active-shadow,
+        0 4px 12px rgba(64, 158, 255, 0.3)
+      ) !important;
+    }
+  }
+
+  /* 有菜单时的状态 */
+  &--has-menu {
+    padding-right: var(--panel-header-menu-padding-right, 8px);
+  }
+
+  /* 有通知时的状态 */
+  &--has-notices {
+    .panel-header__action-bar {
+      gap: var(--panel-header-notices-gap, 8px);
+    }
+  }
+
+  /* 主要内容区域 */
+  &__main {
+    flex: 1;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    min-width: 0; /* 防止内容溢出 */
+    padding: var(--panel-header-main-padding, 0 16px);
+  }
+
+  /* 标题区域 */
+  &__title-section {
+    flex: 1;
+    display: flex;
+    align-items: center;
+    min-width: 0; /* 防止标题过长时溢出 */
+  }
+
+  /* 标题样式 */
+  &__title {
+    margin: 0;
+    font-size: var(--panel-header-title-size, 14px);
+    font-weight: var(--panel-header-title-weight, 500);
+    line-height: var(--panel-header-title-line-height, 1.4);
+    color: var(--panel-header-title-color, var(--el-text-color-primary));
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+
+    /* 标题悬停效果 */
+    &:hover {
+      color: var(--panel-header-title-hover-color, var(--el-color-primary));
+    }
+  }
+
+  /* 操作栏 */
+  &__action-bar {
+    display: flex;
+    align-items: center;
+    gap: var(--panel-header-action-bar-gap, 6px);
+    padding: var(--panel-header-action-bar-padding, 0 8px);
+
+    /* 默认隐藏，悬停时显示 */
+    opacity: var(--panel-header-action-bar-opacity, 0);
+    visibility: var(--panel-header-action-bar-visibility, hidden);
+    transition: all var(--panel-header-action-bar-transition, var(--el-transition-duration-fast))
+      ease;
+
+    /* 可见状态 */
+    &--visible {
+      opacity: 1;
+      visibility: visible;
+    }
+
+    /* 始终可见的操作栏 */
+    &--always-visible {
+      opacity: 1 !important;
+      visibility: visible !important;
+    }
+  }
+}
+
+/* 兼容性：保持原有类名 */
+.m-panel-header {
+  @extend .panel-header;
+
+  /* 向后兼容的标题样式 */
+  h1 {
+    @extend .panel-header__title;
+    padding: var(--panel-header-legacy-title-padding, 16px 20px);
+  }
+
+  /* 向后兼容的操作组 */
+  .bar-group {
+    @extend .panel-header__action-bar;
+    position: absolute;
+    top: 50%;
+    right: var(--panel-header-legacy-bar-right, 10px);
+    transform: translateY(-50%);
+    display: none;
+
+    .panel-header:hover & {
+      display: flex;
+    }
+  }
+}
+
+/* 响应式设计 */
+@media (max-width: 768px) {
+  .panel-header {
+    &__main {
+      padding: var(--panel-header-mobile-main-padding, 0 12px);
+    }
+
+    &__title {
+      font-size: var(--panel-header-mobile-title-size, 13px);
+    }
+
+    &__action-bar {
+      padding: var(--panel-header-mobile-action-bar-padding, 0 6px);
+      gap: var(--panel-header-mobile-action-bar-gap, 4px);
+    }
+  }
+}
+
+/* 深色主题适配 */
+html.dark,
+html.dark-blue,
+:root[data-theme='dark'],
+:root[data-theme='dark-blue'] {
+  .panel-header {
+    /* 深色主题下的背景色 */
+    --panel-header-bg: var(--app-background-color-card-default, #062846);
+    --panel-header-hover-bg: var(--app-background-color-card-hover, #07395f);
+    --panel-header-title-color: var(--el-text-color-primary, #ffffff);
+    --panel-header-title-hover-color: var(--el-color-primary, #9cfff9);
+    --panel-header-border-bottom: 1px solid var(--el-border-color, #356a72);
+    --panel-header-hover-shadow: 0 2px 8px rgba(0, 0, 0, 0.3);
+
+    /* 深色主题下的可拖动样式 */
+    --panel-header-draggable-hover-bg: var(--el-color-primary-dark-2, #1f4e79);
+    --panel-header-draggable-hover-border: var(--el-color-primary, #9cfff9);
+    --panel-header-draggable-hover-shadow: 0 2px 8px rgba(156, 255, 249, 0.2);
+    --panel-header-draggable-title-hover-color: var(--el-color-primary, #9cfff9);
+    --panel-header-draggable-active-shadow: 0 4px 12px rgba(156, 255, 249, 0.3);
+  }
+}
+
+/* 高对比度主题支持 */
+@media (prefers-contrast: high) {
+  .panel-header {
+    --panel-header-border-bottom: 2px solid var(--el-border-color-darker);
+    --panel-header-title-weight: 600;
+
+    &:hover {
+      --panel-header-hover-shadow: 0 2px 6px rgba(0, 0, 0, 0.4);
+    }
+  }
+}
+
+/* 减少动画偏好支持 */
+@media (prefers-reduced-motion: reduce) {
+  .panel-header,
+  .panel-header__action-bar {
+    transition: none;
+  }
+}
+
+/* 打印样式 */
+@media print {
+  .panel-header {
+    position: static;
+    background: transparent !important;
+    box-shadow: none !important;
+    border-radius: 0;
+
+    &__action-bar {
+      display: none !important;
+    }
+  }
+}

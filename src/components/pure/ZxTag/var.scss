@@ -1,0 +1,170 @@
+// ZxTag 组件 CSS 变量定义
+// 基于 Element Plus 变量系统的主题变量
+
+// 所有样式包装在 tag-class 下
+.zx-tag {
+  // ========== 内部组件变量 (--cmp 开头) ==========
+  // 基础样式变量
+  --cmp-tag-bg: var(--zx-tag-bg, var(--el-bg-color, #ffffff));
+  --cmp-tag-text-color: var(--zx-tag-text-color, var(--el-text-color-primary, #303133));
+  --cmp-tag-text-secondary: var(--zx-tag-text-secondary, var(--el-text-color-secondary, #909399));
+  --cmp-tag-border-color: var(--zx-tag-border-color, var(--el-border-color, #e4e7ed));
+  --cmp-tag-border-color-light: var(
+    --zx-tag-border-color-light,
+    var(--el-border-color-light, #ebeef5)
+  );
+  --cmp-tag-primary-color: var(--zx-tag-primary-color, var(--el-color-primary, #409eff));
+
+  // 主题样式变量
+  --cmp-tag-dark-bg: var(
+    --zx-tag-dark-bg,
+    var(--el-tag-bg-color, var(--el-fill-color-dark, #d3d4d6))
+  );
+  --cmp-tag-dark-text: var(--zx-tag-dark-text, var(--el-color-white, #ffffff));
+  --cmp-tag-dark-border: var(
+    --zx-tag-dark-border,
+    var(--el-tag-border-color, var(--el-border-color-dark, #a8abb2))
+  );
+
+  --cmp-tag-light-bg: var(--zx-tag-light-bg, var(--el-color-primary-light-9, #ecf5ff));
+  --cmp-tag-light-text: var(
+    --zx-tag-light-text,
+    var(--el-tag-text-color, var(--el-color-primary, #409eff))
+  );
+  --cmp-tag-light-border: var(--zx-tag-light-border, var(--el-color-primary-light-8, #d9ecff));
+
+  --cmp-tag-plain-bg: var(--zx-tag-plain-bg, transparent);
+  --cmp-tag-plain-text: var(
+    --zx-tag-plain-text,
+    var(--el-tag-text-color, var(--el-text-color-primary, #303133))
+  );
+  --cmp-tag-plain-border: var(--zx-tag-plain-border, var(--el-border-color-light, #ebeef5));
+
+  // 间距变量
+  --cmp-tag-margin-small: var(--zx-tag-margin-small, 2px);
+  --cmp-tag-margin-default: var(--zx-tag-margin-default, 3px);
+  --cmp-tag-margin-large: var(--zx-tag-margin-large, 4px);
+  --cmp-tag-icon-gap: var(--zx-tag-icon-gap, 4px);
+
+  // 尺寸变量
+  --cmp-tag-max-width: var(--zx-tag-max-width, 144px);
+  --cmp-tag-mobile-max-width: var(--zx-tag-mobile-max-width, 120px);
+  --cmp-tag-icon-size: var(--zx-tag-icon-size, 14px);
+
+  // 高度变量
+  --cmp-tag-height-large: var(--zx-tag-height-large, 32px);
+  --cmp-tag-height-default: var(--zx-tag-height-default, 24px);
+  --cmp-tag-height-small: var(--zx-tag-height-small, 20px);
+
+  // 内边距变量
+  --cmp-tag-padding-large: var(--zx-tag-padding-large, 0 12px);
+  --cmp-tag-padding-default: var(--zx-tag-padding-default, 0 8px);
+  --cmp-tag-padding-small: var(--zx-tag-padding-small, 0 6px);
+
+  // 字体大小变量
+  --cmp-tag-font-size-large: var(--zx-tag-font-size-large, 14px);
+  --cmp-tag-font-size-default: var(--zx-tag-font-size-default, 12px);
+  --cmp-tag-font-size-small: var(--zx-tag-font-size-small, 12px);
+
+  // 行高变量
+  --cmp-tag-line-height-large: var(--zx-tag-line-height-large, 30px);
+  --cmp-tag-line-height-default: var(--zx-tag-line-height-default, 22px);
+  --cmp-tag-line-height-small: var(--zx-tag-line-height-small, 18px);
+
+  // 过渡动画变量
+  --cmp-tag-transition: var(--zx-tag-transition, all 0.3s);
+  --cmp-tag-transition-timing: var(--zx-tag-transition-timing, cubic-bezier(0.4, 0, 0.2, 1));
+
+  // 边框圆角变量
+  --cmp-tag-border-radius: var(--zx-tag-border-radius, var(--el-border-radius-base, 4px));
+  --cmp-tag-border-radius-round: var(
+    --zx-tag-border-radius-round,
+    var(--el-border-radius-round, 20px)
+  );
+
+  // 关闭按钮样式变量
+  --cmp-tag-close-color: var(--zx-tag-close-color, var(--el-text-color-regular, #606266));
+  --cmp-tag-close-hover-color: var(
+    --zx-tag-close-hover-color,
+    var(--el-text-color-primary, #303133)
+  );
+  --cmp-tag-close-size: var(--zx-tag-close-size, 12px);
+
+  // 悬停状态变量
+  --cmp-tag-hover-bg: var(--zx-tag-hover-bg, var(--el-fill-color-light, #f5f7fa));
+  --cmp-tag-hover-border: var(--zx-tag-hover-border, var(--el-border-color-hover, #c0c4cc));
+  --cmp-tag-hover-text: var(--zx-tag-hover-text, var(--el-text-color-primary, #303133));
+
+  // 激活状态变量
+  --cmp-tag-active-bg: var(--zx-tag-active-bg, var(--el-fill-color, #e4e7ed));
+  --cmp-tag-active-border: var(--zx-tag-active-border, var(--el-border-color-dark, #a8abb2));
+  --cmp-tag-active-text: var(--zx-tag-active-text, var(--el-text-color-primary, #303133));
+
+  // 禁用状态变量
+  --cmp-tag-disabled-bg: var(--zx-tag-disabled-bg, var(--el-fill-color-lighter, #f5f7fa));
+  --cmp-tag-disabled-text: var(--zx-tag-disabled-text, var(--el-text-color-placeholder, #a8abb2));
+  --cmp-tag-disabled-border: var(--zx-tag-disabled-border, var(--el-border-color-lighter, #f0f2f5));
+
+  // 阴影效果变量
+  --cmp-tag-shadow: var(--zx-tag-shadow, none);
+  --cmp-tag-hover-shadow: var(--zx-tag-hover-shadow, 0 2px 4px rgba(0, 0, 0, 0.1));
+
+  // 响应式设计变量
+  --cmp-tag-mobile-padding: var(--zx-tag-mobile-padding, 0 6px);
+  --cmp-tag-mobile-font-size: var(--zx-tag-mobile-font-size, 11px);
+  --cmp-tag-mobile-height: var(--zx-tag-mobile-height, 20px);
+
+  // ZxTagGroup 相关变量
+  --cmp-tag-group-gap: 8px;
+  --cmp-tag-group-mobile-gap: 6px;
+  --cmp-tag-group-margin: 0;
+  --cmp-tag-group-padding: 0;
+  --cmp-tag-group-border-radius: var(--el-border-radius-base, 4px);
+  --cmp-tag-group-max-width: 440px;
+
+  // ZxTagGroup 编辑状态
+  --cmp-tag-group-edit-bg: transparent;
+  --cmp-tag-group-edit-border: 1px dashed var(--el-border-color-light);
+  --cmp-tag-group-edit-hover-bg: var(--el-fill-color-lighter);
+  --cmp-tag-group-edit-hover-border: var(--el-color-primary-light-7);
+
+  // ZxTagGroup 项目悬停效果
+  --cmp-tag-group-item-hover-transform: translateY(-1px);
+
+  // ZxTagGroup 空状态
+  --cmp-tag-group-empty-color: var(--el-text-color-placeholder);
+  --cmp-tag-group-empty-bg: transparent;
+  --cmp-tag-group-empty-border: 1px dashed var(--el-border-color-light);
+  --cmp-tag-group-empty-hover-color: var(--el-color-primary);
+  --cmp-tag-group-empty-hover-bg: var(--el-color-primary-light-9);
+  --cmp-tag-group-empty-hover-border: var(--el-color-primary-light-7);
+}
+
+// ZxTagGroup 组件变量
+.zx-tag-group {
+  // ========== 内部组件变量 (--cmp 开头) ==========
+  // 基础样式变量
+  --cmp-tag-group-max-width: var(--zx-tag-group-max-width, 440px);
+  --cmp-tag-group-gap: var(--zx-tag-group-gap, 4px);
+  --cmp-tag-group-item-max-width: var(--zx-tag-group-item-max-width, 144px);
+  --cmp-tag-group-item-min-width: var(--zx-tag-group-item-min-width, min-content);
+
+  // 空状态变量
+  --cmp-tag-group-empty-min-height: var(--zx-tag-group-empty-min-height, 24px);
+  --cmp-tag-group-empty-cursor: var(--zx-tag-group-empty-cursor, pointer);
+
+  // 编辑状态变量
+  --cmp-tag-group-editable-cursor: var(--zx-tag-group-editable-cursor, pointer);
+  --cmp-tag-group-editable-hover-bg: var(
+    --zx-tag-group-editable-hover-bg,
+    var(--el-fill-color-extra-light, #fafafa)
+  );
+
+  // 数字标签变量
+  --cmp-tag-group-number-flex-shrink: var(--zx-tag-group-number-flex-shrink, 0);
+  --cmp-tag-group-number-bg: var(--zx-tag-group-number-bg, var(--el-fill-color, #e4e7ed));
+  --cmp-tag-group-number-text: var(
+    --zx-tag-group-number-text,
+    var(--el-text-color-regular, #606266)
+  );
+}

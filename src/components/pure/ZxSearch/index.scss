@@ -1,0 +1,139 @@
+// ZxSearch 组件样式
+@import './var.scss';
+
+// 变量定义
+$zx-search-prefix: 'zx-search';
+
+// 组件主体样式
+.#{$zx-search-prefix} {
+  position: relative;
+  width: 100%;
+  color: var(--cmp-search-text-color);
+
+  &.is-disabled {
+    opacity: 0.6;
+    pointer-events: none;
+    background-color: var(--cmp-search-disabled-bg);
+    color: var(--cmp-search-disabled-color);
+  }
+
+  &__input-wrapper {
+    width: 100%;
+
+    .el-input {
+      width: 100%;
+
+      .el-input__wrapper {
+        background-color: var(--cmp-search-input-bg);
+        border-color: var(--cmp-search-input-border);
+        border-radius: var(--cmp-search-input-radius);
+        transition: var(--cmp-search-transition-duration) var(--cmp-search-transition-timing);
+
+        &:hover {
+          border-color: var(--cmp-search-input-border-hover);
+        }
+
+        &.is-focus {
+          border-color: var(--cmp-search-input-border-focus);
+          box-shadow: var(--cmp-search-shadow-focus);
+        }
+      }
+
+      .el-input__inner {
+        color: var(--cmp-search-text-color);
+        font-size: var(--cmp-search-input-font-size);
+
+        &::placeholder {
+          color: var(--cmp-search-placeholder-color);
+        }
+      }
+
+      .el-input-group__prepend {
+        background-color: var(--cmp-search-input-bg);
+        border-color: var(--cmp-search-input-border);
+
+        .el-select {
+          .el-input__wrapper {
+            box-shadow: none;
+            background-color: transparent;
+          }
+        }
+      }
+
+      .el-input-group__append {
+        padding: 0;
+
+        .el-button {
+          border: none;
+          border-radius: 0;
+          margin: 0;
+          transition: var(--cmp-search-transition-duration) var(--cmp-search-transition-timing);
+          transform: none !important;
+          background-color: var(--cmp-search-button-bg);
+          color: var(--cmp-search-button-text-color);
+
+          &:hover {
+            transform: none !important;
+            background-color: var(--cmp-search-button-bg-hover);
+            border-color: var(--cmp-search-button-border-hover);
+          }
+
+          &:active {
+            transform: none !important;
+            background-color: var(--cmp-search-button-bg-active);
+            border-color: var(--cmp-search-button-border-active);
+          }
+        }
+      }
+    }
+  }
+
+  &--loading {
+    .#{$zx-search-prefix}__button {
+      pointer-events: none;
+    }
+  }
+}
+
+// 垂直布局（当模式切换显示时）
+.#{$zx-search-prefix}:has(.#{$zx-search-prefix}__mode-wrapper) {
+  flex-direction: column;
+  align-items: stretch;
+
+  .#{$zx-search-prefix}__mode-wrapper {
+    align-self: flex-start;
+  }
+
+  .#{$zx-search-prefix}__input-wrapper,
+  .#{$zx-search-prefix}__button {
+    align-self: stretch;
+  }
+}
+
+// 水平布局（当模式切换隐藏时）
+.#{$zx-search-prefix}:not(:has(.#{$zx-search-prefix}__mode-wrapper)) {
+  flex-direction: row;
+  align-items: center;
+}
+
+// 响应式设计
+@media (max-width: 768px) {
+  .#{$zx-search-prefix} {
+    flex-direction: column;
+    align-items: stretch;
+    gap: var(--cmp-search-mobile-gap);
+    padding: var(--cmp-search-mobile-padding);
+
+    &__mode-wrapper {
+      align-self: flex-start;
+    }
+
+    &__button {
+      width: 100%;
+    }
+
+    .el-input__inner {
+      font-size: var(--cmp-search-mobile-font-size);
+    }
+  }
+}

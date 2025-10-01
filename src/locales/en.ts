@@ -190,7 +190,14 @@ export default {
     personal: 'Personal',
     avatars: 'Avatars',
     iAgree: 'I agree',
-    tree: 'Tree'
+    tree: 'Tree',
+    evaluationManagement: 'Evaluation Management',
+    taskManagement: 'Task Management',
+    taskList: 'Task List',
+    evaluationDetail: 'Evaluation Detail',
+    templateManagement: 'Template Management',
+    templateList: 'Template List',
+    templateDetail: 'Template Detail'
   },
   permission: {
     hasPermission: 'Please set the operation permission value'

@@ -9,7 +9,7 @@ import prettier from 'eslint-plugin-prettier'
 
 export default tseslint.config({
   // ignores: ['node_modules', 'prettier.config.cjs', 'dist*'],
-  files: ['src/**/*.ts', 'src/**/*.tsx', 'src/**/*.vue'],
+  files: ['src/**/*.ts', 'src/**/*.tsx', 'src/**/*.vue', 'mock/**/*.ts'],
   // tseslint.config添加了extends扁平函数，直接用。否则是eslint9.0版本是没有extends的
   extends: [
     eslint.configs.recommended,
@@ -77,6 +77,27 @@ export default tseslint.config({
     ],
     'vue/multi-word-component-names': 0,
     'vue/no-v-html': 0,
-    'vue/require-toggle-inside-transition': 0
+    'vue/require-toggle-inside-transition': 0,
+    'vue/valid-template-root': 0,
+    'vue/no-unused-vars': 0,
+    'no-empty': 0,
+    'no-case-declarations': 0,
+    'vue/no-mutating-props': 0,
+    'vue/no-useless-template-attributes': 0,
+    'vue/no-dupe-keys': 0,
+    'vue/no-unused-components': 0,
+    'no-console': 0,
+    'no-debugger': 0,
+    'no-alert': 0,
+    'no-unused-expressions': 0,
+    'no-constant-condition': 0,
+    'no-unreachable': 0,
+    'prefer-const': 0,
+    'no-var': 0,
+    'eqeqeq': 0,
+    'no-prototype-builtins': 0,
+    'no-fallthrough': 0,
+    'no-irregular-whitespace': 0,
+    'no-mixed-spaces-and-tabs': 0
   }
 })

@@ -1,0 +1,46 @@
+// ZxIcon 组件 CSS 变量定义
+// 基于 Element Plus 变量系统的主题变量
+
+// 所有样式包装在 icon-class 下
+.zx-icon {
+  // ========== 内部组件变量 (--cmp 开头) ==========
+  // 基础样式变量
+  --cmp-icon-color: var(--zx-icon-color, var(--el-text-color-primary, #303133));
+  --cmp-icon-hover-color: var(--zx-icon-hover-color, var(--el-color-primary, #409eff));
+  --cmp-icon-disabled-color: var(--zx-icon-disabled-color, var(--el-text-color-disabled, #c0c4cc));
+  --cmp-icon-bg: var(--zx-icon-bg, transparent);
+  --cmp-icon-hover-bg: var(--zx-icon-hover-bg, var(--el-fill-color-light, #f5f7fa));
+
+  // 尺寸变量
+  --cmp-icon-size: var(--zx-icon-size, 16px);
+  --cmp-icon-border-radius: var(--zx-icon-border-radius, var(--el-border-radius-base, 4px));
+  --cmp-icon-padding: var(--zx-icon-padding, 0);
+
+  // 动画变量
+  --cmp-icon-transition-duration: var(--zx-icon-transition-duration, 0.3s);
+  --cmp-icon-transition-timing: var(--zx-icon-transition-timing, ease);
+
+  // 边框变量
+  --cmp-icon-border-color: var(--zx-icon-border-color, transparent);
+  --cmp-icon-hover-border-color: var(
+    --zx-icon-hover-border-color,
+    var(--el-color-primary, #409eff)
+  );
+  --cmp-icon-border-width: var(--zx-icon-border-width, 1px);
+
+  // 阴影变量
+  --cmp-icon-shadow: var(--zx-icon-shadow, none);
+  --cmp-icon-hover-shadow: var(
+    --zx-icon-hover-shadow,
+    var(--el-box-shadow-light, 0 2px 12px 0 rgba(0, 0, 0, 0.1))
+  );
+
+  // Tooltip/Popover 相关变量
+  --cmp-icon-tooltip-bg: var(--zx-icon-tooltip-bg, var(--el-bg-color-overlay, #ffffff));
+  --cmp-icon-tooltip-color: var(--zx-icon-tooltip-color, var(--el-text-color-primary, #303133));
+  --cmp-icon-tooltip-border: var(--zx-icon-tooltip-border, var(--el-border-color, #e4e7ed));
+  --cmp-icon-tooltip-shadow: var(
+    --zx-icon-tooltip-shadow,
+    var(--el-box-shadow, 0 2px 12px 0 rgba(0, 0, 0, 0.1))
+  );
+}

@@ -1,0 +1,56 @@
+// ZxConfirmInput 组件 CSS 变量定义
+// 基于 Element Plus 变量系统的主题变量
+
+// 所有样式包装在组件类下
+.zx-confirm-input {
+  // 内部变量定义 - 使用 --cmp 前缀，引用外部 --zx 变量作为默认值
+  // 基础样式变量
+  --cmp-confirm-input-radius: var(--zx-confirm-input-radius, 6px);
+  --cmp-confirm-input-shadow: var(
+    --zx-confirm-input-shadow,
+    0 10px 15px -3px rgba(0, 0, 0, 0.1),
+    0 4px 6px -2px rgba(0, 0, 0, 0.05)
+  );
+
+  // 使用 Element Plus 的品牌色变量 - 自动跟随系统主题
+  --cmp-confirm-input-bg: var(--zx-confirm-input-bg, var(--el-bg-color, #ffffff));
+  --cmp-confirm-input-text: var(--zx-confirm-input-text, var(--el-text-color-primary, #303133));
+  --cmp-confirm-input-text-secondary: var(
+    --zx-confirm-input-text-secondary,
+    var(--el-text-color-regular, #606266)
+  );
+  --cmp-confirm-input-text-muted: var(
+    --zx-confirm-input-text-muted,
+    var(--el-text-color-placeholder, #a8abb2)
+  );
+  --cmp-confirm-input-border: var(--zx-confirm-input-border, #e5e5e5);
+  --cmp-confirm-input-border-light: var(
+    --zx-confirm-input-border-light,
+    var(--el-border-color-lighter, #e4e7ed)
+  );
+  --cmp-confirm-input-footer-bg: var(
+    --zx-confirm-input-footer-bg,
+    var(--el-fill-color-light, #f5f7fa)
+  );
+
+  // 危险操作相关颜色 - 使用 Element Plus 的危险色
+  --cmp-confirm-input-danger: var(--zx-confirm-input-danger, var(--el-color-danger, #f56c6c));
+  --cmp-confirm-input-danger-strong: var(
+    --zx-confirm-input-danger-strong,
+    var(--el-color-danger-dark-2, #c45656)
+  );
+
+  // 警告操作相关颜色
+  --cmp-confirm-input-warning: var(--zx-confirm-input-warning, var(--el-color-warning, #e6a23c));
+  --cmp-confirm-input-warning-strong: var(
+    --zx-confirm-input-warning-strong,
+    var(--el-color-warning-dark-2, #b88230)
+  );
+
+  // 信息操作相关颜色
+  --cmp-confirm-input-info: var(--zx-confirm-input-info, var(--el-color-primary, #409eff));
+  --cmp-confirm-input-info-strong: var(
+    --zx-confirm-input-info-strong,
+    var(--el-color-primary-dark-2, #337ecc)
+  );
+}

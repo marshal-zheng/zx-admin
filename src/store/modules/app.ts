@@ -87,7 +87,7 @@ function createDefaultState(): AppState {
     screenfull: true, // 全屏图标
     size: false, // 尺寸图标
     locale: false, // 多语言图标
-    tagsView: true, // 标签页
+    tagsView: false, // 标签页
     tagsViewIcon: true, // 是否显示标签图标
     logo: false, // logo
     fixedHeader: true, // 固定toolheader
@@ -122,11 +122,11 @@ function createDefaultState(): AppState {
       // logo边框颜色
       logoBorderColor: 'inherit',
       // 头部背景颜色
-      topHeaderBgColor: '#fff',
+      topHeaderBgColor: '#151515',
       // 头部字体颜色
-      topHeaderTextColor: 'inherit',
+      topHeaderTextColor: '#fff',
       // 头部悬停颜色
-      topHeaderHoverColor: '#f6f6f6',
+      topHeaderHoverColor: '#202020',
       // 头部边框颜色
       topToolBorderColor: '#eee'
     }

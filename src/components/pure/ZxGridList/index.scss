@@ -1,0 +1,187 @@
+// 引入变量定义
+@import './var.scss';
+
+.zx-grid-list-wrapper {
+  height: 100%;
+  overflow: auto;
+  display: flex;
+  flex-direction: column;
+
+  .zx-grid-list {
+    display: flex;
+    flex-direction: column;
+    min-height: 100%;
+    // 由父容器控制整体高度，避免组件内部再强行设定视口相关 min-height 造成抖动
+
+    &__toolbar {
+      flex-shrink: 0;
+      display: flex;
+      flex-direction: column;
+      gap: var(--cmp-grid-list-toolbar-gap);
+      margin-bottom: var(--cmp-grid-list-toolbar-margin-bottom);
+
+      :deep(.el-form) {
+        display: flex;
+        flex-wrap: wrap;
+        gap: var(--cmp-grid-list-gap);
+        align-items: center;
+
+        &.align-left {
+          justify-content: flex-start;
+        }
+
+        .el-form-item {
+          margin-bottom: 0;
+
+          &:last-child {
+            margin-right: 0;
+          }
+        }
+      }
+
+      .master-btns {
+        display: flex;
+        gap: var(--cmp-grid-list-master-btns-gap);
+        margin-bottom: var(--cmp-grid-list-master-btns-margin-bottom);
+      }
+    }
+
+    &__grid {
+      flex: 1;
+      display: flex;
+      flex-direction: column;
+      min-height: 0; // 允许flex子项收缩
+    }
+
+    &__table {
+      flex: 1;
+      display: flex;
+      flex-direction: column;
+      min-height: 0;
+
+      :deep(.el-table) {
+        flex: 1;
+        height: 100%;
+
+        .el-table__body-wrapper {
+          // 让表格主体区域在容器内自适应，固定分页区域高度时不抖动
+          flex: 1 1 auto;
+          overflow: auto;
+        }
+
+        .el-table-column--selection {
+          .cell {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            padding: 0;
+          }
+        }
+      }
+    }
+
+    &__empty {
+      flex: 1;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      min-height: var(--cmp-grid-list-empty-min-height);
+      padding: var(--cmp-grid-list-empty-padding);
+      background: var(--cmp-grid-list-empty-bg);
+      color: var(--cmp-grid-list-empty-text);
+
+      :deep(.zx-empty) {
+        width: 100%;
+        min-height: auto;
+      }
+    }
+
+    &__pagination {
+      flex-shrink: 0;
+      display: flex;
+      justify-content: flex-end;
+      align-items: center;
+      // 通过固定最小高度，始终为分页占位，避免数据多/少导致上下跳动
+      min-height: var(--cmp-grid-list-pagination-min-height);
+      padding: var(--cmp-grid-list-pagination-padding);
+      margin-top: auto; // 推到底部
+      background: var(--cmp-grid-list-pagination-bg);
+      border-top: var(--cmp-grid-list-pagination-border-top);
+      position: sticky;
+      bottom: 0;
+      z-index: var(--cmp-grid-list-pagination-z-index);
+      transition: var(--cmp-grid-list-transition);
+
+      .el-pagination {
+        --el-pagination-font-size: var(--cmp-grid-list-pagination-font-size);
+        --el-pagination-bg-color: transparent;
+        padding-bottom: var(--cmp-grid-list-pagination-padding-bottom);
+
+        .el-select .el-input {
+          width: var(--cmp-grid-list-pagination-select-width);
+        }
+
+        .el-pagination__sizes {
+          margin-right: var(--cmp-grid-list-pagination-sizes-margin);
+        }
+
+        .el-pagination__jump {
+          margin-left: var(--cmp-grid-list-pagination-jump-margin);
+        }
+      }
+    }
+  }
+
+  // 响应式设计
+  @media (max-width: var(--cmp-grid-list-mobile-breakpoint)) {
+    .zx-grid-list {
+      &__toolbar {
+        :deep(.el-form) {
+          flex-direction: column;
+          align-items: stretch;
+
+          .el-form-item {
+            width: 100%;
+          }
+        }
+      }
+
+      &__pagination {
+        justify-content: flex-end;
+
+        :deep(.el-pagination) {
+          --el-pagination-font-size: var(--cmp-grid-list-pagination-font-size-mobile);
+
+          .el-pagination__sizes,
+          .el-pagination__jump {
+            margin: 0 var(--cmp-grid-list-pagination-mobile-margin);
+          }
+        }
+      }
+    }
+  }
+
+  .zx-grid-list__pagination {
+    padding-right: var(--cmp-grid-list-pagination-padding-right);
+  }
+
+  // 加载状态样式
+  .zx-grid-list__grid[v-loading] {
+    // 保持加载时也有稳定高度，避免骨架/加载层抖动
+    min-height: var(--cmp-grid-list-loading-min-height);
+    background: var(--cmp-grid-list-loading-bg);
+  }
+
+  // 表格内边框控制
+  .el-table--fit .el-table__inner-wrapper:before {
+    display: none; // 默认不显示
+    border-color: var(--cmp-grid-list-table-inner-border-color);
+    border-width: var(--cmp-grid-list-table-inner-border-width);
+  }
+
+  &.show-table-border {
+    .el-table--fit .el-table__inner-wrapper:before {
+      display: block; // 当启用时显示
+    }
+  }
+}

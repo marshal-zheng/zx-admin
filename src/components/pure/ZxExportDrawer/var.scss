@@ -1,0 +1,126 @@
+// ZxExportDrawer 组件 CSS 变量定义
+// 基于 Element Plus 变量系统的主题变量
+
+// 所有样式包装在 export-drawer-class 下
+.zx-export-drawer {
+  // ========== 内部组件变量 (--cmp 开头) ==========
+  // 基础样式变量
+  --cmp-export-drawer-border-color: var(
+    --zx-export-drawer-border-color,
+    var(--el-border-color-light, #e4e7ed)
+  );
+  --cmp-export-drawer-bg: var(--zx-export-drawer-bg, var(--el-bg-color, #ffffff));
+  --cmp-export-drawer-text-color: var(
+    --zx-export-drawer-text-color,
+    var(--el-text-color-primary, #303133)
+  );
+  --cmp-export-drawer-text-secondary: var(
+    --zx-export-drawer-text-secondary,
+    var(--el-text-color-secondary, #909399)
+  );
+  --cmp-export-drawer-hover-color: var(
+    --zx-export-drawer-hover-color,
+    var(--el-color-primary, #409eff)
+  );
+
+  // 内容区域变量
+  --cmp-export-drawer-content-gap: var(--zx-export-drawer-content-gap, 20px);
+  --cmp-export-drawer-content-height: var(--zx-export-drawer-content-height, calc(100vh - 145px));
+  --cmp-export-drawer-content-padding: var(--zx-export-drawer-content-padding, 30px 20px);
+
+  // 面板通用样式变量
+  --cmp-export-drawer-panel-border: var(
+    --zx-export-drawer-panel-border,
+    1px solid var(--el-border-color-light, #e4e7ed)
+  );
+  --cmp-export-drawer-panel-border-radius: var(--zx-export-drawer-panel-border-radius, 6px);
+  --cmp-export-drawer-panel-header-height: var(--zx-export-drawer-panel-header-height, 53px);
+  --cmp-export-drawer-panel-header-padding: var(--zx-export-drawer-panel-header-padding, 12px 16px);
+  --cmp-export-drawer-panel-header-bg: var(
+    --zx-export-drawer-panel-header-bg,
+    var(--el-fill-color-light, #f5f7fa)
+  );
+  --cmp-export-drawer-panel-header-border: var(
+    --zx-export-drawer-panel-header-border,
+    1px solid var(--el-border-color-light, #e4e7ed)
+  );
+
+  // 面板标题样式变量
+  --cmp-export-drawer-panel-title-font-weight: var(--zx-export-drawer-panel-title-font-weight, 500);
+  --cmp-export-drawer-panel-title-color: var(
+    --zx-export-drawer-panel-title-color,
+    var(--el-text-color-primary, #303133)
+  );
+
+  // 可选字段区域变量
+  --cmp-export-drawer-optional-padding: var(--zx-export-drawer-optional-padding, 16px);
+  --cmp-export-drawer-field-item-padding: var(--zx-export-drawer-field-item-padding, 4px 8px);
+  --cmp-export-drawer-field-item-hover-bg: var(
+    --zx-export-drawer-field-item-hover-bg,
+    var(--el-fill-color-lighter, #f5f7fa)
+  );
+  --cmp-export-drawer-field-item-selected-bg: var(
+    --zx-export-drawer-field-item-selected-bg,
+    var(--el-color-primary-light-9, #ecf5ff)
+  );
+
+  // 已选字段区域变量
+  --cmp-export-drawer-selected-padding: var(--zx-export-drawer-selected-padding, 16px);
+  --cmp-export-drawer-selected-item-padding: var(
+    --zx-export-drawer-selected-item-padding,
+    8px 12px
+  );
+  --cmp-export-drawer-selected-item-margin: var(--zx-export-drawer-selected-item-margin, 0 0 8px 0);
+  --cmp-export-drawer-selected-item-bg: var(
+    --zx-export-drawer-selected-item-bg,
+    var(--el-color-primary-light-9, #ecf5ff)
+  );
+  --cmp-export-drawer-selected-item-border-radius: var(
+    --zx-export-drawer-selected-item-border-radius,
+    4px
+  );
+  --cmp-export-drawer-selected-label-color: var(
+    --zx-export-drawer-selected-label-color,
+    var(--el-text-color-primary, #303133)
+  );
+
+  // 空状态样式变量
+  --cmp-export-drawer-empty-padding: var(--zx-export-drawer-empty-padding, 40px 16px);
+
+  // 底部操作栏变量
+  --cmp-export-drawer-footer-gap: var(--zx-export-drawer-footer-gap, 12px);
+  --cmp-export-drawer-footer-padding: var(--zx-export-drawer-footer-padding, 16px 0 0);
+
+  // 过渡动画变量
+  --cmp-export-drawer-transition-bg: var(--zx-export-drawer-transition-bg, background-color 0.2s);
+  --cmp-export-drawer-transition-all: var(--zx-export-drawer-transition-all, all 0.2s ease);
+
+  // 滚动条样式变量
+  --cmp-export-drawer-scrollbar-width: var(--zx-export-drawer-scrollbar-width, 6px);
+  --cmp-export-drawer-scrollbar-track: var(
+    --zx-export-drawer-scrollbar-track,
+    var(--el-fill-color-lighter, #f5f7fa)
+  );
+  --cmp-export-drawer-scrollbar-thumb: var(
+    --zx-export-drawer-scrollbar-thumb,
+    var(--el-border-color, #c0c4cc)
+  );
+  --cmp-export-drawer-scrollbar-thumb-hover: var(
+    --zx-export-drawer-scrollbar-thumb-hover,
+    var(--el-border-color-dark, #a8abb2)
+  );
+
+  // 响应式设计变量
+  --cmp-export-drawer-mobile-gap: var(--zx-export-drawer-mobile-gap, 12px);
+  --cmp-export-drawer-mobile-padding: var(--zx-export-drawer-mobile-padding, 12px);
+
+  // 兼容旧版本的变量（保留原有的 --color 变量）
+  --color-text-n8: var(--zx-export-drawer-legacy-border, var(--el-border-color-light, #e4e7ed));
+  --color-text-3: var(--zx-export-drawer-legacy-text, var(--el-text-color-primary, #303133));
+  --color-text-n9: var(--zx-export-drawer-legacy-bg, var(--el-fill-color-light, #f5f7fa));
+  --primary-5: var(--zx-export-drawer-legacy-primary, var(--el-color-primary, #409eff));
+  --primary-1: var(
+    --zx-export-drawer-legacy-primary-light,
+    var(--el-color-primary-light-9, #ecf5ff)
+  );
+}

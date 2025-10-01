@@ -1,0 +1,155 @@
+// EditPane 组件样式
+.panel-edit-pane {
+  // 抽屉内容区域
+  .panel-edit-content {
+    padding: 0 2px; // 为聚焦态边框预留空间
+    height: 100%;
+    overflow-x: hidden;
+  }
+
+  // 表单容器
+  .panel-edit-form {
+    height: 100%;
+    overflow-y: auto;
+    padding: 0 4px 0 2px; // 为滚动条和聚焦态边框预留空间
+
+    // 自定义滚动条样式
+    &::-webkit-scrollbar {
+      width: 6px;
+    }
+
+    &::-webkit-scrollbar-track {
+      background: var(--el-fill-color-lighter);
+      border-radius: 3px;
+    }
+
+    &::-webkit-scrollbar-thumb {
+      background: var(--el-border-color-darker);
+      border-radius: 3px;
+
+      &:hover {
+        background: var(--el-border-color-dark);
+      }
+    }
+  }
+
+  // 表单区域分组
+  .form-section {
+    margin-bottom: 32px;
+    overflow-x: hidden;
+
+    &:last-child {
+      margin-bottom: 16px;
+    }
+
+    // 区域标题
+    .section-header {
+      display: flex;
+      align-items: center;
+      margin-bottom: 20px;
+      padding-bottom: 12px;
+      border-bottom: 1px solid var(--el-border-color-light);
+
+      .section-icon {
+        font-size: 16px;
+        color: var(--el-color-primary);
+        margin-right: 8px;
+      }
+
+      .section-title {
+        font-size: 14px;
+        font-weight: 600;
+        color: var(--el-text-color-primary);
+        letter-spacing: 0.5px;
+      }
+    }
+  }
+
+  // 开关组件样式
+  .switch-item {
+    display: flex;
+    align-items: flex-start;
+    gap: 12px;
+
+    .switch-description {
+      font-size: 12px;
+      color: var(--el-text-color-secondary);
+      line-height: 1.5;
+      margin-top: 2px;
+      flex: 1;
+    }
+  }
+
+  // 表单区域样式优化
+  .form-section {
+    .section-header {
+      display: flex;
+      align-items: center;
+      margin-bottom: 16px;
+      padding-bottom: 8px;
+      border-bottom: 1px solid var(--el-border-color-lighter);
+
+      .section-icon {
+        margin-right: 8px;
+        color: var(--el-color-primary);
+        font-size: 16px;
+      }
+
+      .section-title {
+        font-size: 14px;
+        font-weight: 500;
+        color: var(--el-text-color-primary);
+      }
+    }
+  }
+
+  // 响应式设计
+  @media (max-width: 768px) {
+    .form-section {
+      margin-bottom: 24px;
+
+      .section-header {
+        margin-bottom: 16px;
+        padding-bottom: 8px;
+
+        .section-title {
+          font-size: 13px;
+        }
+      }
+    }
+
+    .advanced-toggle {
+      margin-top: 16px;
+      padding-top: 12px;
+    }
+  }
+}
+
+// 暗色主题适配
+// @media (prefers-color-scheme: dark) {
+//   .panel-edit-pane {
+//     .form-section {
+//       .section-header {
+//         border-bottom-color: var(--el-border-color);
+//       }
+//     }
+
+//     .advanced-toggle {
+//       border-top-color: var(--el-border-color);
+//     }
+
+//     .panel-edit-form {
+//       &::-webkit-scrollbar-track {
+//         background: var(--el-fill-color-dark);
+//       }
+
+//       &::-webkit-scrollbar-thumb {
+//         background: var(--el-border-color);
+
+//         &:hover {
+//           background: var(--el-border-color-light);
+//         }
+//       }
+//     }
+//   }
+// }

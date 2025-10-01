@@ -1,0 +1,85 @@
+@import './vars.scss';
+
+.zx-dashboard-grid {
+  /* Container for component-scoped variables */
+
+  .vue-grid-layout.dashbord-grid-layout {
+    min-height: 300px;
+    width: 100%;
+    position: relative;
+    transition: height 200ms ease;
+
+    &.uneditable {
+      margin-top: -20px;
+      margin-bottom: -20px;
+
+      .m-panel-header {
+        cursor: auto;
+        border-bottom: 1px solid var(--el-border-color-lighter, #e8e8e8);
+        transition: background-color 150ms ease;
+
+        &:hover {
+          background: transparent;
+          .el-icon-delete {
+            display: none;
+          }
+        }
+      }
+
+      .vue-resizable-handle {
+        display: none;
+      }
+    }
+
+    .vue-grid-item {
+      touch-action: none;
+      box-sizing: border-box;
+      transition: all 200ms ease;
+      transition-property: left, top, width, height;
+
+      &.cssTransforms {
+        transition-property: transform, width, height;
+      }
+
+      &.resizing {
+        transition: none;
+        z-index: 1;
+        will-change: width, height;
+      }
+
+      &.vue-draggable-dragging {
+        transition: none;
+        z-index: 3;
+        will-change: transform;
+      }
+    }
+
+    .vue-grid-placeholder {
+      background: var(--dg-grid-placeholder-bg);
+      opacity: var(--dg-grid-placeholder-opacity);
+      transition:
+        opacity 120ms ease,
+        background-color 120ms ease;
+      z-index: 2;
+      user-select: none;
+
+      &.placeholder-resizing {
+        transition: none;
+      }
+    }
+
+    .vue-resizable-handle {
+      transition:
+        background-color 150ms ease,
+        opacity 150ms ease;
+      /* Use SVG as mask so color comes from CSS variables */
+      -webkit-mask: url('@/assets/svgs/resize-handle.svg') no-repeat center / contain;
+      mask: url('@/assets/svgs/resize-handle.svg') no-repeat center / contain;
+      background-color: var(--dg-resize-handle-color);
+      &:hover {
+        background-color: var(--dg-resize-handle-color-hover, var(--dg-resize-handle-color));
+        opacity: 0.9;
+      }
+    }
+  }
+}
