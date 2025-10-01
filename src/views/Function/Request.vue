@@ -4,7 +4,7 @@ import { useI18n } from '@/hooks/web/useI18n'
 import { ElDivider } from 'element-plus'
 import { request1, request2, request3, request4, request5, expired } from '@/api/request'
 import { ref } from 'vue'
-import request from '@/axios'
+import ZXR from '@/api/http'
 
 const { t } = useI18n()
 
@@ -94,7 +94,7 @@ const getAll = () => {
 }
 
 const cancelAll = () => {
-  request.cancelAllRequest()
+  ZXR.cancelAllRequest()
   pending.value.clear()
 }
 
@@ -109,7 +109,7 @@ const setToArray = (set: Set<string>) => {
 
 const clickRequest1 = () => {
   if (pending.value.has('/request/1')) {
-    request.cancelRequest('/request/1')
+    ZXR.cancelRequest('/request/1')
     pending.value.delete('/request/1')
     return
   }
@@ -118,7 +118,7 @@ const clickRequest1 = () => {
 
 const clickRequest2 = () => {
   if (pending.value.has('/request/2')) {
-    request.cancelRequest('/request/2')
+    ZXR.cancelRequest('/request/2')
     pending.value.delete('/request/2')
     return
   }
@@ -127,7 +127,7 @@ const clickRequest2 = () => {
 
 const clickRequest3 = () => {
   if (pending.value.has('/request/3')) {
-    request.cancelRequest('/request/3')
+    ZXR.cancelRequest('/request/3')
     pending.value.delete('/request/3')
     return
   }
@@ -136,7 +136,7 @@ const clickRequest3 = () => {
 
 const clickRequest4 = () => {
   if (pending.value.has('/request/4')) {
-    request.cancelRequest('/request/4')
+    ZXR.cancelRequest('/request/4')
     pending.value.delete('/request/4')
     return
   }
@@ -145,7 +145,7 @@ const clickRequest4 = () => {
 
 const clickRequest5 = () => {
   if (pending.value.has('/request/5')) {
-    request.cancelRequest('/request/5')
+    ZXR.cancelRequest('/request/5')
     pending.value.delete('/request/5')
     return
   }

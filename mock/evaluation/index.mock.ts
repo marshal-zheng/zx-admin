@@ -443,12 +443,12 @@ export default [
 
   // 删除评估任务
   {
-    url: '/api/evaluation/deletedddd',
+    url: '/api/evaluation/delete',
     method: 'delete',
     timeout,
     response: ({ query }) => {
       const { id } = query
-      const index = evaluationList.findIndex((item) => item.id === id)
+      const index = evaluationList.findIndex((item) => item.id == id)
 
       if (index === -1) {
         return {
@@ -655,12 +655,12 @@ export default [
 
   // 删除模版
   {
-    url: '/api/template/:id',
+    url: '/api/template/delete',
     method: 'delete',
     timeout,
     response: ({ query }) => {
       const { id } = query
-      const index = templateList.findIndex((item) => item.id === parseInt(id))
+      const index = templateList.findIndex((item) => item.id == id)
 
       if (index === -1) {
         return {

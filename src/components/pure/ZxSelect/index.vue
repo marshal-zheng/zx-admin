@@ -17,11 +17,12 @@
         :multiple="multiple"
         :collapse-tags="shouldCalculateMaxTag !== false && multiple"
         :max-collapse-tags="maxTagCount"
-        :filter-method="handleSearch"
+        :filter-method="shouldUseCustomFilter ? handleSearch : undefined"
         :disabled="disabled"
         :size="size"
         :popper-append-to-body="false"
         :teleported="false"
+        :default-first-option="defaultFirstOption"
         @change="handleChange"
         @blur="$emit('blur')"
         @visible-change="handlePopupVisibleChange"
@@ -53,7 +54,11 @@
           :label="item[labelKey || 'label']"
           :disabled="getOptionItemDisabled(item)"
         >
+          <!-- 自定义选项插槽 -->
+          <slot v-if="$slots.option" name="option" :option="item"></slot>
+          <!-- 默认选项渲染 -->
           <el-tooltip
+            v-else
             :content="item.tooltipContent || item[labelKey || 'label']"
             :placement="optionTooltipPosition || 'left'"
             :show-after="500"
@@ -236,6 +241,11 @@ const props = defineProps({
   fullTooltipPosition: {
     type: String,
     default: 'top'
+  },
+  // 在输入框按下回车时，选择第一个匹配项（需要配合 filterable 或 remote 使用）
+  defaultFirstOption: {
+    type: Boolean,
+    default: false
   }
 })
 
@@ -263,6 +273,9 @@ const isArcoFirstSearch = ref(true)
 const popupVisible = ref(false)
 const maxTagCount = ref(3) // 默认最大标签数
 const optionsLoading = ref(false) // options Promise加载状态
+// 防抖相关
+const lastSearchParams = ref(null) // 上次搜索的参数
+const pendingRequest = ref(null) // 正在进行的请求
 
 // 监听 modelValue 变化
 watch(
@@ -349,6 +362,21 @@ const disabledTooltip = computed(() => {
   return false
 })
 
+// 是否使用自定义过滤
+// 当启用 defaultFirstOption 时，使用原生过滤以确保回车选择第一项功能正常工作
+const shouldUseCustomFilter = computed(() => {
+  // 远程模式始终使用自定义过滤
+  if (props.mode === 'remote') {
+    return true
+  }
+  // 如果启用了 defaultFirstOption，则不使用自定义过滤，让 el-select 使用原生过滤
+  if (props.defaultFirstOption) {
+    return false
+  }
+  // 默认使用自定义过滤（支持高亮、多字段搜索等）
+  return true
+})
+
 // 搜索处理
 async function handleSearch(val = '', manual = false) {
   if (isArcoFirstSearch.value && !manual) {
@@ -357,12 +385,88 @@ async function handleSearch(val = '', manual = false) {
   }
   isArcoFirstSearch.value = false
 
+  // 生成当前搜索参数的标识
+  const currentSearchParams = JSON.stringify({ keyword: val, ...props.remoteExtraParams })
+
+  // 如果参数相同且正在请求中，复用正在进行的请求
+  if (
+    props.mode === 'remote' &&
+    pendingRequest.value &&
+    lastSearchParams.value === currentSearchParams
+  ) {
+    try {
+      await pendingRequest.value
+      return
+    } catch (error) {
+      // 如果之前的请求失败了，继续执行新请求
+    }
+  }
+
+  // 如果参数相同且已有缓存数据，直接使用缓存
+  if (
+    props.mode === 'remote' &&
+    lastSearchParams.value === currentSearchParams &&
+    remoteOriginOptions.value.length > 0
+  ) {
+    // 应用过滤逻辑，但不重新请求
+    if (val.trim() === '') {
+      filterOptions.value = remoteOriginOptions.value.map((e) => ({
+        ...e,
+        tooltipContent:
+          typeof props.optionTooltipContent === 'function'
+            ? props.optionTooltipContent(e)
+            : e[props.labelKey || 'label']
+      }))
+    } else {
+      // 应用搜索高亮
+      const highlightedKeyword = `<span style="color: var(--el-color-primary);">${val}</span>`
+      filterOptions.value = remoteOriginOptions.value
+        .map((e) => {
+          const item = { ...e }
+          let hasMatch = false
+
+          if (props.searchKeys) {
+            for (let i = 0; i < props.searchKeys.length; i++) {
+              const key = props.searchKeys[i]
+              if (e[key]?.toLowerCase().includes(val.toLowerCase())) {
+                hasMatch = true
+                item[key] = e[key].replace(
+                  new RegExp(val.replace(/[.*+?^${}()|[\]\\]/g, '\\$&'), 'gi'),
+                  highlightedKeyword
+                )
+              }
+            }
+          }
+
+          if (hasMatch) {
+            return {
+              ...item,
+              tooltipContent:
+                typeof props.optionTooltipContent === 'function'
+                  ? props.optionTooltipContent(e)
+                  : e[props.labelKey || 'label']
+            }
+          }
+          return null
+        })
+        .filter((e) => e)
+    }
+    return
+  }
+
   try {
     loading.value = true
 
     // 远程模式
     if (props.mode === 'remote' && typeof props.remoteFunc === 'function') {
-      const result = await props.remoteFunc({ ...props.remoteExtraParams, keyword: val })
+      // 创建新的请求 Promise
+      pendingRequest.value = props.remoteFunc({ ...props.remoteExtraParams, keyword: val })
+      const result = await pendingRequest.value
+
+      // 请求完成后清除
+      pendingRequest.value = null
+      lastSearchParams.value = currentSearchParams
+
       remoteOriginOptions.value = result.map((e) => {
         const item = { ...e }
 
@@ -435,6 +539,7 @@ async function handleSearch(val = '', manual = false) {
       .filter((e) => e)
   } catch (error) {
     console.error('搜索出错:', error)
+    pendingRequest.value = null // 清除失败的请求
   } finally {
     loading.value = false
   }
@@ -513,6 +618,8 @@ function handlePopupVisibleChange(val) {
   } else {
     inputValue.value = ''
     tempInputValue.value = ''
+    // 关闭下拉框时清除待处理的请求（但保留缓存数据）
+    pendingRequest.value = null
   }
   emit('visible-change', val)
 }

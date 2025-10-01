@@ -1,14 +1,16 @@
-import { createRouter, createWebHashHistory } from 'vue-router'
+import { createRouter, createWebHistory } from 'vue-router'
 import type { RouteRecordRaw } from 'vue-router'
 import type { App } from 'vue'
 import { NO_RESET_WHITE_LIST } from '@/constants'
 
 // 导入拆分的路由模块
 import { basicRoutes } from './routes/basic.route'
-// import { dashboardOnlyRoutes } from './routes/dashboard-only.route'
+import { dashboardOnlyRoutes } from './routes/dashboard-only.route'
 // import { dashboardRoutes } from './routes/dashboard.route'
 // import { componentsRoutes } from './routes/components.route'
 import { evaluationRoutes } from './routes/evaluation.route'
+import { dataPreprocessingRoutes } from './routes/dataPreprocessing.route'
+import { indicatorRoutes } from './routes/indicator.route'
 // import { functionRoutes } from './routes/function.route'
 // import { hooksRoutes } from './routes/hooks.route'
 // import { levelRoutes } from './routes/level.route'
@@ -21,8 +23,10 @@ export const constantRouterMap: AppRouteRecordRaw[] = [...basicRoutes]
 
 // 异步路由（需要权限的路由）
 export const asyncRouterMap: AppRouteRecordRaw[] = [
-  // ...dashboardOnlyRoutes,
+  ...dashboardOnlyRoutes,
   // ...componentsRoutes,
+  ...dataPreprocessingRoutes,
+  ...indicatorRoutes,
   ...evaluationRoutes
   // ...functionRoutes,
   // ...hooksRoutes,
@@ -33,7 +37,7 @@ export const asyncRouterMap: AppRouteRecordRaw[] = [
 ]
 
 const router = createRouter({
-  history: createWebHashHistory(),
+  history: createWebHistory(),
   strict: true,
   routes: constantRouterMap as RouteRecordRaw[],
   scrollBehavior: () => ({ left: 0, top: 0 })

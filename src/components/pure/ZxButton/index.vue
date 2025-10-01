@@ -52,7 +52,7 @@ export default defineComponent({
     },
     enableLoading: {
       type: Boolean,
-      default: true
+      default: false
     }
   },
   setup(props, { emit, attrs }) {

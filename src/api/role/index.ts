@@ -1,5 +1,5 @@
-import request from '@/axios'
+import ZXR from '@/api/http'
 
 export const getRoleListApi = () => {
-  return request.get({ url: '/mock/role/table' })
+  return ZXR.get({ url: '/mock/role/list' })
 }

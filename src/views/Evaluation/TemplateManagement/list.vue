@@ -116,16 +116,10 @@ import EvaluationSchemeSelector from '@/components/business/Selector/EvaluationS
 import EvaluationAlgorithmSelector from '@/components/business/Selector/EvaluationAlgorithmSelector.vue'
 import IndicatorSystemSelector from '@/components/business/Selector/IndicatorSystemSelector.vue'
 import SelectStatus from './components/selector/SelectStatus.vue'
+import { danger as confirmInputDanger } from '@/components/pure/ZxConfirmInput/service'
 
 const { t } = useI18n()
 const router = useRouter()
-
-// 添加组件初始化调试
-onMounted(() => {
-  console.log('=== Template Management List 组件已挂载 ===')
-  console.log('ZxGridList 组件:', ZxGridList)
-  console.log('loadTemplateData 函数:', loadTemplateData)
-})
 
 // 响应式数据
 const dialogVisible = ref(false)
@@ -158,14 +152,8 @@ const scenarioMap = {
 
 // 数据加载函数 - 适配 ZxGridList
 const loadTemplateData = async (params) => {
-  try {
-    const data = await templateApi.getTemplateList(params)
-    console.log('=== Template API 返回数据 ===', data)
-    return data
-  } catch (error) {
-    console.error('=== loadTemplateData 错误 ===', error)
-    throw error
-  }
+  const data = await templateApi.getTemplateList(params)
+  return data
 }
 
 // 工具函数
@@ -221,23 +209,53 @@ const handleCopy = (row) => {
 }
 
 // 获取 ZxConfirmInput 服务
-const { proxy } = getCurrentInstance()
+const instance = getCurrentInstance()
+const { proxy } = instance || {}
+
+// 添加调试信息
+onMounted(() => {
+  console.log('=== 检查 $confirmInput 服务 ===')
+  console.log('instance:', instance)
+  console.log('proxy:', proxy)
+  console.log('proxy.$confirmInput:', proxy?.$confirmInput)
+})
 
 // 删除模版
 const handleDelete = async (row, refresh) => {
-  await proxy.$confirmInput.danger({
-    targetName: row.name,
-    targetType: '模版',
-    keyword: row.name,
-    dangerMessage: `您即将删除模版"${row.name}"`,
-    description: '此操作不可恢复，请输入模版名称以确认删除。',
-    confirmAction: async () => {
-      // 调用删除API
-      return templateApi.deleteTemplate(row.id).then(() => {
-        refresh()
+  try {
+    // 方案1: 尝试使用全局服务
+    if (proxy?.$confirmInput) {
+      await proxy.$confirmInput.danger({
+        targetName: row.name,
+        targetType: '模版',
+        keyword: row.name,
+        dangerMessage: `您即将删除模版"${row.name}"`,
+        description: '此操作不可恢复，请输入模版名称以确认删除。',
+        confirmAction: async () => {
+          return templateApi.deleteTemplate(row.id).then(() => {
+            refresh()
+          })
+        }
+      })
+    } else {
+      // 方案2: 使用直接导入的服务
+      console.warn('⚠️ 使用备用方案：直接导入服务')
+      await confirmInputDanger({
+        targetName: row.name,
+        targetType: '模版',
+        keyword: row.name,
+        dangerMessage: `您即将删除模版"${row.name}"`,
+        description: '此操作不可恢复，请输入模版名称以确认删除。',
+        confirmAction: async () => {
+          return templateApi.deleteTemplate(row.id).then(() => {
+            refresh()
+          })
+        }
       })
     }
-  })
+  } catch (error) {
+    console.log('用户取消删除或操作失败:', error)
+  }
 }
 
 // 表单成功回调

@@ -83,6 +83,7 @@
 <script setup>
 import { ref, reactive, watch, computed, nextTick } from 'vue'
 import { Warning } from '@element-plus/icons-vue'
+import ZxInput from '../ZxInput/index.vue'
 import { useZxConfirmInput } from './hook'
 
 // Props 对齐 GitLab 风格

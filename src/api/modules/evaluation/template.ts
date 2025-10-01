@@ -1,5 +1,5 @@
 // 模版管理模块API
-import ZXR from '../../http/index.js'
+import ZXR from '../../http'
 
 // 获取模版列表
 export function getTemplateList(params = {}) {
@@ -41,7 +41,8 @@ export function updateTemplate(id, data) {
 // 删除模版
 export function deleteTemplate(id) {
   return ZXR.delete({
-    url: `/template/${id}`
+    url: '/template/delete',
+    params: { id }
   })
 }
 

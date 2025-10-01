@@ -15,6 +15,8 @@ import ZxConfirmInput from './ZxConfirmInput'
 import ZxFloatingPanel from './ZxFloatingPanel'
 import ZxDrawer from './ZxDrawer'
 import ZxExpandToggle from './ZxExpandToggle'
+import ZxInput from './ZxInput'
+import ZxUpload from './ZxUpload'
 
 // 所有组件列表
 const components = [
@@ -33,7 +35,9 @@ const components = [
   ZxConfirmInput,
   ZxFloatingPanel,
   ZxDrawer,
-  ZxExpandToggle
+  ZxExpandToggle,
+  ZxInput,
+  ZxUpload
 ]
 
 // 统一的全局注册方法
@@ -65,6 +69,8 @@ export {
   ZxFloatingPanel,
   ZxDrawer,
   ZxExpandToggle,
+  ZxInput,
+  ZxUpload,
   install
 }
 
@@ -86,5 +92,6 @@ export default {
   ZxFloatingPanel,
   ZxDrawer,
   ZxExpandToggle,
+  ZxUpload,
   install
 }

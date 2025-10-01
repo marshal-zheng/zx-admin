@@ -47,6 +47,7 @@
 <script setup>
 import { ref, computed, watch, nextTick } from 'vue'
 import { Search } from '@element-plus/icons-vue'
+import { ElInput, ElInputNumber } from 'element-plus'
 import { debounce as lodashDebounce } from 'lodash-es'
 import ZxTooltipOrPopover from '../ZxTooltipOrPopover/index.vue'
 
@@ -190,11 +191,11 @@ const showTooltip = ref(false)
 const inputComponent = computed(() => {
   switch (props.type) {
     case 'textarea':
-      return 'el-input'
+      return ElInput
     case 'number':
-      return 'el-input-number'
+      return ElInputNumber
     default:
-      return 'el-input'
+      return ElInput
   }
 })
 

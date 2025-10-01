@@ -1,5 +1,5 @@
 import Component from './index.vue'
-import './service.js' // 导入服务文件以执行全局变量设置
+import './service' // 导入服务文件以执行全局变量设置
 import type { App } from 'vue'
 
 // 扩展全局 Window 接口

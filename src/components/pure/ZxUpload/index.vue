@@ -286,7 +286,7 @@ const emit = defineEmits([
 
 // 响应式数据
 const uploadRef = ref()
-const innerFileList = ref([...props.modelValue])
+const innerFileList = ref(Array.isArray(props.modelValue) ? [...props.modelValue] : [])
 
 // 计算属性
 const uploadClass = computed(() => {
@@ -305,7 +305,7 @@ const uploadClass = computed(() => {
 watch(
   () => props.modelValue,
   (newVal) => {
-    innerFileList.value = [...newVal]
+    innerFileList.value = Array.isArray(newVal) ? [...newVal] : []
   },
   { deep: true }
 )

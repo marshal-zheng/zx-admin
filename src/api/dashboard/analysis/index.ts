@@ -1,4 +1,4 @@
-import request from '@/axios'
+import ZXR from '@/api/http'
 import type {
   AnalysisTotalTypes,
   UserAccessSource,
@@ -7,17 +7,17 @@ import type {
 } from './types'
 
 export const getCountApi = (): Promise<IResponse<AnalysisTotalTypes[]>> => {
-  return request.get({ url: '/mock/analysis/total' })
+  return ZXR.get({ url: '/mock/analysis/total' })
 }
 
 export const getUserAccessSourceApi = (): Promise<IResponse<UserAccessSource[]>> => {
-  return request.get({ url: '/mock/analysis/userAccessSource' })
+  return ZXR.get({ url: '/mock/analysis/userAccessSource' })
 }
 
 export const getWeeklyUserActivityApi = (): Promise<IResponse<WeeklyUserActivity[]>> => {
-  return request.get({ url: '/mock/analysis/weeklyUserActivity' })
+  return ZXR.get({ url: '/mock/analysis/weeklyUserActivity' })
 }
 
 export const getMonthlySalesApi = (): Promise<IResponse<MonthlySales[]>> => {
-  return request.get({ url: '/mock/analysis/monthlySales' })
+  return ZXR.get({ url: '/mock/analysis/monthlySales' })
 }

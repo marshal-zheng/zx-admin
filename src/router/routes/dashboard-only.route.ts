@@ -10,9 +10,10 @@ export const dashboardOnlyRoutes: AppRouteRecordRaw[] = [
     redirect: '/dashboard/analysis',
     name: 'Dashboard',
     meta: {
-      title: t('router.dashboard'),
+      title: t('router.analysis'),
       icon: 'vi-ant-design:dashboard-filled',
-      alwaysShow: true
+      noCache: true,
+      affix: true
     },
     children: [
       {
@@ -21,17 +22,9 @@ export const dashboardOnlyRoutes: AppRouteRecordRaw[] = [
         name: 'Analysis',
         meta: {
           title: t('router.analysis'),
+          icon: 'vi-ant-design:line-chart-outlined',
           noCache: true,
           affix: true
-        }
-      },
-      {
-        path: 'workplace',
-        component: () => import('@/views/Dashboard/Workplace.vue'),
-        name: 'Workplace',
-        meta: {
-          title: t('router.workplace'),
-          noCache: true
         }
       }
     ]

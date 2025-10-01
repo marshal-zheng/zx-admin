@@ -49,7 +49,7 @@
               <el-tag
                 v-if="titleTag"
                 :color="titleTagColor"
-                style=" margin-right: auto;margin-left: 0.5rem"
+                style="margin-right: auto; margin-left: 0.5rem"
               >
                 {{ titleTag }}
               </el-tag>
@@ -110,7 +110,7 @@
                 <span style="margin-top: 2px">
                   <ZxIcon
                     icon="question-circle"
-                    style=" width: 16px;height: 16px"
+                    style="width: 16px; height: 16px"
                     class="text-\[rgb\(var\(--el-color-primary\)\)\]"
                   />
                 </span>
@@ -750,6 +750,12 @@ const handleClose = () => {
 }
 
 const handleOpen = () => {
+  // 对话框打开后，延迟清除表单校验状态，避免一打开就显示错误提示
+  nextTick(() => {
+    if (props.formRef?.clearValidate) {
+      props.formRef.clearValidate()
+    }
+  })
   emit('open')
 }
 

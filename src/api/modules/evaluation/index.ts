@@ -36,7 +36,7 @@ export function getStatusOptions() {
 // 删除评估任务
 export function deleteEvaluation(id) {
   return ZXR.delete({
-    url: '/evaluation/deletedddd',
+    url: '/evaluation/delete',
     params: { id }
   })
 }

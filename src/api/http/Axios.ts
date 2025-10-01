@@ -57,10 +57,12 @@ export const ContentTypeEnum = {
 export class ZXAxios {
   private options: CreateAxiosOptions
   private axiosInstance: AxiosInstance
+  private axiosCanceler: AxiosCanceler
 
   constructor(options: CreateAxiosOptions) {
     this.options = options
     this.axiosInstance = axios.create(options)
+    this.axiosCanceler = new AxiosCanceler()
 
     this.setupInterceptors()
   }
@@ -84,8 +86,6 @@ export class ZXAxios {
     }
     const { requestInterceptors, responseInterceptors, responseInterceptorsCatch } = transform
 
-    const axiosCanceler = new AxiosCanceler()
-
     // 请求拦截器
     this.axiosInstance.interceptors.request.use((config) => {
       // 如果ignoreCancelToken为true，则不添加到pending中
@@ -96,7 +96,7 @@ export class ZXAxios {
           : this.options.requestOptions?.ignoreCancelToken
 
       if (!ignoreCancel) {
-        axiosCanceler.addPending(config)
+        this.axiosCanceler.addPending(config)
       }
       if (requestInterceptors && isFunction(requestInterceptors)) {
         config = requestInterceptors(config, this.options) as any
@@ -123,7 +123,7 @@ export class ZXAxios {
     // 响应拦截器
     this.axiosInstance.interceptors.response.use((res) => {
       if (res) {
-        axiosCanceler.removePending(res.config)
+        this.axiosCanceler.removePending(res.config)
       }
       if (responseInterceptors && isFunction(responseInterceptors)) {
         res = responseInterceptors(res)
@@ -237,6 +237,21 @@ export class ZXAxios {
    */
   delete<T = any>(config: AxiosRequestConfig, options?: RequestOptions): Promise<T> {
     return this.request({ ...config, method: 'DELETE' }, options)
+  }
+
+  /**
+   * 取消所有请求
+   */
+  cancelAllRequest(): void {
+    this.axiosCanceler.removeAllPending()
+  }
+
+  /**
+   * 取消指定请求
+   * @param url - 请求URL
+   */
+  cancelRequest(url: string): void {
+    this.axiosCanceler.removePending({ url, method: 'GET' } as any)
   }
 
   /**

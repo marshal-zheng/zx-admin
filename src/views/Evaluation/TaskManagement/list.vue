@@ -75,6 +75,9 @@
       </template>
     </ZxGridList>
   </ContentWrap>
+
+  <!-- 任务创建向导 -->
+  <TaskWizard v-model="showTaskWizard" @success="handleWizardSuccess" />
 </template>
 
 <script setup>
@@ -84,9 +87,13 @@ import { useI18n } from '@/hooks/web/useI18n'
 import { evaluationApi } from '@/api/modules/evaluation'
 import ZxGridList from '@/components/pure/ZxGridList/index.vue'
 import SelectStatus from './components/selector/SelectStatus.vue'
+import TaskWizard from './components/TaskWizard.vue'
 import { ZxSearch, ZxButton } from '@/components/pure'
 
 const { t } = useI18n()
+
+// 控制任务向导显示
+const showTaskWizard = ref(false)
 
 // 添加组件初始化调试
 onMounted(() => {
@@ -142,6 +149,13 @@ const handleSaveAsTemplate = (row) => {
 // actions in toolbar
 const handleCreate = () => {
   console.log('新建评估')
+  showTaskWizard.value = true
+}
+
+// 向导完成后的回调
+const handleWizardSuccess = () => {
+  console.log('任务创建成功，刷新列表')
+  // 这里可以刷新列表
 }
 
 const onFilterChange = (value, { refresh, updateState }) => {

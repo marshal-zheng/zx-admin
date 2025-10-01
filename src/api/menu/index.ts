@@ -1,5 +1,5 @@
-import request from '@/axios'
+import ZXR from '@/api/http'
 
 export const getMenuListApi = () => {
-  return request.get({ url: '/mock/menu/list' })
+  return ZXR.get({ url: '/mock/menu/list' })
 }

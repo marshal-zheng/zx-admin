@@ -84,7 +84,7 @@ const crudSchemas = reactive<CrudSchema[]>([
     label: t('userDemo.departmentName'),
     table: {
       slots: {
-        default: (data: any) => {
+        default: (data: { row: DepartmentItem }) => {
           return <>{data.row.departmentName}</>
         }
       }
@@ -99,12 +99,12 @@ const crudSchemas = reactive<CrudSchema[]>([
       },
       optionApi: async () => {
         const res = await getDepartmentApi()
-        return res.data.list
+        return res.list || []
       }
     },
     detail: {
       slots: {
-        default: (data: any) => {
+        default: (data: DepartmentItem) => {
           return <>{data.departmentName}</>
         }
       }
@@ -118,7 +118,7 @@ const crudSchemas = reactive<CrudSchema[]>([
     },
     table: {
       slots: {
-        default: (data: any) => {
+        default: (data: { row: DepartmentItem & { status: number } }) => {
           const status = data.row.status
           return (
             <>
@@ -208,7 +208,7 @@ const crudSchemas = reactive<CrudSchema[]>([
     },
     table: {
       slots: {
-        default: (data: any) => {
+        default: (data: { row: DepartmentItem }) => {
           return (
             <>
               <BaseButton type="primary" onClick={() => action(data.row, 'edit')}>

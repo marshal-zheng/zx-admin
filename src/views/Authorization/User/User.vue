@@ -25,8 +25,8 @@ const { tableRegister, tableState, tableMethods } = useTable({
       ...unref(searchParams)
     })
     return {
-      list: res.data.list || [],
-      total: res.data.total || 0
+      list: res.list || [],
+      total: res.total || 0
     }
   },
   fetchDelApi: async () => {
@@ -101,7 +101,7 @@ const crudSchemas = reactive<CrudSchema[]>([
       },
       optionApi: async () => {
         const res = await getDepartmentApi()
-        return res.data.list
+        return res.list || []
       }
     },
     table: {
@@ -166,8 +166,8 @@ const crudSchemas = reactive<CrudSchema[]>([
     table: {
       width: 240,
       slots: {
-        default: (data: any) => {
-          const row = data.row as DepartmentUserItem
+        default: (data: { row: DepartmentUserItem }) => {
+          const row = data.row
           return (
             <>
               <BaseButton type="primary" onClick={() => action(row, 'edit')}>
@@ -202,9 +202,9 @@ const currentNodeKey = ref('')
 const departmentList = ref<DepartmentItem[]>([])
 const fetchDepartment = async () => {
   const res = await getDepartmentApi()
-  departmentList.value = res.data.list
+  departmentList.value = res.list || []
   currentNodeKey.value =
-    (res.data.list[0] && res.data.list[0]?.children && res.data.list[0].children[0].id) || ''
+    (res.list?.[0] && res.list[0]?.children && res.list[0].children[0].id) || ''
   await nextTick()
   unref(treeEl)?.setCurrentKey(currentNodeKey.value)
 }
@@ -289,7 +289,7 @@ const action = (row: DepartmentUserItem, type: string) => {
         :filter-node-method="filterNode"
         @current-change="currentChange"
       >
-        <template #default="{ data }">
+        <template #default="{ data }: { data: DepartmentItem }">
           <div
             :title="data.departmentName"
             class="whitespace-nowrap overflow-ellipsis overflow-hidden"
