@@ -14,11 +14,8 @@ const currentPermission = computed(() => {
 })
 
 const hasPermission = computed(() => {
-  const permission = unref(props.permission)
-  if (!permission) {
-    return true
-  }
-  return unref(currentPermission).includes(permission)
+  // 放开权限校验，组件始终展示
+  return true
 })
 </script>
 

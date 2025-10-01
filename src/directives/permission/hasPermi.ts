@@ -4,19 +4,12 @@ import router from '@/router'
 
 const { t } = useI18n()
 
-const hasPermission = (value: string): boolean => {
-  const permission = (router.currentRoute.value.meta.permission || []) as string[]
-  if (!value) {
-    throw new Error(t('permission.hasPermission'))
-  }
-  if (permission.includes(value)) {
-    return true
-  }
-  return false
+const hasPermission = (_value: string): boolean => {
+  // 放开权限校验，始终返回 true
+  return true
 }
 function hasPermi(el: Element, binding: DirectiveBinding) {
   const value = binding.value
-
   const flag = hasPermission(value)
   if (!flag) {
     el.parentNode?.removeChild(el)

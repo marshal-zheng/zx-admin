@@ -17,44 +17,33 @@ router.beforeEach(async (to, from, next) => {
   loadStart()
   const permissionStore = usePermissionStoreWithOut()
   const appStore = useAppStoreWithOut()
-  const userStore = useUserStoreWithOut()
-  if (userStore.getUserInfo) {
-    if (to.path === '/login') {
-      next({ path: '/' })
-    } else {
-      if (permissionStore.getIsAddRouters) {
-        next()
-        return
-      }
 
-      // 开发者可根据实际情况进行修改
-      const roleRouters = userStore.getRoleRouters || []
-
-      // 是否使用动态路由
-      if (appStore.getDynamicRouter) {
-        appStore.serverDynamicRouter
-          ? await permissionStore.generateRoutes('server', roleRouters as AppCustomRouteRecordRaw[])
-          : await permissionStore.generateRoutes('frontEnd', roleRouters as string[])
-      } else {
-        await permissionStore.generateRoutes('static')
-      }
-
-      permissionStore.getAddRouters.forEach((route) => {
-        router.addRoute(route as unknown as RouteRecordRaw) // 动态添加可访问路由表
-      })
-      const redirectPath = from.query.redirect || to.path
-      const redirect = decodeURIComponent(redirectPath as string)
-      const nextData = to.path === redirect ? { ...to, replace: true } : { path: redirect }
-      permissionStore.setIsAddRouters(true)
-      next(nextData)
-    }
-  } else {
-    if (NO_REDIRECT_WHITE_LIST.indexOf(to.path) !== -1) {
-      next()
-    } else {
-      next(`/login?redirect=${to.path}`) // 否则全部重定向到登录页
-    }
+  // 免登录：访问登录页时直接重定向到首页
+  if (to.path === '/login') {
+    next({ path: '/' })
+    return
   }
+
+  // 放开权限校验：始终按静态或配置的动态路由生成并放行
+  if (!permissionStore.getIsAddRouters) {
+    const roleRouters = [] as unknown as AppCustomRouteRecordRaw[] | string[]
+    if (appStore.getDynamicRouter) {
+      appStore.serverDynamicRouter
+        ? await permissionStore.generateRoutes('server', roleRouters as AppCustomRouteRecordRaw[])
+        : await permissionStore.generateRoutes('frontEnd', roleRouters as string[])
+    } else {
+      await permissionStore.generateRoutes('static')
+    }
+
+    permissionStore.getAddRouters.forEach((route) => {
+      router.addRoute(route as unknown as RouteRecordRaw)
+    })
+    permissionStore.setIsAddRouters(true)
+    next({ ...to, replace: true })
+    return
+  }
+
+  next()
 })
 
 router.afterEach((to) => {
