@@ -161,6 +161,12 @@ importers:
       vue-types:
         specifier: ^5.1.3
         version: 5.1.3(vue@3.5.13(typescript@5.7.3))
+      vxe-table:
+        specifier: ^4.16.20
+        version: 4.16.20(vue@3.5.13(typescript@5.7.3))
+      xe-utils:
+        specifier: ^3.7.9
+        version: 3.7.9
       xgplayer:
         specifier: ^3.0.20
         version: 3.0.20(core-js@3.40.0)
@@ -2265,6 +2271,11 @@ packages:
   '@vueuse/shared@9.13.0':
     resolution: {integrity: sha512-UrnhU+Cnufu4S6JLCPZnkWh0WwZGUp72ktOF2DFptMlOs3TOdVv8xJN53zhHGARmVOsz5KqOls09+J1NR6sBKw==}
 
+  '@vxe-ui/core@4.2.12':
+    resolution: {integrity: sha512-g6gNDykKrKLzxsDDFDYTD/6tWrV9AfSaU7WIlKCO67BSXgKDMaEVTsH7ZZ7fI5qkOO9DH1vo07kbacyBNx7gSQ==}
+    peerDependencies:
+      vue: ^3.2.0
+
   '@wangeditor/basic-modules@1.1.7':
     resolution: {integrity: sha512-cY9CPkLJaqF05STqfpZKWG4LpxTMeGSIIF1fHvfm/mz+JXatCagjdkbxdikOuKYlxDdeqvOeBmsUBItufDLXZg==}
     peerDependencies:
@@ -3085,6 +3096,9 @@ packages:
 
   dom-serializer@2.0.0:
     resolution: {integrity: sha512-wIkAryiqt/nV5EQKqQpo3SToSOV9J0DnbJqwK7Wv/Trc92zIAYZ4FlMu+JPFW1DfGFt81ZTCGgDEabffXeLyJg==}
+
+  dom-zindex@1.0.6:
+    resolution: {integrity: sha512-FKWIhiU96bi3xpP9ewRMgANsoVmMUBnMnmpCT6dPMZOunVYJQmJhSRruoI0XSPoHeIif3kyEuiHbFrOJwEJaEA==}
 
   dom7@3.0.0:
     resolution: {integrity: sha1-uGHOXWemvs16qjrQKUL/FLEkAzE=}
@@ -6345,6 +6359,12 @@ packages:
       typescript:
         optional: true
 
+  vxe-pc-ui@4.9.41:
+    resolution: {integrity: sha512-CsaRv7d2NGRkVUOWhF+vHdcS7j1NgGZ5A16564645zS4lIUxkn4pADEieyDsA8GTlNwCZmyYmGtjMfOsUKlcNg==}
+
+  vxe-table@4.16.20:
+    resolution: {integrity: sha512-AUEOqgr/4fFZ9SBg2akepkadI3c8Ct7/zG/gkurUvCIbixsoZr78c4NStmdhLxlFjUeQkiKb8ukesZsjLloAhA==}
+
   wcwidth@1.0.1:
     resolution: {integrity: sha1-8LDc+RW8X/FSivrbLA4XtTLaL+g=}
 
@@ -6417,6 +6437,9 @@ packages:
   write-file-atomic@5.0.1:
     resolution: {integrity: sha512-+QU2zd6OTD8XWIJCbffaiQeH9U73qIqafo1x6V1snCWYGJf6cVE0cDR4D8xRzcEnfI21IFrUPzPGtcPf8AC+Rw==}
     engines: {node: ^14.17.0 || ^16.13.0 || >=18.0.0}
+
+  xe-utils@3.7.9:
+    resolution: {integrity: sha512-LWH6M7g+TKX8P2fqGxDPgJQygiULhbMtpmfxTMxJTUjuUv9y2+I45UCcVLh5AnmJSxDV1xTxsq7G5P9Eid06JQ==}
 
   xgplayer-subtitles@3.0.20:
     resolution: {integrity: sha512-I1bjsIY+aKOrhYQspLdneOkYg+Vf4cJVGPnDSFnNebnxXl9Mhz5SEpWGzYizMYxL9UvsQ9pgjeEY0o4hkwM+kQ==}
@@ -8728,6 +8751,12 @@ snapshots:
       - '@vue/composition-api'
       - vue
 
+  '@vxe-ui/core@4.2.12(vue@3.5.13(typescript@5.7.3))':
+    dependencies:
+      dom-zindex: 1.0.6
+      vue: 3.5.13(typescript@5.7.3)
+      xe-utils: 3.7.9
+
   '@wangeditor/basic-modules@1.1.7(@wangeditor/core@1.1.19(@uppy/core@2.3.4)(@uppy/xhr-upload@2.1.3(@uppy/core@2.3.4))(dom7@3.0.0)(is-hotkey@0.2.0)(lodash.camelcase@4.3.0)(lodash.clonedeep@4.5.0)(lodash.debounce@4.0.8)(lodash.foreach@4.5.0)(lodash.isequal@4.5.0)(lodash.throttle@4.1.1)(lodash.toarray@4.4.0)(nanoid@3.3.8)(slate@0.72.8)(snabbdom@3.6.2))(dom7@3.0.0)(lodash.throttle@4.1.1)(nanoid@3.3.8)(slate@0.72.8)(snabbdom@3.6.2)':
     dependencies:
       '@wangeditor/core': 1.1.19(@uppy/core@2.3.4)(@uppy/xhr-upload@2.1.3(@uppy/core@2.3.4))(dom7@3.0.0)(is-hotkey@0.2.0)(lodash.camelcase@4.3.0)(lodash.clonedeep@4.5.0)(lodash.debounce@4.0.8)(lodash.foreach@4.5.0)(lodash.isequal@4.5.0)(lodash.throttle@4.1.1)(lodash.toarray@4.4.0)(nanoid@3.3.8)(slate@0.72.8)(snabbdom@3.6.2)
@@ -9609,6 +9638,8 @@ snapshots:
       domelementtype: 2.3.0
       domhandler: 5.0.3
       entities: 4.5.0
+
+  dom-zindex@1.0.6: {}
 
   dom7@3.0.0:
     dependencies:
@@ -13210,6 +13241,18 @@ snapshots:
     optionalDependencies:
       typescript: 5.7.3
 
+  vxe-pc-ui@4.9.41(vue@3.5.13(typescript@5.7.3)):
+    dependencies:
+      '@vxe-ui/core': 4.2.12(vue@3.5.13(typescript@5.7.3))
+    transitivePeerDependencies:
+      - vue
+
+  vxe-table@4.16.20(vue@3.5.13(typescript@5.7.3)):
+    dependencies:
+      vxe-pc-ui: 4.9.41(vue@3.5.13(typescript@5.7.3))
+    transitivePeerDependencies:
+      - vue
+
   wcwidth@1.0.1:
     dependencies:
       defaults: 1.0.4
@@ -13309,6 +13352,8 @@ snapshots:
     dependencies:
       imurmurhash: 0.1.4
       signal-exit: 4.1.0
+
+  xe-utils@3.7.9: {}
 
   xgplayer-subtitles@3.0.20(core-js@3.40.0):
     dependencies:

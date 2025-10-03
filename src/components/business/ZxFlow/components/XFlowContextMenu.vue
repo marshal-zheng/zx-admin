@@ -83,8 +83,6 @@ const getIconComponent = (iconName) => {
 </script>
 
 <style scoped>
-
-
 /* 深色主题支持 */
 @media (prefers-color-scheme: dark) {
   .xflow-context-menu {

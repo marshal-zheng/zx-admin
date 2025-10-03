@@ -12,7 +12,6 @@
 
 <script setup>
 import { ref } from 'vue'
-import ZxChart from '@/components/pure/ZxChart/index.vue'
 
 defineEmits(['ready', 'click', 'dblclick', 'mouseover', 'mouseout'])
 

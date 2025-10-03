@@ -22,6 +22,8 @@ export default function checkStatus(
   // const router = useRouter()
   let errMessage = ''
 
+  console.log('status', status)
+
   switch (status) {
     case 400:
       errMessage = `${msg}`

@@ -185,7 +185,7 @@
     >
       <template #description>
         这是一个高级 Hook 示例，展示了：
-        <ul style=" padding-left: 20px;margin: 10px 0">
+        <ul style="padding-left: 20px; margin: 10px 0">
           <li>自定义异步验证器（至少3个字符，仅字母数字）</li>
           <li>异步确认操作（模拟 API 调用）</li>
           <li>完整的错误处理和 loading 状态</li>

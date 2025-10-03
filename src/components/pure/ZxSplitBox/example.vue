@@ -261,8 +261,6 @@ const clearLogs = () => {
 </script>
 
 <style scoped>
-
-
 /* 响应式设计 */
 @media (width <= 768px) {
   .zx-split-box-example {

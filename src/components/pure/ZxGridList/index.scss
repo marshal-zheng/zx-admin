@@ -165,6 +165,58 @@
     padding-right: var(--cmp-grid-list-pagination-padding-right);
   }
 
+  &.zx-grid-list--page {
+    overflow: hidden;
+    min-height: var(--zx-grid-list-page-height, 100%);
+    height: var(--zx-grid-list-page-height, auto);
+
+    .zx-grid-list {
+      flex: 1;
+      min-height: 100%;
+    }
+
+    .zx-grid-list__grid,
+    .zx-grid-list__table {
+      flex: 1;
+      min-height: 0;
+    }
+
+    .zx-grid-list__grid {
+      overflow: hidden;
+    }
+
+    .zx-grid-list__table {
+      :deep(.el-table) {
+        display: flex;
+        flex-direction: column;
+        flex: 1 1 auto;
+        min-height: 0;
+        height: auto;
+      }
+
+      :deep(.el-table__inner-wrapper) {
+        flex: 1 1 auto;
+        display: flex;
+        flex-direction: column;
+        min-height: 0;
+      }
+
+      :deep(.el-table__header-wrapper) {
+        flex: 0 0 auto;
+      }
+
+      :deep(.el-table__body-wrapper) {
+        flex: 1 1 auto;
+        overflow: auto;
+      }
+
+      :deep(.el-table__footer-wrapper),
+      :deep(.el-table__append-wrapper) {
+        flex: 0 0 auto;
+      }
+    }
+  }
+
   // 加载状态样式
   .zx-grid-list__grid[v-loading] {
     // 保持加载时也有稳定高度，避免骨架/加载层抖动

@@ -132,6 +132,23 @@ const handleDelete = (row) => {
 </script>
 ```
 
+## 布局控制
+
+- 当 ZxGridList 作为页面级列表使用时，可通过额外添加 `zx-grid-list--page` 类，让分页始终贴底展示，并把滚动行为限定在表格主体内。
+- 该类只作为开关使用，不会影响在弹窗或卡片中的默认行为，可与业务类名组合，例如 `class="user-list zx-grid-list--page"`。
+- 组件会根据视口高度自动重新计算可用空间，因此无需再为 `el-table` 设置额外的 `max-height`。如需微调高度，可通过 `page-viewport-offset` 属性或在容器上设置 `--zx-grid-list-page-offset-top / bottom` CSS 变量来补偿顶部/底部留白（支持正负值）。
+
+```vue
+<ZxGridList
+  class="user-list zx-grid-list--page"
+  :load-data="loadUserList"
+  :show-pagination="true"
+  :page-viewport-offset="{ bottom: 16 }"
+>
+  <!-- slots -->
+</ZxGridList>
+```
+
 ## Props
 
 | 参数 | 说明 | 类型 | 默认值 |
@@ -155,6 +172,7 @@ const handleDelete = (row) => {
 | defaultPageSize | 默认分页大小 | Number | `20` |
 | showTableBorder | 是否显示表格内边框 | Boolean | `false` |
 | paginationPaddingBottom | 分页组件底部内边距 | String/Number | `'12px'` |
+| pageViewportOffset | 页面布局模式下的额外视口留白（px），可为数字或 `{ top, bottom }` 对象，正数增加预留、负数抵消预留 | Number/String/Object | `0` |
 
 ## Events
 

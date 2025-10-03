@@ -68,6 +68,14 @@ export function getTableNames(baseId, params = {}) {
   })
 }
 
+// 获取创建表列表
+export function getCreateTableList(params = {}) {
+  return ZXR.get({
+    url: '/zhpgxt/zhpgCreateTable',
+    params
+  })
+}
+
 // 查询数据源表的所有数据行
 export function getTableData(data) {
   return ZXR.post({
@@ -92,6 +100,14 @@ export function migrationToLocalHost(data) {
   })
 }
 
+// 根据表名查询表数据
+export function selectTableData(tableName: string, params = {}) {
+  return ZXR.get({
+    url: `/zhpgxt/zhpgCreateTable/selectTable/${tableName}`,
+    params
+  })
+}
+
 // 兼容旧接口名称
 export const getTableList = getTableNames
 export const getTableAllData = getTableData
@@ -106,9 +122,11 @@ export const dataConnectionApi = {
   exportDataSource,
   importDataSource,
   getTableNames,
+  getCreateTableList,
   getTableData,
   getTableFields,
   migrationToLocalHost,
+  selectTableData,
   // 兼容旧名称
   getTableList: getTableNames,
   getTableAllData: getTableData

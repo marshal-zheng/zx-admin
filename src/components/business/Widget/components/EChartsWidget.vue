@@ -22,7 +22,6 @@
 <script setup>
 import { ref, computed, watch, onMounted, onUnmounted, defineAsyncComponent } from 'vue'
 import { transformByChartType } from '../util'
-import ZxEmpty from '@/components/pure/ZxEmpty/index.vue'
 import { applyGrafanaStyleToOption } from '../config/echarts'
 
 // 动态导入图表插件组件

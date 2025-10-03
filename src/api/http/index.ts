@@ -222,7 +222,48 @@ transform.transformRequestHook = (res, options) => {
     throw new Error('请求出错，请稍候重试')
   }
 
-  // 优先兼容第三方常见返回：{ success, data, msg/message }
+  // 处理标准返回格式：{ code, success, msg, data }
+  const { code, msg, message, data, success } = rawData
+  const hasCode = Reflect.has(rawData, 'code')
+
+  if (hasCode) {
+    // code === 200 表示成功
+    if (code === 200) {
+      // 成功时根据配置显示提示
+      const method = res?.config?.method || ''
+      const successMessageMode = resolveSuccessMode(options.successMessageMode, method)
+      // const successMsg = msg || message || '操作成功'
+      const successMsg = '操作成功'
+      showNotice(successMsg, successMessageMode, 'success')
+      // 返回 data 字段
+      return data !== undefined ? data : rawData
+    } else {
+      // code !== 200 表示业务错误
+      // 处理特定业务错误码
+      let errMsg = msg || message || '操作失败'
+
+      // 对特定错误码进行特殊处理
+      if (code === 401) {
+        errMsg = errMsg || '用户没有权限（令牌、用户名、密码错误）!'
+        // 清除token并跳转登录页
+        localStorage.removeItem('token')
+      } else if (code === 403) {
+        errMsg = errMsg || '用户得到授权，但是访问是被禁止的!'
+      } else if (code === 404) {
+        errMsg = errMsg || '请求的资源不存在!'
+      } else if (code === 500) {
+        errMsg = errMsg || '服务器错误,请联系管理员!'
+      }
+
+      if (showErrorMessage) {
+        const errorMessageMode = options.errorMessageMode || 'message'
+        showNotice(errMsg, errorMessageMode, 'error')
+      }
+      throw new Error(errMsg)
+    }
+  }
+
+  // 兼容第三方常见返回：{ success, data, msg/message }
   if (Reflect.has(rawData, 'success')) {
     const ok = rawData.success
     if (ok) {
@@ -239,79 +280,8 @@ transform.transformRequestHook = (res, options) => {
     throw new Error(errMsg)
   }
 
-  // 其次兼容 { code, result, message } 风格
-  const { code, result, message } = rawData
-  const hasCode = Reflect.has(rawData, 'code')
-  const hasCodeSuccess = hasCode && (code === 200 || code === 0)
-
-  if (hasCodeSuccess) {
-    const method = res?.config?.method || ''
-    const successMessageMode = resolveSuccessMode(options.successMessageMode, method)
-    const successMsg = message || '操作成功'
-    showNotice(successMsg, successMessageMode, 'success')
-    if (result !== undefined) return result
-    return payload ?? rawData
-  }
-
-  // 在此处根据自己项目的实际情况对不同的code执行不同的操作
-  // 如果不希望中断当前请求，请return数据，否则直接抛出异常即可
-  let timeoutMsg = ''
-  switch (code) {
-    case 401:
-      timeoutMsg = '用户没有权限（令牌、用户名、密码错误）!'
-      // 清除token并跳转登录页
-      localStorage.removeItem('token')
-      break
-    case 403:
-      timeoutMsg = '用户得到授权，但是访问是被禁止的。!'
-      break
-    case 404:
-      timeoutMsg = '网络请求错误,未找到该资源!'
-      break
-    case 408:
-      timeoutMsg = '网络请求超时!'
-      break
-    case 500:
-      timeoutMsg = '服务器错误,请联系管理员!'
-      break
-    case 501:
-      timeoutMsg = '网络未实现!'
-      break
-    case 502:
-      timeoutMsg = '网络错误!'
-      break
-    case 503:
-      timeoutMsg = '服务不可用，服务器暂时过载或维护!'
-      break
-    case 504:
-      timeoutMsg = '网络超时!'
-      break
-    case 505:
-      timeoutMsg = 'http版本不支持该请求!'
-      break
-    default:
-  }
-
-  if (timeoutMsg) {
-    if (showErrorMessage) {
-      const errorMessageMode = options.errorMessageMode || 'message'
-      showNotice(timeoutMsg, errorMessageMode, 'error')
-    }
-    throw new Error(timeoutMsg)
-  }
-
   // 未匹配到已知包裹结构，直接返回数据本体
-  if (!hasCode && !Reflect.has(rawData, 'success')) {
-    return payload ?? rawData
-  }
-
-  const errorMsg = message || '操作失败'
-  if (showErrorMessage) {
-    const errorMessageMode = options.errorMessageMode || 'message'
-    showNotice(errorMsg, errorMessageMode, 'error')
-  }
-
-  throw new Error(errorMsg)
+  return payload ?? rawData
 }
 
 /**
@@ -347,7 +317,7 @@ transform.responseInterceptors = (res) => {
  */
 transform.responseInterceptorsCatch = (error: any) => {
   const { response, code, message, config } = error || {}
-  const errorMessageMode = config?.requestOptions?.errorMessageMode || 'none'
+  const errorMessageMode = config?.requestOptions?.errorMessageMode || 'message'
   const showErrorMessage = config?.requestOptions?.showErrorMessage !== false
   const msg = response?.data?.error?.message ?? ''
   const err = error?.toString?.()
@@ -375,13 +345,57 @@ transform.responseInterceptorsCatch = (error: any) => {
     throw new Error(String(error))
   }
 
-  checkStatus(
-    error?.response?.status,
-    msg,
-    error?.response?.data?.code,
-    errorMessageMode,
-    showErrorMessage
-  )
+  // HTTP 错误处理
+  if (response?.status) {
+    const status = response.status
+    let statusMessage = ''
+
+    switch (status) {
+      case 401:
+        statusMessage = '用户没有权限（令牌、用户名、密码错误）!'
+        // 清除token并跳转登录页
+        localStorage.removeItem('token')
+        break
+      case 403:
+        statusMessage = '用户得到授权，但是访问是被禁止的!'
+        break
+      case 404:
+        statusMessage = '网络请求错误,未找到该资源!'
+        break
+      case 408:
+        statusMessage = '网络请求超时!'
+        break
+      case 500:
+        statusMessage = '服务器错误,请联系管理员!'
+        break
+      case 501:
+        statusMessage = '网络未实现!'
+        break
+      case 502:
+        statusMessage = '网络错误!'
+        break
+      case 503:
+        statusMessage = '服务不可用，服务器暂时过载或维护!'
+        break
+      case 504:
+        statusMessage = '网络超时!'
+        break
+      case 505:
+        statusMessage = 'http版本不支持该请求!'
+        break
+      default:
+        statusMessage = msg || `HTTP错误: ${status}`
+    }
+
+    if (showErrorMessage) {
+      if (errorMessageMode === 'modal') {
+        ElMessageBox.alert(statusMessage, '错误', { type: 'error' })
+      } else if (errorMessageMode === 'message') {
+        ElMessage.error(statusMessage)
+      }
+    }
+  }
+
   return Promise.reject(error)
 }
 

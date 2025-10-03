@@ -300,7 +300,7 @@
             </el-form-item>
           </el-form>
 
-          <div style=" padding: 10px;margin-top: 20px; background: #f5f7fa; border-radius: 4px">
+          <div style="padding: 10px; margin-top: 20px; background: #f5f7fa; border-radius: 4px">
             <h5>当前表单数据：</h5>
             <pre style="font-size: 12px">{{
               JSON.stringify(hookFormDialog.formData, null, 2)
@@ -329,15 +329,15 @@
 
           <div
             v-if="hookDataDialog.data.value"
-            style=" padding: 15px;margin-top: 20px; background: #fafbfc; border-radius: 6px"
+            style="padding: 15px; margin-top: 20px; background: #fafbfc; border-radius: 6px"
           >
             <h5 style="margin: 0 0 10px; color: #606266">原始数据：</h5>
-            <pre style=" margin: 0;font-size: 12px; color: #909399; white-space: pre-wrap">{{
+            <pre style="margin: 0; font-size: 12px; color: #909399; white-space: pre-wrap">{{
               JSON.stringify(hookDataDialog.data.value, null, 2)
             }}</pre>
           </div>
 
-          <div style=" display: flex;margin-top: 15px; gap: 10px">
+          <div style="display: flex; margin-top: 15px; gap: 10px">
             <el-button @click="hookDataDialog.refreshData()">刷新数据</el-button>
             <el-button @click="hookDataDialog.clearData()">清除数据</el-button>
           </div>

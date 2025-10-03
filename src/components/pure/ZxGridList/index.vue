@@ -1,5 +1,5 @@
 <template>
-  <div class="zx-grid-list-wrapper">
+  <div ref="wrapperEl" class="zx-grid-list-wrapper">
     <div class="zx-grid-list" :class="{ 'show-table-border': showTableBorder }">
       <!-- 查询表单区域（始终渲染容器，避免插槽检测异常导致不显示） -->
       <div class="zx-grid-list__toolbar">
@@ -100,7 +100,8 @@ import {
   nextTick,
   getCurrentInstance,
   readonly,
-  h
+  h,
+  useAttrs
 } from 'vue'
 import { useRoute, useRouter } from 'vue-router'
 import { merge, cloneDeep, isEqual, omit, isEmpty, get, set } from 'lodash-es'
@@ -113,6 +114,8 @@ import './index.scss'
 defineOptions({
   name: 'ZxGridList'
 })
+
+const attrs = useAttrs()
 
 // 手动实现 useDebounceFn 和 useIntervalFn（避免依赖 @vueuse/core）
 const useDebounceFn = (fn, delay) => {
@@ -262,6 +265,11 @@ const props = defineProps({
   paginationPaddingBottom: {
     type: [String, Number],
     default: '0px'
+  },
+  // 页面布局下的额外视口留白（px），用于手动调节顶部/底部预留高度
+  pageViewportOffset: {
+    type: [Number, String, Object],
+    default: 1
   }
 })
 
@@ -290,8 +298,11 @@ const gridState = reactive({
 // 内部状态
 const loadingRequestId = ref('')
 const autoRefreshTimer = ref(null)
+const wrapperEl = ref(null)
 const gridEl = ref(null)
 let resizeObserver = null
+const PAGE_LAYOUT_CLASS = 'zx-grid-list--page'
+let pageLayoutRaf = null
 
 // 计算属性
 const isLoading = computed(() => gridState.loading)
@@ -327,6 +338,113 @@ const paginationStyles = computed(() => {
 // 工具函数
 const generateRequestId = () => `${Date.now()}_${Math.random().toString(36).substr(2, 9)}`
 
+const normalizeClassList = (value) => {
+  if (!value) return []
+  if (typeof value === 'string') {
+    return value.split(/\s+/).filter(Boolean)
+  }
+  if (Array.isArray(value)) {
+    return value.reduce((acc, item) => acc.concat(normalizeClassList(item)), [])
+  }
+  if (typeof value === 'object') {
+    return Object.keys(value).filter((key) => value[key])
+  }
+  return []
+}
+
+const hasPageLayoutClass = computed(() =>
+  normalizeClassList(attrs.class).includes(PAGE_LAYOUT_CLASS)
+)
+
+const resolvedViewportOffset = computed(() => {
+  const normalize = (val) => {
+    if (typeof val === 'number') return val
+    if (typeof val === 'string') {
+      const parsed = parseFloat(val)
+      return Number.isFinite(parsed) ? parsed : 0
+    }
+    return 0
+  }
+
+  const raw = props.pageViewportOffset
+  if (typeof raw === 'number' || typeof raw === 'string') {
+    const parsed = normalize(raw)
+    return { top: parsed, bottom: parsed }
+  }
+  if (raw && typeof raw === 'object') {
+    return {
+      top: normalize(raw.top ?? 0),
+      bottom: normalize(raw.bottom ?? 0)
+    }
+  }
+  return { top: 0, bottom: 0 }
+})
+
+const getCssNumberVariable = (name) => {
+  if (typeof document === 'undefined') return 0
+  try {
+    const raw = getComputedStyle(document.documentElement).getPropertyValue(name)
+    const numeric = parseFloat(raw)
+    return Number.isFinite(numeric) ? numeric : 0
+  } catch (error) {
+    return 0
+  }
+}
+
+const measurePageLayoutHeight = () => {
+  if (typeof window === 'undefined' || typeof document === 'undefined') return
+  const el = wrapperEl.value
+  if (!el) return
+  if (!hasPageLayoutClass.value) {
+    el.style.removeProperty('--zx-grid-list-page-height')
+    return
+  }
+  const rect = el.getBoundingClientRect()
+  const viewportHeight = window.innerHeight || document.documentElement?.clientHeight || 0
+  const footerHeight = getCssNumberVariable('--app-footer-height')
+  const appContentPadding = getCssNumberVariable('--app-content-padding')
+  const parent = el.parentElement
+  const parentStyle = parent ? getComputedStyle(parent) : null
+  const parentPaddingBottom = parentStyle ? parseFloat(parentStyle.paddingBottom || '0') || 0 : 0
+  const style = getComputedStyle(el)
+  const marginBottom = parseFloat(style.marginBottom || '0') || 0
+  const cssTopOffset =
+    parseFloat(style.getPropertyValue('--zx-grid-list-page-offset-top') || '0') || 0
+  const cssBottomOffset =
+    parseFloat(style.getPropertyValue('--zx-grid-list-page-offset-bottom') || '0') || 0
+  const reservedBottom = footerHeight + appContentPadding + parentPaddingBottom + marginBottom
+  const offsetTop = resolvedViewportOffset.value.top + cssTopOffset
+  const offsetBottom = resolvedViewportOffset.value.bottom + cssBottomOffset
+  const effectiveTop = Math.max(rect.top + offsetTop, 0)
+  const availableHeight = viewportHeight - effectiveTop - reservedBottom - offsetBottom
+
+  if (!Number.isFinite(availableHeight) || availableHeight <= 0) {
+    el.style.removeProperty('--zx-grid-list-page-height')
+    return
+  }
+
+  el.style.setProperty('--zx-grid-list-page-height', `${availableHeight}px`)
+}
+
+const updatePageLayoutHeight = () => {
+  if (typeof window === 'undefined') {
+    measurePageLayoutHeight()
+    return
+  }
+  if (pageLayoutRaf) {
+    window.cancelAnimationFrame(pageLayoutRaf)
+  }
+  if (!window.requestAnimationFrame) {
+    measurePageLayoutHeight()
+    pageLayoutRaf = null
+    return
+  }
+  pageLayoutRaf = window.requestAnimationFrame(() => {
+    measurePageLayoutHeight()
+    pageLayoutRaf = null
+  })
+}
+
 const sanitizeState = (state) => {
   const { query, pager } = state || {}
   return {
@@ -358,6 +476,7 @@ const updateMultiState = (newState) => {
 const loadDataInternal = async (params = {}, options = {}) => {
   const requestId = generateRequestId()
   loadingRequestId.value = requestId
+  let shouldSyncLayout = false
 
   try {
     // 合并参数
@@ -456,8 +575,7 @@ const loadDataInternal = async (params = {}, options = {}) => {
       list: resolvedList,
       lastLoadTime: Date.now()
     })
-    await nextTick()
-    applyAutoTableHeight()
+    shouldSyncLayout = true
 
     emit('dataLoaded', responseData)
 
@@ -472,6 +590,7 @@ const loadDataInternal = async (params = {}, options = {}) => {
       error: error.message || 'Loading failed',
       list: []
     })
+    shouldSyncLayout = true
     emit('loadError', error)
   } finally {
     if (loadingRequestId.value === requestId) {
@@ -479,6 +598,11 @@ const loadDataInternal = async (params = {}, options = {}) => {
         loading: false,
         silent: false
       })
+    }
+    if (shouldSyncLayout) {
+      await nextTick()
+      updatePageLayoutHeight()
+      applyAutoTableHeight()
     }
   }
 }
@@ -574,6 +698,26 @@ const applyAutoTableHeight = () => {
     // 忽略
   }
 }
+
+watch(
+  () => hasPageLayoutClass.value,
+  () => {
+    nextTick(() => {
+      updatePageLayoutHeight()
+      applyAutoTableHeight()
+    })
+  }
+)
+
+watch(
+  () => [resolvedViewportOffset.value.top, resolvedViewportOffset.value.bottom],
+  () => {
+    nextTick(() => {
+      updatePageLayoutHeight()
+      applyAutoTableHeight()
+    })
+  }
+)
 
 // URL状态同步
 const setupUrlStateSync = () => {
@@ -697,19 +841,21 @@ onMounted(async () => {
     )
     if (gridEl.value) ro.observe(gridEl.value)
     resizeObserver = ro
-    // 初次应用
-    await nextTick()
-    applyAutoTableHeight()
   } else {
-    await nextTick()
-    applyAutoTableHeight()
     window.addEventListener('resize', applyAutoTableHeight)
   }
+
+  window.addEventListener('resize', updatePageLayoutHeight)
+
+  await nextTick()
+  updatePageLayoutHeight()
+  applyAutoTableHeight()
 })
 
 onActivated(async () => {
   await loadDataPublic({}, { immediate: true })
   await nextTick()
+  updatePageLayoutHeight()
   applyAutoTableHeight()
   if (autoRefreshTimer.value?.resume) {
     autoRefreshTimer.value.resume()
@@ -736,6 +882,13 @@ onBeforeUnmount(() => {
     resizeObserver = null
   }
   window.removeEventListener('resize', applyAutoTableHeight)
+  window.removeEventListener('resize', updatePageLayoutHeight)
+  if (typeof window !== 'undefined' && pageLayoutRaf) {
+    if (window.cancelAnimationFrame) {
+      window.cancelAnimationFrame(pageLayoutRaf)
+    }
+    pageLayoutRaf = null
+  }
 })
 
 // 渲染表格内空状态的辅助函数

@@ -5,7 +5,7 @@
     <!-- 控制选项 -->
     <div
       class="demo-controls"
-      style=" padding: 16px;margin-bottom: 16px; background: #f5f7fa; border-radius: 4px"
+      style="padding: 16px; margin-bottom: 16px; background: #f5f7fa; border-radius: 4px"
     >
       <el-space wrap>
         <span>控制选项：</span>
@@ -188,7 +188,7 @@
     <!-- 状态信息展示 -->
     <div
       class="status-info"
-      style=" padding: 12px;margin-top: 16px; background: #f5f7fa; border-radius: 4px"
+      style="padding: 12px; margin-top: 16px; background: #f5f7fa; border-radius: 4px"
     >
       <el-row :gutter="16">
         <el-col :span="6">
@@ -504,8 +504,6 @@ const formatDate = (dateString) => {
 </script>
 
 <style scoped>
-
-
 /* 响应式设计 */
 @media (width <= 768px) {
   .search-form .el-form-item {

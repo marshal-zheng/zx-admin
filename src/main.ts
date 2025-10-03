@@ -32,6 +32,12 @@ import { setupPermission } from './directives'
 
 import { createApp } from 'vue'
 
+import VXETable from 'vxe-table'
+import 'vxe-table/lib/style.css'
+
+import ZXUI from 'zxui'
+import '@zxui/theme-chalk/src/index.scss'
+
 import App from './App.vue'
 
 import './permission'
@@ -51,6 +57,15 @@ const setupAll = async () => {
   setupRouter(app)
 
   setupPermission(app)
+
+  // app.use(VXETable)
+
+  // 可选全局配置
+  app.use(ZXUI, {
+    size: 'default',
+    namespace: 'zxxss',
+    zIndex: 3000
+  })
 
   app.mount('#app')
 }

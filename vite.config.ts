@@ -55,7 +55,13 @@ export default ({ command, mode }: ConfigEnv): UserConfig => {
       }),
       Components({
         resolvers: [ElementPlusResolver()],
-        dts: 'types/components.d.ts'
+        dts: 'types/components.d.ts',
+        // 排除 pure 目录下所有组件的自动导入
+        globs: [
+          'src/components/**/*.vue',
+          '!src/components/pure/**',
+          '!src/components/comp/pure/**'
+        ]
       }),
       ServerUrlCopy(),
       progress(),
@@ -130,7 +136,33 @@ export default ({ command, mode }: ConfigEnv): UserConfig => {
         {
           find: /\@\//,
           replacement: `${pathResolve('src')}/`
-        }
+        },
+        // 直连 ZXUI 入口（全量安装）
+        {
+          find: 'zxui',
+          replacement: '/Users/hqz/dev/element-plus/packages/zxui/index.ts'
+        },
+        // 直连各子包（按需引用）
+        {
+          find: '@zxui/components',
+          replacement: '/Users/hqz/dev/element-plus/packages/components'
+        },
+        {
+          find: '@zxui/utils',
+          replacement: '/Users/hqz/dev/element-plus/packages/utils'
+        },
+        {
+          find: '@zxui/hooks',
+          replacement: '/Users/hqz/dev/element-plus/packages/hooks'
+        },
+        {
+          find: '@zxui/constants',
+          replacement: '/Users/hqz/dev/element-plus/packages/constants'
+        },
+        {
+          find: '@zxui/theme-chalk',
+          replacement: '/Users/hqz/dev/element-plus/packages/theme-chalk'
+        },
       ]
     },
     esbuild: {
@@ -170,7 +202,13 @@ export default ({ command, mode }: ConfigEnv): UserConfig => {
       hmr: {
         overlay: false
       },
-      host: '0.0.0.0'
+      host: '0.0.0.0',
+
+      fs: {
+        
+        // 允许访问源码所在仓库
+        allow: ['/Users/hqz/dev/element-plus', '/Users/hqz/dev/vue-element-plus-admin'],
+      },
     },
     optimizeDeps: {
       include: [
@@ -192,7 +230,15 @@ export default ({ command, mode }: ConfigEnv): UserConfig => {
         '@zxcvbn-ts/core',
         'dayjs',
         'cropperjs'
-      ]
+      ],
+       exclude: [
+        'zxui',
+        '@zxui/components',
+        '@zxui/utils',
+        '@zxui/hooks',
+        '@zxui/constants',
+        '@zxui/theme-chalk',
+      ],
     }
   }
 }

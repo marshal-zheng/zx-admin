@@ -1,5 +1,6 @@
 import Mock from 'mockjs'
 import { SUCCESS_CODE } from '@/constants'
+import datasetsMock from './datasets.mock'
 
 const timeout = 1000
 
@@ -605,6 +606,7 @@ const mockTableData = {
 }
 
 export default [
+  ...datasetsMock,
   // 分页查询数据源列表
   {
     url: '/api/zhpgxt/zhpgBase',
@@ -888,19 +890,68 @@ export default [
         code: SUCCESS_CODE,
         success: true,
         msg: 'SUCCESS',
-        data: {
-          records: [
-            { id: 1, name: 'admin', type: 'user' },
-            { id: 2, name: 'user1', type: 'user' },
-            { id: 3, name: 'user2', type: 'user' },
-            { id: 4, name: 'manager', type: 'admin' },
-            { id: 5, name: 'guest', type: 'guest' }
-          ],
-          total: 100,
-          size: 10,
-          current: 1,
-          pages: 10
-        }
+        data: [
+          {
+            id: 1,
+            name: '张三',
+            type: '员工',
+            age: 25,
+            department: '技术部',
+            email: 'zhangsan@company.com',
+            phone: '13800138001',
+            status: '在职',
+            salary: 8000,
+            createTime: '2023-01-15'
+          },
+          {
+            id: 2,
+            name: '李四',
+            type: '经理',
+            age: 30,
+            department: '销售部',
+            email: 'lisi@company.com',
+            phone: '13800138002',
+            status: '在职',
+            salary: 12000,
+            createTime: '2022-08-20'
+          },
+          {
+            id: 3,
+            name: '王五',
+            type: '主管',
+            age: 28,
+            department: '人事部',
+            email: 'wangwu@company.com',
+            phone: '13800138003',
+            status: '在职',
+            salary: 10000,
+            createTime: '2023-03-10'
+          },
+          {
+            id: 4,
+            name: '赵六',
+            type: '员工',
+            age: 32,
+            department: '财务部',
+            email: 'zhaoliu@company.com',
+            phone: '13800138004',
+            status: '离职',
+            salary: 7500,
+            createTime: '2022-12-05'
+          },
+          {
+            id: 5,
+            name: '钱七',
+            type: '开发',
+            age: 27,
+            department: '技术部',
+            email: 'qianqi@company.com',
+            phone: '13800138005',
+            status: '在职',
+            salary: 9500,
+            createTime: '2023-06-01'
+          }
+        ]
       }
     }
   },
@@ -922,6 +973,341 @@ export default [
           { name: 'created_at', comment: '创建时间', type: 'datetime' },
           { name: 'updated_at', comment: '更新时间', type: 'datetime' }
         ]
+      }
+    }
+  },
+
+  // 获取创建表列表
+  {
+    url: '/api/zhpgxt/zhpgCreateTable',
+    method: 'get',
+    timeout,
+    response: ({ query }) => {
+      const { current = 1, size = 10, createTableName = '' } = query
+
+      // 模拟创建表数据
+      const mockCreateTables = [
+        {
+          createTime: '2025-01-15 10:30:00',
+          createType: 1, // 自建表
+          createTableId: 'CT001',
+          createTableName: '用户信息表',
+          handType: 1, // 已处理
+          tableComment: '存储系统用户基本信息'
+        },
+        {
+          createTime: '2025-01-14 14:20:00',
+          createType: 2, // 其他库导入表
+          createTableId: 'CT002',
+          createTableName: '订单数据表',
+          handType: 0, // 未处理
+          tableComment: '电商订单详细信息记录'
+        },
+        {
+          createTime: '2025-01-13 09:15:00',
+          createType: 3, // 文件导入表
+          createTableId: 'CT003',
+          createTableName: '商品库存表',
+          handType: 1, // 已处理
+          tableComment: '商品库存管理数据'
+        },
+        {
+          createTime: '2025-01-12 16:45:00',
+          createType: 1, // 自建表
+          createTableId: 'CT004',
+          createTableName: '客户关系表',
+          handType: 0, // 未处理
+          tableComment: '客户关系管理信息'
+        },
+        {
+          createTime: '2025-01-11 11:30:00',
+          createType: 2, // 其他库导入表
+          createTableId: 'CT005',
+          createTableName: '财务报表',
+          handType: 1, // 已处理
+          tableComment: '企业财务数据统计'
+        },
+        {
+          createTime: '2025-01-10 08:45:00',
+          createType: 3, // 文件导入表
+          createTableId: 'CT006',
+          createTableName: '员工档案表',
+          handType: 0, // 未处理
+          tableComment: '公司员工基本档案信息'
+        },
+        {
+          createTime: '2025-01-09 15:20:00',
+          createType: 1, // 自建表
+          createTableId: 'CT007',
+          createTableName: '产品分类表',
+          handType: 1, // 已处理
+          tableComment: '产品分类层级结构'
+        },
+        {
+          createTime: '2025-01-08 12:10:00',
+          createType: 2, // 其他库导入表
+          createTableId: 'CT008',
+          createTableName: '销售数据表',
+          handType: 0, // 未处理
+          tableComment: '销售业绩统计数据'
+        },
+        {
+          createTime: '2025-01-07 13:25:00',
+          createType: 3, // 文件导入表
+          createTableId: 'CT009',
+          createTableName: '供应商信息表',
+          handType: 1, // 已处理
+          tableComment: '供应商基本信息管理'
+        },
+        {
+          createTime: '2025-01-06 10:50:00',
+          createType: 1, // 自建表
+          createTableId: 'CT010',
+          createTableName: '物流跟踪表',
+          handType: 0, // 未处理
+          tableComment: '物流配送跟踪信息'
+        },
+        {
+          createTime: '2025-01-05 14:35:00',
+          createType: 2, // 其他库导入表
+          createTableId: 'CT011',
+          createTableName: '营销活动表',
+          handType: 1, // 已处理
+          tableComment: '营销活动策划执行数据'
+        },
+        {
+          createTime: '2025-01-04 09:40:00',
+          createType: 3, // 文件导入表
+          createTableId: 'CT012',
+          createTableName: '设备维护表',
+          handType: 0, // 未处理
+          tableComment: '设备维护保养记录'
+        },
+        {
+          createTime: '2025-01-03 16:15:00',
+          createType: 1, // 自建表
+          createTableId: 'CT013',
+          createTableName: '会员积分表',
+          handType: 1, // 已处理
+          tableComment: '会员积分变动记录'
+        },
+        {
+          createTime: '2025-01-02 11:20:00',
+          createType: 2, // 其他库导入表
+          createTableId: 'CT014',
+          createTableName: '审计日志表',
+          handType: 0, // 未处理
+          tableComment: '系统操作审计日志'
+        },
+        {
+          createTime: '2025-01-01 08:30:00',
+          createType: 3, // 文件导入表
+          createTableId: 'CT015',
+          createTableName: '配置参数表',
+          handType: 1, // 已处理
+          tableComment: '系统配置参数管理'
+        },
+        {
+          createTime: '2024-12-31 17:45:00',
+          createType: 1, // 自建表
+          createTableId: 'CT016',
+          createTableName: '权限管理表',
+          handType: 0, // 未处理
+          tableComment: '用户权限分配管理'
+        },
+        {
+          createTime: '2024-12-30 13:10:00',
+          createType: 2, // 其他库导入表
+          createTableId: 'CT017',
+          createTableName: '数据字典表',
+          handType: 1, // 已处理
+          tableComment: '系统数据字典配置'
+        },
+        {
+          createTime: '2024-12-29 10:25:00',
+          createType: 3, // 文件导入表
+          createTableId: 'CT018',
+          createTableName: '报表模板表',
+          handType: 0, // 未处理
+          tableComment: '报表模板配置信息'
+        },
+        {
+          createTime: '2024-12-28 15:55:00',
+          createType: 1, // 自建表
+          createTableId: 'CT019',
+          createTableName: '消息通知表',
+          handType: 1, // 已处理
+          tableComment: '系统消息通知记录'
+        },
+        {
+          createTime: '2024-12-27 12:40:00',
+          createType: 2, // 其他库导入表
+          createTableId: 'CT020',
+          createTableName: '备份恢复表',
+          handType: 0, // 未处理
+          tableComment: '数据备份恢复记录'
+        }
+      ]
+
+      // 根据搜索条件过滤数据
+      let filteredData = mockCreateTables
+      if (createTableName) {
+        filteredData = mockCreateTables.filter((item) =>
+          item.createTableName.includes(createTableName)
+        )
+      }
+
+      // 分页处理
+      const pageNum = parseInt(current)
+      const pageSize = parseInt(size)
+      const total = filteredData.length
+      const pages = Math.ceil(total / pageSize)
+      const startIndex = (pageNum - 1) * pageSize
+      const endIndex = startIndex + pageSize
+      const records = filteredData.slice(startIndex, endIndex)
+
+      return {
+        code: SUCCESS_CODE,
+        success: true,
+        msg: 'SUCCESS',
+        data: {
+          records,
+          total,
+          size: pageSize,
+          current: pageNum,
+          pages
+        }
+      }
+    }
+  },
+
+  // 迁移到本地主机
+  {
+    url: '/api/zhpgxt/zhpgCreateTable/migrationToLocalHost',
+    method: 'post',
+    timeout,
+    response: ({ body }) => {
+      // 模拟表导入处理
+      const { id, tableName, targetDatabase } = body || {}
+
+      // 模拟导入成功的响应
+      return {
+        code: SUCCESS_CODE,
+        success: true,
+        msg: '表导入成功',
+        data: {
+          importId: Mock.Random.id(),
+          sourceBaseId: id,
+          sourceTableName: tableName,
+          targetDatabase: targetDatabase || 'localhost',
+          importTime: new Date()
+            .toLocaleString('zh-CN', {
+              year: 'numeric',
+              month: '2-digit',
+              day: '2-digit',
+              hour: '2-digit',
+              minute: '2-digit',
+              second: '2-digit'
+            })
+            .replace(/\//g, '-'),
+          status: 'success',
+          message: `表 ${tableName} 已成功导入到本地数据库`
+        }
+      }
+    }
+  },
+
+  // 根据表名查询表数据
+  {
+    url: '/api/zhpgxt/zhpgCreateTable/selectTable/:tableName',
+    method: 'get',
+    timeout,
+    response: ({ query, url }) => {
+      // 从 URL 中提取表名
+      const tableName = url.split('/').pop()
+      const { current = 1, size = 20, keyword = '' } = query
+
+      // 模拟表数据结构
+      const generateTableData = (tableName, count) => {
+        const columns = [
+          'id',
+          'name',
+          'age',
+          'email',
+          'department',
+          'salary',
+          'create_time',
+          'status'
+        ]
+
+        return Array.from({ length: count }, (_, index) => {
+          const record = {}
+          columns.forEach((col) => {
+            switch (col) {
+              case 'id':
+                record[col] = index + 1
+                break
+              case 'name':
+                record[col] = `用户${index + 1}`
+                break
+              case 'age':
+                record[col] = Math.floor(Math.random() * 40) + 20
+                break
+              case 'email':
+                record[col] = `user${index + 1}@example.com`
+                break
+              case 'department':
+                record[col] = ['技术部', '市场部', '人事部', '财务部'][
+                  Math.floor(Math.random() * 4)
+                ]
+                break
+              case 'salary':
+                record[col] = Math.floor(Math.random() * 50000) + 50000
+                break
+              case 'create_time':
+                record[col] = new Date(Date.now() - Math.random() * 365 * 24 * 60 * 60 * 1000)
+                  .toISOString()
+                  .split('T')[0]
+                break
+              case 'status':
+                record[col] = Math.random() > 0.5 ? '正常' : '禁用'
+                break
+              default:
+                record[col] = `${col}_${index + 1}`
+            }
+          })
+          return record
+        })
+      }
+
+      // 生成模拟数据
+      const allData = generateTableData(tableName, 100)
+
+      // 根据关键字筛选
+      const filteredData = keyword
+        ? allData.filter((item) =>
+            Object.values(item).some((value) =>
+              String(value).toLowerCase().includes(keyword.toLowerCase())
+            )
+          )
+        : allData
+
+      // 分页
+      const startIndex = (current - 1) * size
+      const endIndex = startIndex + size
+      const pageData = filteredData.slice(startIndex, endIndex)
+
+      return {
+        code: SUCCESS_CODE,
+        success: true,
+        msg: 'SUCCESS',
+        data: {
+          records: pageData,
+          total: filteredData.length,
+          current: Number(current),
+          size: Number(size),
+          tableName: tableName
+        }
       }
     }
   }

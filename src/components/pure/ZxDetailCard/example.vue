@@ -118,10 +118,10 @@
             :description="basicDescription"
             :enable-border-radius="true"
             style="
+              --zx-detail-card-border-radius: 16px;
 
- --zx-detail-card-border-radius: 16px;
-
-border: 1px solid var(--el-border-color);"
+              border: 1px solid var(--el-border-color);
+            "
           />
         </div>
       </div>

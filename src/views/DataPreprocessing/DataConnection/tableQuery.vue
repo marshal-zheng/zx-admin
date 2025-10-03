@@ -8,7 +8,7 @@
       :default-page-size="20"
       :load-on-mounted="true"
       :clear-selection-on-load="true"
-      class="table-query-grid"
+      class="table-query-grid zx-grid-list--page"
     >
       <!-- 工具栏：左-操作 | 中-数据源信息 | 右-搜索 -->
       <template #form="{ query, loading, refresh, updateState, grid }">
@@ -53,9 +53,7 @@
             <template #default="{ row }">
               <div class="op-col__wrap">
                 <ZxButton link type="primary" @click="handleViewData(row)">查看数据</ZxButton>
-                <ZxButton link type="info" @click="handleImportToLocal(row)"
-                  >导入本地数据库</ZxButton
-                >
+                <ZxButton link type="info" @click="handleImportToLocal(row)">导入数据集</ZxButton>
               </div>
             </template>
           </el-table-column>
@@ -64,11 +62,7 @@
     </ZxGridList>
 
     <!-- 表数据查看弹窗 -->
-    <TableDataDialog
-      v-model="tableDataDialogVisible"
-      :data-source-id="dataSourceId"
-      :table-name="currentTableName"
-    />
+    <TableDataDialog ref="tableDataDialogRef" />
   </ContentWrap>
 </template>
 
@@ -77,9 +71,6 @@ import { ref, computed, onMounted, nextTick } from 'vue'
 import { useRoute, useRouter } from 'vue-router'
 import { ElMessage } from 'element-plus'
 import { ContentWrap } from '@/components/ContentWrap'
-import { ZxButton, ZxSearch } from '@/components/pure'
-import { Icon } from '@/components/Icon'
-import ZxGridList from '@/components/pure/ZxGridList/index.vue'
 import TableDataDialog from './components/TableDataDialog.vue'
 import { dataConnectionApi } from '@/api/modules/dataPreprocessing/dataConnection'
 
@@ -89,8 +80,7 @@ const router = useRouter()
 
 // 响应式数据
 const gridListRef = ref()
-const tableDataDialogVisible = ref(false)
-const currentTableName = ref('')
+const tableDataDialogRef = ref()
 const dataSourceInfo = ref(null)
 
 // 从路由参数获取数据源ID
@@ -130,8 +120,10 @@ const formatNumber = (num) => {
 }
 
 const handleViewData = (row) => {
-  currentTableName.value = row.tableName
-  tableDataDialogVisible.value = true
+  tableDataDialogRef.value?.open({
+    dataSourceId: dataSourceId.value,
+    tableName: row.tableName
+  })
 }
 
 const handleImportToLocal = async (row) => {
@@ -145,9 +137,24 @@ const handleImportToLocal = async (row) => {
 
     await dataConnectionApi.migrationToLocalHost(params)
 
-    ElMessage.success(`表 "${row.tableName}" 已成功导入到本地数据库`)
+    const messageInstance = ElMessage.success({
+      message: h('span', [
+        `表 "${row.tableName}" 已成功导入到数据集，`,
+        h(
+          'a',
+          {
+            style: { color: 'var(--el-color-primary)', cursor: 'pointer' },
+            onClick: () => {
+              messageInstance.close()
+              router.push({ name: 'DataEntry' })
+            }
+          },
+          '点击查看'
+        )
+      ]),
+      duration: 5000
+    })
   } catch (error) {
-    console.error('导入本地数据库失败:', error)
     ElMessage.error(`导入表 "${row.tableName}" 失败: ${error.message || '未知错误'}`)
   }
 }

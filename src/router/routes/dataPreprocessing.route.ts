@@ -1,4 +1,4 @@
-import { Layout } from '@/utils/routerHelper'
+import { Layout, getParentLayout } from '@/utils/routerHelper'
 import { useI18n } from '@/hooks/web/useI18n'
 
 const { t } = useI18n()
@@ -17,31 +17,47 @@ export const dataPreprocessingRoutes: AppRouteRecordRaw[] = [
     children: [
       {
         path: 'data-connection',
-        component: () => import('@/views/DataPreprocessing/DataConnection/list.vue'),
+        component: getParentLayout(),
         name: 'DataConnection',
+        redirect: '/data-preprocessing/data-connection/list',
         meta: {
           title: '数据引接',
           icon: 'vi-ep:connection'
-        }
-      },
-      {
-        path: 'data-connection/table-query/:id',
-        component: () => import('@/views/DataPreprocessing/DataConnection/tableQuery.vue'),
-        name: 'DataConnectionTableQuery',
-        meta: {
-          title: '表查询',
-          icon: 'vi-ep:search',
-          hidden: true,
-          noTagsView: false,
-          activeMenu: '/data-preprocessing/data-connection'
-        }
+        },
+        children: [
+          {
+            path: 'list',
+            component: () => import('@/views/DataPreprocessing/DataConnection/list.vue'),
+            name: 'DataConnectionList',
+            meta: {
+              title: '数据引接',
+              hidden: true,
+              canTo: true,
+              noTagsView: true,
+              activeMenu: '/data-preprocessing/data-connection'
+            }
+          },
+          {
+            path: 'table-query/:id',
+            component: () => import('@/views/DataPreprocessing/DataConnection/TableQuery.vue'),
+            name: 'DataConnectionTableQuery',
+            meta: {
+              title: '表查询',
+              icon: 'vi-ep:search',
+              hidden: true,
+              canTo: true,
+              noTagsView: false,
+              activeMenu: '/data-preprocessing/data-connection'
+            }
+          }
+        ]
       },
       {
         path: 'data-entry',
         component: () => import('@/views/DataPreprocessing/DataEntry/list.vue'),
         name: 'DataEntry',
         meta: {
-          title: '数据录入',
+          title: '数据集',
           icon: 'vi-ep:edit'
         }
       },

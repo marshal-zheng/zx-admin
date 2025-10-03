@@ -10,5 +10,5 @@ export const setupGlobCom = (app: App<Element>): void => {
   app.component('BaseButton', BaseButton)
 
   // 注册 Pure 组件库
-  app.use(PureComponents)
+  // app.use(PureComponents)
 }

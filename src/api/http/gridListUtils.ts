@@ -44,6 +44,7 @@ export function handleGridListRequest(config) {
  * @returns {object} 处理后的响应
  */
 export function handleGridListResponse(res) {
+  console.log('res', res)
   // 检查是否是需要转换的响应格式
   const data = get(res, 'data.data', {})
 

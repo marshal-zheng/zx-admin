@@ -1,5 +1,5 @@
 <template>
-  <FlexView column class="indicator-system-design" :height="contentHeight">
+  <ZxFlexView column class="indicator-system-design" :height="contentHeight">
     <IndicatorDagEditor
       :algo-type="2"
       ref="editorRef"
@@ -12,13 +12,12 @@
       @edit-node="handleEditNode"
       @delete-node="handleDeleteNode"
     />
-  </FlexView>
+  </ZxFlexView>
 </template>
 
 <script setup>
 import { ref, reactive, computed } from 'vue'
 import IndicatorDagEditor from './IndicatorDagEditor.vue'
-import FlexView from '@/components/pure/FlexView/index.vue'
 import { ElMessage } from 'element-plus'
 import graphDataJson from '../data.json'
 import { useAppStore } from '@/store/modules/app'

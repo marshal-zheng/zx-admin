@@ -30,7 +30,6 @@
 
 <script setup>
 import { ref, computed, watch, readonly, useAttrs } from 'vue'
-import ZxChart from '@/components/pure/ZxChart/index.vue'
 
 const props = defineProps({
   // 支持单个option对象或options数组

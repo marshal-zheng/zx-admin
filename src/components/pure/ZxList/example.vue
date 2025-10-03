@@ -188,8 +188,6 @@ onMounted(() => {
 </script>
 
 <style scoped>
-
-
 /* 响应式设计 */
 @media (width <= 768px) {
   .zx-list-example {

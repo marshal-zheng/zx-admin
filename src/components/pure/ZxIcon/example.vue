@@ -83,7 +83,7 @@
 
     <div class="demo-section">
       <h3>优化的 Popover 交互</h3>
-      <p style=" margin-bottom: 20px;color: #666">鼠标可以移动到 popover 内容区域进行复制等操作</p>
+      <p style="margin-bottom: 20px; color: #666">鼠标可以移动到 popover 内容区域进行复制等操作</p>
       <div class="icon-row">
         <ZxIcon
           icon="CopyDocument"
@@ -92,7 +92,7 @@
           tooltip="悬停查看可复制的内容"
         >
           <template #popoverContent>
-            <div style=" max-width: 300px;padding: 10px">
+            <div style="max-width: 300px; padding: 10px">
               <p><strong>API Key:</strong></p>
               <code
                 style="
@@ -106,7 +106,7 @@
               >
                 sk-1234567890abcdef1234567890abcdef
               </code>
-              <p style=" font-size: 12px;color: #666">鼠标移动到此区域可以选择和复制内容</p>
+              <p style="font-size: 12px; color: #666">鼠标移动到此区域可以选择和复制内容</p>
             </div>
           </template>
         </ZxIcon>
@@ -119,11 +119,11 @@
           :popover-persistent="true"
         >
           <template #popoverContent>
-            <div style=" max-width: 250px;padding: 15px">
+            <div style="max-width: 250px; padding: 15px">
               <p><strong>持久化模式</strong></p>
               <p>这个 popover 需要点击外部区域才会关闭，方便进行复制操作。</p>
-              <div style=" padding: 8px;margin-top: 10px; background: #f0f9ff; border-radius: 4px">
-                <code style=" font-size: 12px;user-select: all"> 这段文字可以被选中和复制 </code>
+              <div style="padding: 8px; margin-top: 10px; background: #f0f9ff; border-radius: 4px">
+                <code style="font-size: 12px; user-select: all"> 这段文字可以被选中和复制 </code>
               </div>
             </div>
           </template>
@@ -142,7 +142,7 @@
 
     <div class="demo-section">
       <h3>跟随系统主题</h3>
-      <p style=" margin-bottom: 20px;color: #666"
+      <p style="margin-bottom: 20px; color: #666"
         >不设置 color 属性时，图标会自动跟随 Element Plus 主题色</p
       >
       <div class="icon-row">
@@ -178,7 +178,7 @@
           style="cursor: pointer"
         />
       </div>
-      <p style=" margin-top: 10px;color: #666">点击图标查看控制台输出</p>
+      <p style="margin-top: 10px; color: #666">点击图标查看控制台输出</p>
     </div>
 
     <div class="demo-section">
@@ -193,7 +193,7 @@
 
     <div class="demo-section">
       <h3>iconfont 图标演示</h3>
-      <p style=" margin-bottom: 20px;color: #666">使用 type="iconfont" 来显示 iconfont 图标</p>
+      <p style="margin-bottom: 20px; color: #666">使用 type="iconfont" 来显示 iconfont 图标</p>
 
       <div class="demo-section">
         <h4>基础用法</h4>
@@ -245,7 +245,7 @@
 
     <div class="demo-section">
       <h3>SVG 图标演示</h3>
-      <p style=" margin-bottom: 20px;color: #666">使用 svg-icon: 前缀来显示本地 SVG 图标</p>
+      <p style="margin-bottom: 20px; color: #666">使用 svg-icon: 前缀来显示本地 SVG 图标</p>
 
       <div class="demo-section">
         <h4>基础用法</h4>
