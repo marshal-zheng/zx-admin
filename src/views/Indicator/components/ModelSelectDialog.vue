@@ -97,8 +97,6 @@
 <script setup>
 import { ref, reactive, watch, nextTick } from 'vue'
 import { Search } from '@element-plus/icons-vue'
-import ZxDialog from '@/components/pure/ZxDialog'
-import ZxGridList from '@/components/pure/ZxGridList'
 import { getCalculationModelList } from '@/api/modules/indicator'
 
 // 定义组件选项

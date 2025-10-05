@@ -13,8 +13,26 @@ export const indicatorRoutes: AppRouteRecordRaw[] = [
       icon: 'vi-ep:data-analysis',
       alwaysShow: true
     },
-    redirect: '/indicator/category-list',
+    redirect: '/indicator/operator-list',
     children: [
+      {
+        path: 'operator-list',
+        component: () => import('@/views/Indicator/OperatorManagement/list.vue'),
+        name: 'OperatorManagement',
+        meta: {
+          title: '评估算子管理',
+          icon: 'vi-ep:cpu'
+        }
+      },
+      {
+        path: 'model-list',
+        component: () => import('@/views/Indicator/ModelManagement/list.vue'),
+        name: 'ModelManagement',
+        meta: {
+          title: '计算模型管理',
+          icon: 'vi-ep:data-board'
+        }
+      },
       {
         path: 'category-list',
         component: () => import('@/views/Indicator/CategoryManagement/list.vue'),

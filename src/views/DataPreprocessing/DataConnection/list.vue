@@ -1,6 +1,7 @@
 <template>
   <ContentWrap>
     <ZxGridList
+      ref="gridListRef"
       :load-data="loadDataSourceData"
       :show-pagination="true"
       :page-sizes="[10, 20, 50, 100]"
@@ -14,6 +15,9 @@
         <div class="zx-grid-form-bar">
           <div class="zx-grid-form-bar__left">
             <ZxButton type="primary" @click="handleAdd">新增数据源</ZxButton>
+            <ZxButton @click="handleImport" :icon="Upload">
+              导入数据源
+            </ZxButton>
           </div>
           <div class="zx-grid-form-bar__filters">
             <SelectDataSourceType
@@ -61,9 +65,10 @@
                   >查看表</ZxButton
                 >
                 <ZxButton link type="primary" @click="handleEdit(row)">编辑</ZxButton>
-                <ZxButton link type="danger" @click="handleDelete(row.baseId, handleRefresh)"
-                  >删除</ZxButton
-                >
+                <ZxMoreAction
+                  :list="getMoreActionList(row)"
+                  @select="handleMoreActionSelect($event, row, handleRefresh)"
+                />
               </div>
             </template>
           </el-table-column>
@@ -73,6 +78,9 @@
 
     <!-- 数据源表单弹窗 -->
     <DataSourceFormDialog ref="dataSourceFormDialogRef" @success="handleFormSuccess" />
+    
+    <!-- 数据源导入弹窗 -->
+    <DataSourceImportDialog ref="dataSourceImportDialogRef" @success="handleImportSuccess" />
   </ContentWrap>
 </template>
 
@@ -81,17 +89,22 @@ import { ref, nextTick, onMounted } from 'vue'
 import { useRouter } from 'vue-router'
 import { ElMessage } from 'element-plus'
 import { ContentWrap } from '@/components/ContentWrap'
+import { Delete, Download, Upload } from '@element-plus/icons-vue'
 import DataSourceFormDialog from './components/DataSourceFormDialog.vue'
+import DataSourceImportDialog from './components/DataSourceImportDialog.vue'
 import { SelectDataSourceType } from '../components/selector'
 import { confirmInputDanger } from 'zxui'
 import { dataConnectionApi } from '@/api/modules/dataPreprocessing/dataConnection'
 import { getDatabaseTypeName } from '../components/utils'
+import { downloadByUrl } from '@/utils/domUtils'
 
 // 路由
 const router = useRouter()
 
 // 组件引用
+const gridListRef = ref()
 const dataSourceFormDialogRef = ref()
+const dataSourceImportDialogRef = ref()
 
 // 数据加载函数 - 适配 ZxGridList
 const loadDataSourceData = async (params) => {
@@ -121,16 +134,67 @@ const handleAdd = () => {
 }
 
 const handleEdit = (row) => {
-  // 调用子组件的 open 方法，传递数据表示编辑
-  dataSourceFormDialogRef.value?.open(row)
+  // 调用子组件的 open 方法，传递 baseId 表示编辑
+  dataSourceFormDialogRef.value?.open(row.baseId)
 }
 
 const handleFormSuccess = () => {
-  // 刷新列表会通过 ZxGridList 的 refresh 方法处理
+  // 刷新列表
+  gridListRef.value?.refresh()
+}
+
+const handleImport = () => {
+  // 调用导入弹框组件的 open 方法
+  dataSourceImportDialogRef.value?.open()
+}
+
+const handleImportSuccess = () => {
+  // 刷新列表
+  gridListRef.value?.refresh()
 }
 
 const handleTableQuery = (dataSourceId) => {
   router.push(`/data-preprocessing/data-connection/table-query/${dataSourceId}`)
+}
+
+// 获取更多操作列表
+const getMoreActionList = (row) => {
+  return [
+    {
+      label: '导出',
+      eventTag: 'export',
+      icon: Download,
+      danger: false
+    },
+    {
+      isDivider: true
+    },
+    {
+      label: '删除',
+      eventTag: 'delete',
+      icon: Delete,
+      danger: true
+    }
+  ]
+}
+
+// 处理更多操作选择
+const handleMoreActionSelect = async (item, row, handleRefresh) => {
+  switch (item.eventTag) {
+    case 'export':
+      handleExport(row)
+      break
+    case 'delete':
+      handleDelete(row.baseId, handleRefresh)
+      break
+    default:
+      break
+  }
+}
+
+// 导出数据源
+const handleExport = async (row) => {
+  downloadByUrl(`/api/zhpgxt/zhpgBase/export/${row.baseId}`, 'hahha')
 }
 
 const handleDelete = async (baseId, handleRefresh) => {
@@ -143,12 +207,7 @@ const handleDelete = async (baseId, handleRefresh) => {
       description: '此操作不可恢复,请输入"确认删除"以确认删除。',
       confirmAction: async () => {
         const result = await dataConnectionApi.deleteDataSource(baseId)
-        if (result.code === '200' || result.success) {
-          ElMessage.success('删除成功')
-          handleRefresh()
-        } else {
-          throw new Error(result.msg || result.message || '删除失败')
-        }
+        handleRefresh()
       }
     })
   } catch (error) {

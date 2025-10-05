@@ -53,7 +53,6 @@
 
 <script setup>
 import { indicatorTemplateApi } from '@/api/modules/indicator/template'
-import { ZxButton } from '@/components/pure'
 import CategorySelector from '../selector/CategorySelector.vue'
 
 const props = defineProps({

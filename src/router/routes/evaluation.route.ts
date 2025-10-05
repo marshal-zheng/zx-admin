@@ -58,6 +58,15 @@ export const evaluationRoutes: AppRouteRecordRaw[] = [
           canTo: true,
           activeMenu: '/evaluation/template-list'
         }
+      },
+      {
+        path: 'dashboard',
+        component: () => import('@/views/Evaluation/Dashboard/list.vue'),
+        name: 'EvaluationDashboard',
+        meta: {
+          title: '仪表盘设计',
+          icon: 'vi-ep:data-board'
+        }
       }
     ]
   }

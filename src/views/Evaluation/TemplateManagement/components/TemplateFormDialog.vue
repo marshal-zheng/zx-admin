@@ -88,7 +88,6 @@
 <script setup>
 import { ref, reactive, computed, watch } from 'vue'
 import { ElMessage } from 'element-plus'
-import ZxDialog from '@/components/pure/ZxDialog'
 import { templateApi } from '@/api/modules/evaluation/template'
 import {
   EvaluationSchemeSelector,

@@ -695,14 +695,21 @@ export default [
     timeout,
     response: ({ query }) => {
       const { baseId } = query
-      const dataSource = dataSourceList.find((item) => item.baseId === baseId)
+      let dataSource = dataSourceList.find((item) => item.baseId === baseId)
 
+      // 如果找不到指定的数据源，返回第一个数据源作为默认值
       if (!dataSource) {
-        return {
-          code: '404',
-          success: false,
-          msg: '数据源不存在',
-          data: null
+        dataSource = dataSourceList[0] || {
+          baseId: '1',
+          baseName: '默认数据源',
+          baseIp: 'localhost',
+          basePort: '3306',
+          baseDataName: 'default_db',
+          baseUser: 'admin',
+          basePassword: '123456',
+          baseType: 1,
+          isLocalhost: 1,
+          createTime: new Date().toISOString().replace('T', ' ').substring(0, 19)
         }
       }
 
@@ -1227,57 +1234,20 @@ export default [
       const tableName = url.split('/').pop()
       const { current = 1, size = 20, keyword = '' } = query
 
-      // 模拟表数据结构
+      // 模拟表数据结构 - 使用英文字段名
       const generateTableData = (tableName, count) => {
-        const columns = [
-          'id',
-          'name',
-          'age',
-          'email',
-          'department',
-          'salary',
-          'create_time',
-          'status'
-        ]
-
-        return Array.from({ length: count }, (_, index) => {
-          const record = {}
-          columns.forEach((col) => {
-            switch (col) {
-              case 'id':
-                record[col] = index + 1
-                break
-              case 'name':
-                record[col] = `用户${index + 1}`
-                break
-              case 'age':
-                record[col] = Math.floor(Math.random() * 40) + 20
-                break
-              case 'email':
-                record[col] = `user${index + 1}@example.com`
-                break
-              case 'department':
-                record[col] = ['技术部', '市场部', '人事部', '财务部'][
-                  Math.floor(Math.random() * 4)
-                ]
-                break
-              case 'salary':
-                record[col] = Math.floor(Math.random() * 50000) + 50000
-                break
-              case 'create_time':
-                record[col] = new Date(Date.now() - Math.random() * 365 * 24 * 60 * 60 * 1000)
-                  .toISOString()
-                  .split('T')[0]
-                break
-              case 'status':
-                record[col] = Math.random() > 0.5 ? '正常' : '禁用'
-                break
-              default:
-                record[col] = `${col}_${index + 1}`
-            }
-          })
-          return record
-        })
+        return Array.from({ length: count }, (_, index) => ({
+          id: index + 1,
+          name: `用户${index + 1}`,
+          age: Math.floor(Math.random() * 40) + 20,
+          email: `user${index + 1}@example.com`,
+          department: ['技术部', '市场部', '人事部', '财务部'][Math.floor(Math.random() * 4)],
+          salary: Math.floor(Math.random() * 50000) + 50000,
+          create_time: new Date(Date.now() - Math.random() * 365 * 24 * 60 * 60 * 1000)
+            .toISOString()
+            .split('T')[0],
+          status: Math.random() > 0.5 ? '正常' : '禁用'
+        }))
       }
 
       // 生成模拟数据
@@ -1298,16 +1268,10 @@ export default [
       const pageData = filteredData.slice(startIndex, endIndex)
 
       return {
-        code: SUCCESS_CODE,
         success: true,
-        msg: 'SUCCESS',
-        data: {
-          records: pageData,
-          total: filteredData.length,
-          current: Number(current),
-          size: Number(size),
-          tableName: tableName
-        }
+        code: 200,
+        msg: "SUCCESS",
+        data: pageData
       }
     }
   }

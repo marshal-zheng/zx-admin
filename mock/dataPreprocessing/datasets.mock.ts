@@ -230,140 +230,51 @@ const mockDatasetFields = {
 }
 
 export default [
-  // 获取数据集列表
-  {
-    url: '/api/zhpgxt/zhpgCreateTable',
-    method: 'get',
-    timeout,
-    response: ({ query }) => {
-      const { page = 1, pageSize = 10, keyword = '' } = query
-
-      let filteredData = [...mockDatasets]
-
-      // 关键词搜索
-      if (keyword) {
-        filteredData = filteredData.filter(
-          (item) =>
-            item.tableName.toLowerCase().includes(keyword.toLowerCase()) ||
-            item.tableComment.toLowerCase().includes(keyword.toLowerCase())
-        )
-      }
-
-      // 分页
-      const start = (page - 1) * pageSize
-      const end = start + parseInt(pageSize)
-      const list = filteredData.slice(start, end)
-
-      return {
-        code: SUCCESS_CODE,
-        data: {
-          list,
-          total: filteredData.length,
-          page: parseInt(page),
-          pageSize: parseInt(pageSize)
-        }
-      }
-    }
-  },
 
   // 根据创建表ID查询数据集数据
+  // 根据创建表ID查询数据集详情
   {
     url: '/api/zhpgxt/zhpgCreateTable/:createTableId',
     method: 'get',
     timeout,
-    response: () => {
-      return {
-        code: SUCCESS_CODE,
-        success: true,
-        msg: 'SUCCESS',
-        data: [
-          {
-            id: 1,
-            name: '张三',
-            type: '员工',
-            age: 25,
-            department: '技术部',
-            email: 'zhangsan@company.com',
-            phone: '13800138001',
-            status: '在职',
-            salary: 8000,
-            createTime: '2023-01-15'
-          },
-          {
-            id: 2,
-            name: '李四',
-            type: '经理',
-            age: 30,
-            department: '销售部',
-            email: 'lisi@company.com',
-            phone: '13800138002',
-            status: '在职',
-            salary: 12000,
-            createTime: '2022-08-20'
-          },
-          {
-            id: 3,
-            name: '王五',
-            type: '主管',
-            age: 28,
-            department: '人事部',
-            email: 'wangwu@company.com',
-            phone: '13800138003',
-            status: '在职',
-            salary: 10000,
-            createTime: '2023-03-10'
-          },
-          {
-            id: 4,
-            name: '赵六',
-            type: '员工',
-            age: 32,
-            department: '财务部',
-            email: 'zhaoliu@company.com',
-            phone: '13800138004',
-            status: '离职',
-            salary: 7500,
-            createTime: '2022-12-05'
-          },
-          {
-            id: 5,
-            name: '钱七',
-            type: '开发',
-            age: 27,
-            department: '技术部',
-            email: 'qianqi@company.com',
-            phone: '13800138005',
-            status: '在职',
-            salary: 9500,
-            createTime: '2023-06-01'
-          }
-        ]
-      }
-    }
-  },
-
-  // 根据创建表ID查询数据集详情
-  {
-    url: '/api/zhpgxt/zhpgCreateTable/:createTableId/detail',
-    method: 'get',
-    timeout,
     response: ({ url }) => {
       const createTableId = url.split('/')[4]
-      const dataset = mockDatasets.find((item) => item.createTableId === String(createTableId))
-
+      
+      // 根据ID选择对应的数据集，如果找不到就使用第一个
+      let dataset = mockDatasets.find((item) => item.createTableId === String(createTableId))
       if (!dataset) {
-        return {
-          code: 404,
-          message: '数据集不存在'
-        }
+        dataset = mockDatasets[0] // 默认使用第一个数据集
       }
+
+      // 获取对应的字段信息，如果找不到就使用第一个
+      let fields = mockDatasetFields[createTableId] || mockDatasetFields['1']
 
       return {
         code: SUCCESS_CODE,
-        data: dataset
+        message: '查询成功',
+        data: {
+          createTableId: dataset.createTableId,
+          tableName: dataset.tableName,
+          tableComment: dataset.tableComment,
+          dataSourceId: dataset.dataSourceId,
+          dataSourceName: dataset.dataSourceName,
+          rowCount: dataset.rowCount,
+          columnCount: dataset.columnCount,
+          createTime: dataset.createTime,
+          updateTime: dataset.updateTime,
+          status: dataset.status,
+          createTableRowDtos: fields.map(field => ({
+            name: field.name,
+            type: field.type,
+            extent: field.type.includes('(') ? field.type.match(/\(([^)]+)\)/)?.[1] || '255' : '255',
+            comment: field.comment
+          }))
+        }
       }
     }
   },
+
+
 
   // 获取数据集字段信息
   {
@@ -396,25 +307,111 @@ export default [
     }
   },
 
-  // 迁移数据集到本地
+  // 迁移数据集到本地数据库
   {
     url: '/api/zhpgxt/zhpgCreateTable/:createTableId/migration',
     method: 'post',
     timeout,
     response: ({ url }) => {
       const createTableId = url.split('/')[4]
-      console.log(`迁移数据集到本地: ${createTableId}`)
+      console.log('迁移数据集到本地数据库:', createTableId)
+      
       return {
         code: SUCCESS_CODE,
         data: {
-          migrationId: Mock.Random.guid(),
-          status: 'success',
-          message: '数据迁移成功',
-          targetDatabase: '本地达梦数据库',
-          migratedRows: Mock.Random.integer(1000, 50000),
-          migrationTime: Mock.Random.datetime('yyyy-MM-dd HH:mm:ss')
-        },
-        message: '数据集迁移成功'
+          success: true,
+          message: '数据集迁移成功'
+        }
+      }
+    }
+  },
+  // 创建表
+  {
+    url: '/api/zhpgxt/zhpgCreateTable',
+    method: 'post',
+    timeout,
+    response: ({ body }) => {
+      console.log('=== Mock 接收到的完整 body ===', body)
+      console.log('=== Mock body 的类型 ===', typeof body)
+      console.log('=== Mock body 的 keys ===', body ? Object.keys(body) : 'body is null')
+      console.log('=== Mock body.createTableRowDtos ===', body?.createTableRowDtos)
+      
+      // 容错处理：检查必要字段
+      if (!body || !body.tableName || !body.tableComment) {
+        return {
+          code: 400,
+          message: '缺少必要参数：tableName 或 tableComment'
+        }
+      }
+      
+      // 容错处理：检查字段数据
+      const fields = body.createTableRowDtos || body.fields || []
+      if (!Array.isArray(fields)) {
+        return {
+          code: 400,
+          message: '字段数据格式错误'
+        }
+      }
+      
+      // 生成新的表ID
+      const newCreateTableId = String(mockDatasets.length + 1)
+      
+      // 创建新的数据集记录
+      const newDataset = {
+        createTableId: newCreateTableId,
+        tableName: body.tableName,
+        tableComment: body.tableComment,
+        dataSourceId: '1',
+        dataSourceName: '生产环境MySQL',
+        rowCount: 0,
+        columnCount: fields.length,
+        createTime: new Date().toISOString().replace('T', ' ').substring(0, 19),
+        updateTime: new Date().toISOString().replace('T', ' ').substring(0, 19),
+        status: 'active'
+      }
+      
+      // 添加到模拟数据中
+      mockDatasets.push(newDataset)
+      
+      // 添加字段信息 - 兼容不同的字段格式
+      mockDatasetFields[newCreateTableId] = fields.map(field => {
+        // 兼容 createTableRowDtos 格式
+        if (field.name && field.type) {
+          return {
+            name: field.name,
+            comment: field.comment || '',
+            type: field.type + (field.extent ? `(${field.extent})` : ''),
+            nullable: true
+          }
+        }
+        // 兼容 fields 格式
+        if (field.fieldName && field.fieldType) {
+          return {
+            name: field.fieldName,
+            comment: field.fieldComment || '',
+            type: field.fieldType + (field.fieldLength ? `(${field.fieldLength})` : ''),
+            nullable: true
+          }
+        }
+        // 默认格式
+        return {
+          name: field.name || field.fieldName || 'unknown',
+          comment: field.comment || field.fieldComment || '',
+          type: field.type || field.fieldType || 'varchar',
+          nullable: true
+        }
+      })
+      
+      // 初始化空数据
+      mockDatasetData[newCreateTableId] = []
+      
+      return {
+        code: SUCCESS_CODE,
+        data: {
+          createTableId: newCreateTableId,
+          tableName: body.tableName,
+          message: '表创建成功'
+        }
       }
     }
   }

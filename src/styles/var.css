@@ -100,22 +100,23 @@ html {
   --left-menu-max-width: 200px;
   --left-menu-min-width: 64px;
   --left-menu-bg-color: #ffffff;
-  --left-menu-bg-light-color: #f7f8fa;
-  --left-menu-bg-active-color: #e6f0ff;
-  --left-menu-text-color: #4e5969;
-  --left-menu-text-active-color: #0052d9;
-  --left-menu-collapse-bg-active-color: #e6f0ff;
+  --left-menu-bg-light-color: #f8f9fa;
+  --left-menu-bg-active-color: rgba(64, 158, 255, 0.08);
+  --left-menu-text-color: #495057;
+  --left-menu-text-active-color: #409eff;
+  --left-menu-collapse-bg-active-color: rgba(64, 158, 255, 0.08);
+  --left-menu-border-color: #f0f2f5;
   /* left menu end */
 
   /* logo start */
   --logo-height: 50px;
-  --logo-title-text-color: #1d2129;
+  --logo-title-text-color: #495057;
   /* logo end */
 
   /* header start */
   --top-header-bg-color: #ffffff;
-  --top-header-text-color: #1d2129;
-  --top-header-hover-color: #f7f8fa;
+  --top-header-text-color: #495057;
+  --top-header-hover-color: #f8f9fa;
   --top-tool-height: var(--logo-height);
   --top-tool-p-x: 0;
   --tags-view-height: 35px;

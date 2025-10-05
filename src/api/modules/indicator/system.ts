@@ -38,5 +38,15 @@ export const systemApi = {
     return ZXR.get({
       url: `/zhpgxt/zhpgEvaluaSystem/${id}`
     })
+  },
+
+  // 设为模版
+  setAsTemplate: (evaluaId: string | number) => {
+    return ZXR.post({
+      url: `/zhpgxt/zhpgEvaluaSystem/${evaluaId}`,
+      data: {
+        evaluaTemplate: 1
+      }
+    })
   }
 }

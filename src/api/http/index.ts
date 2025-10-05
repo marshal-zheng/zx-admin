@@ -165,6 +165,12 @@ transform.beforeRequestHook = (config, options) => {
 
   const params = config.params || {}
   // const data = config.data || false
+  
+  // 添加调试日志 - 处理前
+  if (config.url?.includes('zhpgCreateTable') && config.method?.toLowerCase() === 'post') {
+    console.log('=== beforeRequestHook 开始 - config.data ===', config.data)
+    console.log('=== beforeRequestHook 开始 - config.params ===', config.params)
+  }
 
   if (config.method?.toUpperCase() === RequestEnum.GET) {
     if (!isString(params)) {
@@ -196,6 +202,13 @@ transform.beforeRequestHook = (config, options) => {
       config.url = config.url + (config.url?.includes('?') ? '&' : '?') + paramString
     }
   }
+  
+  // 添加调试日志 - 处理后
+  if (config.url?.includes('zhpgCreateTable') && config.method?.toLowerCase() === 'post') {
+    console.log('=== beforeRequestHook 结束 - config.data ===', config.data)
+    console.log('=== beforeRequestHook 结束 - config.params ===', config.params)
+  }
+  
   return config
 }
 
@@ -299,6 +312,7 @@ transform.requestInterceptors = (config, options) => {
       ? `${options.authenticationScheme} ${token}`
       : token
   }
+  
   return config
 }
 

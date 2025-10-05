@@ -105,6 +105,7 @@ export default ({ command, mode }: ConfigEnv): UserConfig => {
             mockPath: 'mock',
             localEnabled: !isBuild,
             prodEnabled: isBuild,
+            logger: true,
             injectCode: `
           import { setupProdMockServer } from '../mock/_createProductionServer'
 

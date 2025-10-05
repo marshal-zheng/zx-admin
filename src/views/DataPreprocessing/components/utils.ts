@@ -5,9 +5,12 @@ import {
   CreateTypeOption,
   HandType,
   HandTypeOption,
+  FieldType,
+  FieldTypeOption,
   DATABASE_TYPE_OPTIONS,
   CREATE_TYPE_OPTIONS,
-  HAND_TYPE_OPTIONS
+  HAND_TYPE_OPTIONS,
+  FIELD_TYPE_OPTIONS
 } from './model'
 
 // ===== 创建类型相关工具函数 =====
@@ -76,4 +79,26 @@ export function getDatabaseTypeName(type: DatabaseType): string {
     default:
       return '未知类型'
   }
+}
+
+// ===== 字段类型相关工具函数 =====
+
+// 工具函数：根据字段类型获取选项配置
+export function getFieldTypeOption(type: FieldType): FieldTypeOption | undefined {
+  return FIELD_TYPE_OPTIONS.find((option) => option.value === type)
+}
+
+// 工具函数：获取字段类型文本
+export function getFieldTypeText(type: FieldType): string {
+  return getFieldTypeOption(type)?.label || '未知类型'
+}
+
+// 工具函数：获取字段类型选项
+export function getFieldTypeOptions(): FieldTypeOption[] {
+  return FIELD_TYPE_OPTIONS
+}
+
+// 验证字段类型是否有效
+export function isValidFieldType(type: any): type is FieldType {
+  return Object.values(FieldType).includes(type)
 }

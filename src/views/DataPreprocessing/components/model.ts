@@ -26,6 +26,20 @@ export enum HandType {
   PROCESSED = 1
 }
 
+// 字段类型枚举
+export enum FieldType {
+  /** 字符串 */
+  VARCHAR = 'varchar',
+  /** 整型 */
+  INT = 'int',
+  /** 文本 */
+  TEXT = 'text',
+  /** 时间 */
+  DATETIME = 'datetime',
+  /** 浮点型 */
+  DOUBLE = 'double'
+}
+
 // 创建类型选项配置
 export interface CreateTypeOption {
   label: string
@@ -38,6 +52,12 @@ export interface HandTypeOption {
   label: string
   value: HandType
   color?: string
+}
+
+// 字段类型选项配置
+export interface FieldTypeOption {
+  label: string
+  value: FieldType
 }
 
 // 创建类型选项列表
@@ -88,5 +108,29 @@ export const DATABASE_TYPE_OPTIONS: DatabaseTypeOption[] = [
   {
     label: '达梦数据库',
     value: DatabaseType.DM
+  }
+]
+
+// 字段类型选项列表
+export const FIELD_TYPE_OPTIONS: FieldTypeOption[] = [
+  {
+    label: '字符串',
+    value: FieldType.VARCHAR
+  },
+  {
+    label: '整型',
+    value: FieldType.INT
+  },
+  {
+    label: '文本',
+    value: FieldType.TEXT
+  },
+  {
+    label: '时间',
+    value: FieldType.DATETIME
+  },
+  {
+    label: '浮点型',
+    value: FieldType.DOUBLE
   }
 ]

@@ -7,7 +7,7 @@
       :default-page-size="10"
       :load-on-mounted="true"
       :clear-selection-on-load="true"
-      class="template-grid"
+      class="template-grid zx-grid-list--page"
     >
       <!-- 工具栏：筛选和搜索 -->
       <template #form="{ query, loading, refresh, updateState }">
@@ -67,10 +67,8 @@
 <script setup>
 import { ContentWrap } from '@/components/ContentWrap'
 import { indicatorTemplateApi } from '@/api/modules/indicator/template'
-import ZxGridList from '@/components/pure/ZxGridList/index.vue'
-import { ZxSearch, ZxButton } from '@/components/pure'
 import { CategorySelector } from '../components/selector'
-import { danger as confirmInputDanger } from '@/components/pure/ZxConfirmInput/service'
+import { confirmInputDanger } from 'zxui'
 
 const router = useRouter()
 

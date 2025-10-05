@@ -109,14 +109,12 @@
 import { ContentWrap } from '@/components/ContentWrap'
 import { useI18n } from '@/hooks/web/useI18n'
 import { templateApi } from '@/api/modules/evaluation/template'
-import ZxGridList from '@/components/pure/ZxGridList/index.vue'
 import TemplateFormDialog from './components/TemplateFormDialog.vue'
-import { ZxSearch, ZxButton } from '@/components/pure'
 import EvaluationSchemeSelector from '@/components/business/Selector/EvaluationSchemeSelector.vue'
 import EvaluationAlgorithmSelector from '@/components/business/Selector/EvaluationAlgorithmSelector.vue'
 import IndicatorSystemSelector from '@/components/business/Selector/IndicatorSystemSelector.vue'
 import SelectStatus from './components/selector/SelectStatus.vue'
-import { danger as confirmInputDanger } from '@/components/pure/ZxConfirmInput/service'
+import { confirmInputDanger } from 'zxui'
 
 const { t } = useI18n()
 const router = useRouter()

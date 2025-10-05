@@ -188,13 +188,33 @@ const handleDataSourceTypeChange = (value: number) => {
 }
 // 暴露方法给父组件
 defineExpose({
-  open: (data?: DataSourceFormData) => {
-    if (data && data.baseId) {
-      // 有数据且有 ID，表示编辑模式
-      currentMode.value = 'edit'
-      open(data)
+  open: async (dataOrId?: DataSourceFormData | string | number) => {
+    if (dataOrId) {
+      // 判断传入的是 baseId 还是完整数据对象
+      if (typeof dataOrId === 'string' || typeof dataOrId === 'number') {
+        // 传入的是 baseId，需要通过接口获取数据
+        currentMode.value = 'edit'
+        try {
+          setLoading(true)
+          const response = await dataConnectionApi.getDataSourceById(dataOrId)
+          open(response)
+        } catch (error) {
+          console.error('获取数据源详情失败:', error)
+          ElMessage.error('获取数据源详情失败')
+        } finally {
+          setLoading(false)
+        }
+      } else if (dataOrId.baseId) {
+        // 传入的是完整数据对象且有 ID，表示编辑模式
+        currentMode.value = 'edit'
+        open(dataOrId)
+      } else {
+        // 传入的是数据对象但无 ID，表示新增模式
+        currentMode.value = 'create'
+        open(dataOrId)
+      }
     } else {
-      // 无数据或无 ID，表示新增模式
+      // 无数据，表示新增模式
       currentMode.value = 'create'
       open()
     }

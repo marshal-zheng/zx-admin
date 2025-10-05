@@ -400,7 +400,7 @@ export default [
 
       return {
         success: true,
-        code: '200',
+        code: 200,
         msg: 'SUCCESS',
         data: {
           countId: null,
@@ -554,7 +554,7 @@ export default [
 
       return {
         success: true,
-        code: '200',
+        code: 200,
         msg: 'SUCCESS',
         data: {
           countId: null,
@@ -753,6 +753,157 @@ export default [
             description: '分类和回归的监督学习算法'
           }
         ]
+      }
+    }
+  },
+
+  // ========== 仪表盘管理接口 ==========
+  // 获取仪表盘列表
+  {
+    url: '/api/zhpgxt/zhpgSchemeResult',
+    method: 'get',
+    response: ({ query }) => {
+      const { page = 1, pageSize = 10, keyword = '' } = query
+
+      // 模拟仪表盘数据
+      const allDashboards = [
+        {
+          id: '1',
+          schemeName: '性能监控面板',
+          schemeDescribe: '实时监控系统性能指标，包括CPU、内存、网络等关键参数',
+          type: 2,
+          config: '{"charts":[{"type":"line","title":"CPU使用率"}],"layout":"grid"}',
+          createTime: '2024-01-15 10:30:00'
+        },
+        {
+          id: '2',
+          schemeName: '安全态势感知',
+          schemeDescribe: '安全事件监控和威胁分析面板，提供安全态势的可视化展示',
+          type: 3,
+          config: '{"charts":[{"type":"pie","title":"安全事件分布"}],"layout":"flex"}',
+          createTime: '2024-01-16 14:20:00'
+        },
+        {
+          id: '3',
+          schemeName: '业务运营概览',
+          schemeDescribe: '业务关键指标监控面板，包括用户活跃度、交易量等',
+          type: 1,
+          config: '{"charts":[{"type":"bar","title":"日活用户"}],"layout":"default"}',
+          createTime: '2024-01-17 09:15:00'
+        },
+        {
+          id: '4',
+          schemeName: '质量评估报告',
+          schemeDescribe: '软件质量评估结果展示面板，包括质量得分和改进建议',
+          type: 2,
+          config: '{"charts":[{"type":"radar","title":"质量雷达图"}],"layout":"grid"}',
+          createTime: '2024-01-18 16:45:00'
+        },
+        {
+          id: '5',
+          schemeName: '用户体验分析',
+          schemeDescribe: '用户行为和体验数据分析面板，包括页面访问、停留时间等',
+          type: 1,
+          config: '{"charts":[{"type":"heatmap","title":"用户行为热图"}],"layout":"default"}',
+          createTime: '2024-01-19 11:30:00'
+        }
+      ]
+
+      // 根据关键词过滤
+      let filteredDashboards = allDashboards
+      if (keyword) {
+        filteredDashboards = allDashboards.filter(
+          (item) => item.schemeName.includes(keyword) || item.schemeDescribe.includes(keyword)
+        )
+      }
+
+      // 分页处理
+      const total = filteredDashboards.length
+      const start = (page - 1) * pageSize
+      const end = start + parseInt(pageSize)
+      const records = filteredDashboards.slice(start, end)
+
+      return {
+        success: true,
+        code: SUCCESS_CODE,
+        msg: 'SUCCESS',
+        data: {
+          records,
+          total,
+          size: parseInt(pageSize),
+          current: parseInt(page),
+          pages: Math.ceil(total / pageSize)
+        }
+      }
+    }
+  },
+
+  // 创建仪表盘
+  {
+    url: '/api/zhpgxt/zhpgSchemeResult',
+    method: 'post',
+    response: ({ body }) => {
+      return {
+        code: SUCCESS_CODE,
+        message: '创建成功',
+        data: {
+          id: Date.now().toString(),
+          ...body,
+          createTime: new Date().toLocaleString('zh-CN')
+        }
+      }
+    }
+  },
+
+  // 更新仪表盘
+  {
+    url: '/api/zhpgxt/zhpgSchemeResult/:id',
+    method: 'put',
+    response: ({ params, body }) => {
+      return {
+        code: SUCCESS_CODE,
+        message: '更新成功',
+        data: {
+          id: params.id,
+          ...body,
+          updateTime: new Date().toLocaleString('zh-CN')
+        }
+      }
+    }
+  },
+
+  // 删除仪表盘
+  {
+    url: '/api/zhpgxt/zhpgSchemeResult/:id',
+    method: 'delete',
+    response: ({ params }) => {
+      return {
+        code: SUCCESS_CODE,
+        message: '删除成功',
+        data: null
+      }
+    }
+  },
+
+  // 获取仪表盘详情
+  {
+    url: '/api/zhpgxt/zhpgSchemeResult/:id',
+    method: 'get',
+    response: ({ params }) => {
+      const mockDashboard = {
+        id: params.id,
+        schemeName: '性能监控面板',
+        schemeDescribe: '实时监控系统性能指标，包括CPU、内存、网络等关键参数',
+        type: 2,
+        config: '{"charts":[{"type":"line","title":"CPU使用率"}],"layout":"grid"}',
+        createTime: '2024-01-15 10:30:00',
+        updateTime: '2024-01-15 14:20:00'
+      }
+
+      return {
+        code: SUCCESS_CODE,
+        message: '获取成功',
+        data: mockDashboard
       }
     }
   }

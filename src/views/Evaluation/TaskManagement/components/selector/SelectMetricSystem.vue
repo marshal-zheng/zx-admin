@@ -26,7 +26,6 @@
 
 <script setup>
 import { ref, computed, onMounted } from 'vue'
-import ZxSelect from '@/components/pure/ZxSelect/index.vue'
 import ZXR from '@/api/http'
 
 // Props

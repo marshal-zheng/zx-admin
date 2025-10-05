@@ -104,31 +104,31 @@ function createDefaultState(): AppState {
       // 主题色
       elColorPrimary: '#409eff',
       // 左侧菜单边框颜色
-      leftMenuBorderColor: 'inherit',
-      // 左侧菜单背景颜色
-      leftMenuBgColor: '#001529',
-      // 左侧菜单浅色背景颜色
-      leftMenuBgLightColor: '#0f2438',
-      // 左侧菜单选中背景颜色
-      leftMenuBgActiveColor: 'var(--el-color-primary)',
+      leftMenuBorderColor: '#f0f2f5',
+      // 左侧菜单背景颜色 - 改为浅色
+      leftMenuBgColor: '#ffffff',
+      // 左侧菜单浅色背景颜色 - 改为更浅的灰色
+      leftMenuBgLightColor: '#f8f9fa',
+      // 左侧菜单选中背景颜色 - 使用主题色的浅色版本
+      leftMenuBgActiveColor: 'rgba(64, 158, 255, 0.1)',
       // 左侧菜单收起选中背景颜色
-      leftMenuCollapseBgActiveColor: 'var(--el-color-primary)',
-      // 左侧菜单字体颜色
-      leftMenuTextColor: '#bfcbd9',
-      // 左侧菜单选中字体颜色
-      leftMenuTextActiveColor: '#fff',
-      // logo字体颜色
-      logoTitleTextColor: '#fff',
+      leftMenuCollapseBgActiveColor: 'rgba(64, 158, 255, 0.1)',
+      // 左侧菜单字体颜色 - 改为深色
+      leftMenuTextColor: '#495057',
+      // 左侧菜单选中字体颜色 - 使用主题色
+      leftMenuTextActiveColor: 'var(--el-color-primary)',
+      // logo字体颜色 - 改为深色
+      logoTitleTextColor: '#495057',
       // logo边框颜色
-      logoBorderColor: 'inherit',
+      logoBorderColor: '#f0f2f5',
       // 头部背景颜色
-      topHeaderBgColor: '#151515',
-      // 头部字体颜色
-      topHeaderTextColor: '#fff',
+      topHeaderBgColor: '#fff',
+      // 头部字体颜色 - 改为深色
+      topHeaderTextColor: '#495057',
       // 头部悬停颜色
-      topHeaderHoverColor: '#202020',
+      topHeaderHoverColor: '#f8f9fa',
       // 头部边框颜色
-      topToolBorderColor: '#eee'
+      topToolBorderColor: '#f0f2f5'
     }
   }
 
@@ -355,29 +355,39 @@ export const useAppStore = defineStore('app', {
     setMenuTheme(color: string) {
       const primaryColor = useCssVar('--el-color-primary', document.documentElement)
       const isDarkColor = colorIsDark(color)
+      
+      // 根据系统主题和颜色深浅自动调整
+      const isSystemDark = this.isDark || window.matchMedia('(prefers-color-scheme: dark)').matches
+      
       const theme: Recordable = {
-        // 左侧菜单边框颜色
-        leftMenuBorderColor: isDarkColor ? 'inherit' : '#eee',
+        // 左侧菜单边框颜色 - 浅色主题使用更柔和的边框
+        leftMenuBorderColor: isDarkColor ? 'inherit' : '#f0f2f5',
         // 左侧菜单背景颜色
         leftMenuBgColor: color,
-        // 左侧菜单浅色背景颜色
-        leftMenuBgLightColor: isDarkColor ? lighten(color!, 6) : color,
-        // 左侧菜单选中背景颜色
+        // 左侧菜单浅色背景颜色 - 优化浅色主题的层次感
+        leftMenuBgLightColor: isDarkColor 
+          ? lighten(color!, 6) 
+          : (isSystemDark ? '#f5f6f7' : '#f8f9fa'),
+        // 左侧菜单选中背景颜色 - 使用更合适的透明度
         leftMenuBgActiveColor: isDarkColor
           ? 'var(--el-color-primary)'
-          : hexToRGB(unref(primaryColor) as string, 0.1),
+          : hexToRGB(unref(primaryColor) as string, 0.08),
         // 左侧菜单收起选中背景颜色
         leftMenuCollapseBgActiveColor: isDarkColor
           ? 'var(--el-color-primary)'
-          : hexToRGB(unref(primaryColor) as string, 0.1),
-        // 左侧菜单字体颜色
-        leftMenuTextColor: isDarkColor ? '#bfcbd9' : '#333',
+          : hexToRGB(unref(primaryColor) as string, 0.08),
+        // 左侧菜单字体颜色 - 优化浅色主题的可读性
+        leftMenuTextColor: isDarkColor 
+          ? '#bfcbd9' 
+          : (isSystemDark ? '#6c757d' : '#495057'),
         // 左侧菜单选中字体颜色
         leftMenuTextActiveColor: isDarkColor ? '#fff' : 'var(--el-color-primary)',
-        // logo字体颜色
-        logoTitleTextColor: isDarkColor ? '#fff' : 'inherit',
+        // logo字体颜色 - 适配浅色主题
+        logoTitleTextColor: isDarkColor 
+          ? '#fff' 
+          : (isSystemDark ? '#495057' : '#212529'),
         // logo边框颜色
-        logoBorderColor: isDarkColor ? color : '#eee'
+        logoBorderColor: isDarkColor ? color : '#f0f2f5'
       }
       this.setTheme(theme)
       this.setCssVarTheme()
@@ -408,8 +418,31 @@ export const useAppStore = defineStore('app', {
         valueLight: 'light'
       })
       isDark.value = this.getIsDark
+      
+      // 监听系统主题变化
+      this.setupSystemThemeListener()
+      
       const newTitle = import.meta.env.VITE_APP_TITLE
       newTitle !== this.getTitle && this.setTitle(newTitle)
+    },
+    // 设置系统主题监听器
+    setupSystemThemeListener() {
+      const mediaQuery = window.matchMedia('(prefers-color-scheme: dark)')
+      
+      const handleSystemThemeChange = (e: MediaQueryListEvent) => {
+        // 当系统主题改变时，如果当前使用的是浅色侧边栏，则重新应用主题以适配系统色系
+        const currentMenuColor = this.theme.leftMenuBgColor || '#ffffff'
+        if (currentMenuColor === '#ffffff' || !colorIsDark(currentMenuColor)) {
+          console.log('🎨 检测到系统主题变化，自动适配侧边栏颜色')
+          this.setMenuTheme(currentMenuColor)
+        }
+      }
+      
+      // 添加监听器
+      mediaQuery.addEventListener('change', handleSystemThemeChange)
+      
+      // 初始化时也检查一次
+      handleSystemThemeChange({ matches: mediaQuery.matches } as MediaQueryListEvent)
     }
   },
   persist: {

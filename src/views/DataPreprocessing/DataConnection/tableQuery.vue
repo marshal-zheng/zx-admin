@@ -53,7 +53,7 @@
             <template #default="{ row }">
               <div class="op-col__wrap">
                 <ZxButton link type="primary" @click="handleViewData(row)">查看数据</ZxButton>
-                <ZxButton link type="info" @click="handleImportToLocal(row)">导入数据集</ZxButton>
+                <ZxButton link type="info" @click="handleImportToLocal(row)">导入至数据集</ZxButton>
               </div>
             </template>
           </el-table-column>

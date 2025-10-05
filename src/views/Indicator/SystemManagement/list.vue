@@ -8,7 +8,7 @@
       :default-page-size="10"
       :load-on-mounted="true"
       :clear-selection-on-load="true"
-      class="system-grid"
+      class="system-grid zx-grid-list--page"
     >
       <!-- 工具栏：左-操作 | 中-筛选 | 右-搜索 -->
       <template #form="{ query, loading, refresh, updateState }">
@@ -51,7 +51,7 @@
           <el-table-column prop="createTime" label="创建时间" width="180" />
           <el-table-column
             label="操作"
-            width="220"
+            width="240"
             class-name="op-col"
             label-class-name="op-col__header"
           >
@@ -59,7 +59,10 @@
               <div class="op-col__wrap">
                 <ZxButton link type="primary" @click="handleEditIndicator(row)">编辑指标</ZxButton>
                 <ZxButton link type="primary" @click="handleEdit(row)">编辑配置</ZxButton>
-                <ZxButton link type="danger" @click="handleDelete(row, refresh)">删除</ZxButton>
+                <ZxMoreAction
+                  :list="getMoreActionList(row)"
+                  @select="handleMoreActionSelect($event, row, refresh)"
+                />
               </div>
             </template>
           </el-table-column>
@@ -67,39 +70,25 @@
       </template>
     </ZxGridList>
 
-    <!-- 新建体系对话框 -->
-    <SystemFormDialog v-model="createDialog.visible" mode="create" @success="handleCreateSuccess" />
-
-    <!-- 编辑体系对话框 -->
-    <SystemFormDialog
-      v-model="editDialog.visible"
-      mode="edit"
-      :system-data="editingSystem"
-      @success="handleEditSuccess"
-    />
+    <!-- 指标体系表单弹窗 -->
+    <SystemFormDialog ref="systemFormDialogRef" @success="handleFormSuccess" />
   </ContentWrap>
 </template>
 
 <script setup>
 import { ContentWrap } from '@/components/ContentWrap'
 import { systemApi } from '@/api/modules/indicator/system'
-import ZxGridList from '@/components/pure/ZxGridList/index.vue'
-import { ZxSearch, ZxButton } from '@/components/pure'
 import { CategorySelector } from '../components/selector'
-import { danger as confirmInputDanger } from '@/components/pure/ZxConfirmInput/service'
+import { confirmInputDanger } from 'zxui'
 import SystemFormDialog from './components/SystemFormDialog.vue'
 import { ElMessage } from 'element-plus'
-import useDialog from '@/hooks/comp/useDialog'
+import { Delete, Setting, Edit } from '@element-plus/icons-vue'
 
 const router = useRouter()
 
-// 对话框状态
-const createDialog = useDialog()
-const editDialog = useDialog()
-const editingSystem = ref(null)
-
-// 获取ZxGridList组件引用
+// 组件引用
 const gridListRef = ref(null)
+const systemFormDialogRef = ref()
 
 // 数据加载函数 - 适配 ZxGridList
 const loadSystemData = async (params) => {
@@ -132,18 +121,8 @@ const onSearch = ({ refresh, updateState }) => {
 
 // 新建 - 显示对话框
 const handleCreate = () => {
-  createDialog.open()
-}
-
-// 处理对话框成功提交后的跳转
-const handleCreateSuccess = (response) => {
-  createDialog.close()
-  // 跳转到创建页面，可以携带创建的体系ID或其他信息
-  if (response && response.id) {
-    router.push(`/indicator/system-create?systemId=${response.id}`)
-  } else {
-    router.push('/indicator/system-create')
-  }
+  // 调用子组件的 open 方法，不传数据表示新增
+  systemFormDialogRef.value?.open()
 }
 
 // 编辑指标 - 跳转到designEdit.vue页面
@@ -160,51 +139,83 @@ const handleEditIndicator = (row) => {
 
 // 编辑配置 - 弹出对话框
 const handleEdit = (row) => {
-  editingSystem.value = { ...row } // 传入当前item数据的副本
-  editDialog.open()
+  // 调用子组件的 open 方法，传递数据表示编辑
+  systemFormDialogRef.value?.open(row)
 }
 
-// 处理编辑对话框成功提交
-const handleEditSuccess = () => {
-  editDialog.close()
-  editingSystem.value = null
-  gridListRef.value.refresh() // 刷新列表
+// 处理表单成功提交
+const handleFormSuccess = (response) => {
+  // 判断是创建还是编辑模式
+  if (response && typeof response === 'object' && !response.id) {
+    // 创建模式：跳转到创建页面
+    router.push('/indicator/system-create')
+  } else {
+    // 编辑模式：刷新列表
+    gridListRef.value?.refresh()
+  }
 }
 
-// 获取当前实例
-const instance = getCurrentInstance()
-const { proxy } = instance || {}
+// 获取更多操作列表
+const getMoreActionList = (row) => {
+  return [
+    {
+      label: '设为模版',
+      eventTag: 'setTemplate',
+      icon: Setting,
+      danger: false
+    },
+    {
+      isDivider: true
+    },
+    {
+      label: '删除',
+      eventTag: 'delete',
+      icon: Delete,
+      danger: true
+    }
+  ]
+}
+
+// 处理更多操作选择
+const handleMoreActionSelect = async (item, row, refresh) => {
+  switch (item.eventTag) {
+    case 'setTemplate':
+      handleSetAsTemplate(row, refresh)
+      break
+    case 'delete':
+      handleDelete(row.id, refresh)
+      break
+    default:
+      break
+  }
+}
+
+// 设为模版
+const handleSetAsTemplate = async (row, refresh) => {
+  try {
+    await systemApi.setAsTemplate(row.id)
+    ElMessage.success(`"${row.name}"已设为模版`)
+    refresh()
+  } catch (error) {
+    ElMessage.error(`设为模版失败: ${error.message || '未知错误'}`)
+    console.error('设为模版失败:', error)
+  }
+}
 
 // 删除体系
-const handleDelete = async (row, refresh) => {
+const handleDelete = async (systemId, refresh) => {
   try {
-    if (proxy?.$confirmInput) {
-      await proxy.$confirmInput.danger({
-        targetName: row.name,
-        targetType: '体系',
-        keyword: row.name,
-        dangerMessage: `您即将删除体系"${row.name}"`,
-        description: '此操作不可恢复，请输入体系名称以确认删除。',
-        confirmAction: async () => {
-          return systemApi.deleteSystem(row.id).then(() => {
-            refresh()
-          })
-        }
-      })
-    } else {
-      await confirmInputDanger({
-        targetName: row.name,
-        targetType: '体系',
-        keyword: row.name,
-        dangerMessage: `您即将删除体系"${row.name}"`,
-        description: '此操作不可恢复，请输入体系名称以确认删除。',
-        confirmAction: async () => {
-          return systemApi.deleteSystem(row.id).then(() => {
-            refresh()
-          })
-        }
-      })
-    }
+    await confirmInputDanger({
+      targetName: '指标体系',
+      targetType: '指标体系',
+      keyword: '确认删除',
+      dangerMessage: '您即将删除该指标体系',
+      description: '此操作不可恢复,请输入"确认删除"以确认删除。',
+      confirmAction: async () => {
+        const result = await systemApi.deleteSystem(systemId)
+        refresh()
+      }
+    })
   } catch (error) {
     console.log('用户取消删除或操作失败:', error)
   }

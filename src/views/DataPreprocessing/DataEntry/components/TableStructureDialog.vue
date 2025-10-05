@@ -50,8 +50,8 @@
 <script setup>
 import { ref, computed, watch } from 'vue'
 import { ElMessage } from 'element-plus'
-import ZxDialog from '@/components/pure/ZxDialog'
-import { Icon } from '@/components/Icon'
+// import { ZxDialog } from 'zxui'
+// import { Icon } from '@/components/Icon'
 import { dataConnectionApi } from '@/api/modules/dataPreprocessing/dataConnection'
 
 // 定义 props

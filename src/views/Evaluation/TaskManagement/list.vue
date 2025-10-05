@@ -85,22 +85,13 @@
 import { ContentWrap } from '@/components/ContentWrap'
 import { useI18n } from '@/hooks/web/useI18n'
 import { evaluationApi } from '@/api/modules/evaluation'
-import ZxGridList from '@/components/pure/ZxGridList/index.vue'
 import SelectStatus from './components/selector/SelectStatus.vue'
 import TaskWizard from './components/TaskWizard.vue'
-import { ZxSearch, ZxButton } from '@/components/pure'
 
 const { t } = useI18n()
 
 // 控制任务向导显示
 const showTaskWizard = ref(false)
-
-// 添加组件初始化调试
-onMounted(() => {
-  console.log('=== Evaluation TaskManagement List 组件已挂载 ===')
-  console.log('ZxGridList 组件:', ZxGridList)
-  console.log('loadEvaluationData 函数:', loadEvaluationData)
-})
 
 // 数据加载函数 - 适配 ZxGridList
 const loadEvaluationData = async (params) => {

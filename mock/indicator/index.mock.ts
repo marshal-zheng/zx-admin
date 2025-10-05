@@ -3,6 +3,454 @@
 import { SUCCESS_CODE } from '@/constants'
 
 export default [
+  // ========== 算子管理接口 ==========
+  // 获取算子列表
+  {
+    url: '/api/zhpgxt/zhpgOperator',
+    method: 'get',
+    response: ({ query }) => {
+      const { page = 1, pageSize = 10, keyword = '' } = query
+
+      // 模拟算子数据
+      const allOperators = [
+        {
+          id: '1',
+          operatorName: '数据清洗算子',
+          operatorDesc: '用于清洗和预处理原始数据，去除噪声和异常值',
+          operatorType: 1,
+          algorithmType: 'Java',
+          algorithmUrl: 'http://example.com/algorithm/data-clean',
+          createTime: '2024-01-15 10:30:00',
+          zhpgOperatorPars: [
+            {
+              id: '1-out-1',
+              operatorNamePar: '清洗后数据',
+              operatorDescPar: '经过清洗处理的数据集',
+              operatorId: '1',
+              parType: 1
+            }
+          ],
+          zhpgOperatorParsInput: [
+            {
+              id: '1-in-1',
+              operatorNamePar: '原始数据',
+              operatorDescPar: '待清洗的原始数据集',
+              operatorId: '1',
+              parType: 2
+            }
+          ]
+        },
+        {
+          id: '2',
+          operatorName: '统计分析算子',
+          operatorDesc: '对数据进行统计分析，包括均值、方差、分布等计算',
+          operatorType: 2,
+          algorithmType: 'Python',
+          algorithmUrl: 'http://example.com/algorithm/statistics',
+          createTime: '2024-01-16 14:20:00',
+          zhpgOperatorPars: [
+            {
+              id: '2-out-1',
+              operatorNamePar: '统计结果',
+              operatorDescPar: '包含各种统计指标的分析结果',
+              operatorId: '2',
+              parType: 1
+            }
+          ],
+          zhpgOperatorParsInput: [
+            {
+              id: '2-in-1',
+              operatorNamePar: '数据集',
+              operatorDescPar: '需要进行统计分析的数据集',
+              operatorId: '2',
+              parType: 2
+            }
+          ]
+        },
+        {
+          id: '3',
+          operatorName: '机器学习模型',
+          operatorDesc: '基于神经网络的深度学习模型，用于复杂模式识别',
+          operatorType: 3,
+          algorithmType: 'Python',
+          algorithmUrl: 'http://example.com/algorithm/ml-model',
+          createTime: '2024-01-17 09:15:00',
+          zhpgOperatorPars: [
+            {
+              id: '3-out-1',
+              operatorNamePar: '预测结果',
+              operatorDescPar: '模型预测的结果数据',
+              operatorId: '3',
+              parType: 1
+            },
+            {
+              id: '3-out-2',
+              operatorNamePar: '置信度',
+              operatorDescPar: '预测结果的置信度分数',
+              operatorId: '3',
+              parType: 1
+            }
+          ],
+          zhpgOperatorParsInput: [
+            {
+              id: '3-in-1',
+              operatorNamePar: '训练数据',
+              operatorDescPar: '用于模型训练的数据集',
+              operatorId: '3',
+              parType: 2
+            },
+            {
+              id: '3-in-2',
+              operatorNamePar: '测试数据',
+              operatorDescPar: '用于模型测试的数据集',
+              operatorId: '3',
+              parType: 2
+            }
+          ]
+        },
+        {
+          id: '4',
+          operatorName: '报告生成器',
+          operatorDesc: '将分析结果生成可视化报告和图表',
+          operatorType: 4,
+          algorithmType: 'Java',
+          algorithmUrl: 'http://example.com/algorithm/report-gen',
+          createTime: '2024-01-18 16:45:00',
+          zhpgOperatorPars: [
+            {
+              id: '4-out-1',
+              operatorNamePar: '分析报告',
+              operatorDescPar: '包含图表和说明的完整报告',
+              operatorId: '4',
+              parType: 1
+            }
+          ],
+          zhpgOperatorParsInput: [
+            {
+              id: '4-in-1',
+              operatorNamePar: '分析数据',
+              operatorDescPar: '需要生成报告的分析数据',
+              operatorId: '4',
+              parType: 2
+            }
+          ]
+        },
+        {
+          id: '5',
+          operatorName: '数据转换器',
+          operatorDesc: '在不同数据格式之间进行转换和适配',
+          operatorType: 1,
+          algorithmType: 'Java',
+          algorithmUrl: 'http://example.com/algorithm/data-transform',
+          createTime: '2024-01-19 11:30:00',
+          zhpgOperatorPars: [
+            {
+              id: '5-out-1',
+              operatorNamePar: '转换后数据',
+              operatorDescPar: '格式转换后的数据',
+              operatorId: '5',
+              parType: 1
+            }
+          ],
+          zhpgOperatorParsInput: [
+            {
+              id: '5-in-1',
+              operatorNamePar: '源数据',
+              operatorDescPar: '需要转换格式的原始数据',
+              operatorId: '5',
+              parType: 2
+            }
+          ]
+        }
+      ]
+
+      // 根据关键词过滤
+      let filteredOperators = allOperators
+      if (keyword) {
+        filteredOperators = allOperators.filter(
+          (item) => item.operatorName.includes(keyword) || item.operatorDesc.includes(keyword)
+        )
+      }
+
+      // 分页处理
+      const total = filteredOperators.length
+      const start = (page - 1) * pageSize
+      const end = start + parseInt(pageSize)
+      const records = filteredOperators.slice(start, end)
+
+      return {
+        success: true,
+        code: SUCCESS_CODE,
+        msg: 'SUCCESS',
+        data: {
+          records,
+          total,
+          size: parseInt(pageSize),
+          current: parseInt(page),
+          pages: Math.ceil(total / pageSize)
+        }
+      }
+    }
+  },
+
+  // 创建算子
+  {
+    url: '/api/zhpgxt/zhpgOperator',
+    method: 'post',
+    response: ({ body }) => {
+      return {
+        code: SUCCESS_CODE,
+        message: '创建成功',
+        data: {
+          id: Date.now().toString(),
+          ...body,
+          createTime: new Date().toLocaleString('zh-CN')
+        }
+      }
+    }
+  },
+
+  // 更新算子
+  {
+    url: '/api/zhpgxt/zhpgOperator/:id',
+    method: 'put',
+    response: ({ params, body }) => {
+      return {
+        code: SUCCESS_CODE,
+        message: '更新成功',
+        data: {
+          id: params.id,
+          ...body,
+          updateTime: new Date().toLocaleString('zh-CN')
+        }
+      }
+    }
+  },
+
+  // 删除算子
+  {
+    url: '/api/zhpgxt/zhpgOperator/:id',
+    method: 'delete',
+    response: ({ params }) => {
+      return {
+        code: SUCCESS_CODE,
+        message: '删除成功',
+        data: null
+      }
+    }
+  },
+
+  // 获取算子详情
+  {
+    url: '/api/zhpgxt/zhpgOperator/:id',
+    method: 'get',
+    response: ({ params }) => {
+      const mockOperator = {
+        id: params.id,
+        operatorName: '数据清洗算子',
+        operatorDesc: '用于清洗和预处理原始数据，去除噪声和异常值',
+        operatorType: 1,
+        algorithmType: 'Java',
+        algorithmUrl: 'http://example.com/algorithm/data-clean',
+        createTime: '2024-01-15 10:30:00',
+        updateTime: '2024-01-15 14:20:00',
+        zhpgOperatorPars: [
+          {
+            id: '1-out-1',
+            operatorNamePar: '清洗后数据',
+            operatorDescPar: '经过清洗处理的数据集',
+            operatorId: params.id,
+            parType: 1
+          }
+        ],
+        zhpgOperatorParsInput: [
+          {
+            id: '1-in-1',
+            operatorNamePar: '原始数据',
+            operatorDescPar: '待清洗的原始数据集',
+            operatorId: params.id,
+            parType: 2
+          }
+        ]
+      }
+
+      return {
+        code: SUCCESS_CODE,
+        message: '获取成功',
+        data: mockOperator
+      }
+    }
+  },
+
+  // ========== 计算模型管理接口 ==========
+  // 获取计算模型列表
+  {
+    url: '/api/zhpgxt/zhpgOperatorModel',
+    method: 'get',
+    response: ({ query }) => {
+      const { page = 1, pageSize = 10, keyword = '' } = query
+
+      // 模拟计算模型数据
+      const allModels = [
+        {
+          id: '1',
+          oprModelName: '线性回归模型',
+          oprModelDesc: '用于预测连续数值的线性回归算法，适用于简单的预测场景，具有良好的解释性和快速的训练速度',
+          createTime: '2024-01-15 10:30:00'
+        },
+        {
+          id: '2',
+          oprModelName: '决策树模型',
+          oprModelDesc: '基于树形结构的分类和回归算法，能够处理非线性关系，具有良好的可解释性，适合特征选择和规则提取',
+          createTime: '2024-01-16 14:20:00'
+        },
+        {
+          id: '3',
+          oprModelName: '随机森林模型',
+          oprModelDesc: '集成学习算法，通过构建多个决策树并投票决定最终结果，具有较高的准确性和鲁棒性，能有效防止过拟合',
+          createTime: '2024-01-17 09:15:00'
+        },
+        {
+          id: '4',
+          oprModelName: '支持向量机模型',
+          oprModelDesc: '基于最大边界原理的分类算法，通过核函数处理非线性问题，在高维数据和小样本情况下表现优异',
+          createTime: '2024-01-18 16:45:00'
+        },
+        {
+          id: '5',
+          oprModelName: '神经网络模型',
+          oprModelDesc: '深度学习算法，通过多层神经元模拟人脑处理信息的方式，能够学习复杂的非线性模式，适用于图像、文本等复杂数据',
+          createTime: '2024-01-19 11:30:00'
+        },
+        {
+          id: '6',
+          oprModelName: '朴素贝叶斯模型',
+          oprModelDesc: '基于贝叶斯定理的概率分类算法，假设特征间相互独立，计算简单高效，特别适用于文本分类和垃圾邮件过滤',
+          createTime: '2024-01-20 08:45:00'
+        },
+        {
+          id: '7',
+          oprModelName: 'K-均值聚类模型',
+          oprModelDesc: '无监督学习算法，将数据分为K个簇，使簇内数据相似度最高，簇间差异最大，适用于市场细分和客户分群',
+          createTime: '2024-01-21 13:20:00'
+        },
+        {
+          id: '8',
+          oprModelName: '时间序列预测模型',
+          oprModelDesc: 'ARIMA等时间序列分析方法，专门处理时序数据的趋势、季节性和周期性，适用于销售预测和股价分析',
+          createTime: '2024-01-22 15:10:00'
+        },
+        {
+          id: '9',
+          oprModelName: '关联规则挖掘模型',
+          oprModelDesc: 'Apriori等关联分析算法，发现数据项之间的关联关系，常用于购物篮分析和推荐系统',
+          createTime: '2024-01-23 09:30:00'
+        },
+        {
+          id: '10',
+          oprModelName: 'XGBoost梯度提升模型',
+          oprModelDesc: '优化的梯度提升算法，具有高效的并行处理能力和优异的预测性能，在各种机器学习竞赛中表现突出',
+          createTime: '2024-01-24 12:15:00'
+        }
+      ]
+
+      // 根据关键词过滤
+      let filteredModels = allModels
+      if (keyword) {
+        filteredModels = allModels.filter(
+          (item) => item.oprModelName.includes(keyword) || item.oprModelDesc.includes(keyword)
+        )
+      }
+
+      // 分页处理
+      const total = filteredModels.length
+      const start = (page - 1) * pageSize
+      const end = start + parseInt(pageSize)
+      const records = filteredModels.slice(start, end)
+
+      return {
+        success: true,
+        code: SUCCESS_CODE,
+        msg: 'SUCCESS',
+        data: {
+          records,
+          total,
+          size: parseInt(pageSize),
+          current: parseInt(page),
+          pages: Math.ceil(total / pageSize)
+        }
+      }
+    }
+  },
+
+  // 创建计算模型
+  {
+    url: '/api/zhpgxt/zhpgOperatorModel',
+    method: 'post',
+    response: ({ body }) => {
+      return {
+        code: SUCCESS_CODE,
+        message: '创建成功',
+        data: {
+          id: Date.now().toString(),
+          ...body,
+          createTime: new Date().toLocaleString('zh-CN')
+        }
+      }
+    }
+  },
+
+  // 更新计算模型
+  {
+    url: '/api/zhpgxt/zhpgOperatorModel/:id',
+    method: 'put',
+    response: ({ params, body }) => {
+      return {
+        code: SUCCESS_CODE,
+        message: '更新成功',
+        data: {
+          id: params.id,
+          ...body,
+          updateTime: new Date().toLocaleString('zh-CN')
+        }
+      }
+    }
+  },
+
+  // 删除计算模型
+  {
+    url: '/api/zhpgxt/zhpgOperatorModel/:id',
+    method: 'delete',
+    response: ({ params }) => {
+      return {
+        code: SUCCESS_CODE,
+        message: '删除成功',
+        data: null
+      }
+    }
+  },
+
+  // 获取计算模型详情
+  {
+    url: '/api/zhpgxt/zhpgOperatorModel/:id',
+    method: 'get',
+    response: ({ params }) => {
+      const mockModel = {
+        id: params.id,
+        oprModelName: '线性回归模型',
+        oprModelDesc: '用于预测连续数值的线性回归算法，适用于简单的预测场景，具有良好的解释性和快速的训练速度',
+        createTime: '2024-01-15 10:30:00',
+        updateTime: '2024-01-15 14:20:00'
+      }
+
+      return {
+        code: SUCCESS_CODE,
+        message: '获取成功',
+        data: mockModel
+      }
+    }
+  },
+
   // ========== 分类管理接口 ==========
   // 获取分类列表
   {
@@ -425,6 +873,23 @@ export default [
         code: SUCCESS_CODE,
         message: '删除成功',
         data: null
+      }
+    }
+  },
+
+  // 设为模版
+  {
+    url: '/api/zhpgxt/zhpgEvaluaSystem/:id',
+    method: 'post',
+    response: ({ params, body }) => {
+      return {
+        code: SUCCESS_CODE,
+        message: '设为模版成功',
+        data: {
+          id: params.id,
+          evaluaTemplate: 1,
+          updateTime: new Date().toLocaleString('zh-CN')
+        }
       }
     }
   },

@@ -7,7 +7,7 @@
       :default-page-size="10"
       :load-on-mounted="true"
       :clear-selection-on-load="true"
-      class="category-grid"
+      class="category-grid zx-grid-list--page"
     >
       <!-- 工具栏：左-操作 | 右-搜索 -->
       <template #form="{ query, loading, refresh, updateState }">
@@ -70,10 +70,8 @@
 <script setup>
 import { ContentWrap } from '@/components/ContentWrap'
 import { categoryApi } from '@/api/modules/indicator/category'
-import ZxGridList from '@/components/pure/ZxGridList/index.vue'
 import CategoryFormDialog from './components/CategoryFormDialog.vue'
-import { ZxSearch, ZxButton } from '@/components/pure'
-import { danger as confirmInputDanger } from '@/components/pure/ZxConfirmInput/service'
+import { confirmInputDanger } from 'zxui'
 
 const router = useRouter()
 

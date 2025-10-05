@@ -4,5 +4,5 @@
 
 <script setup>
 import { ref, computed, onMounted, nextTick } from 'vue'
-import TableQuery from './components/TableQuery.vue'
+import TableQuery from '../components/TableQuery.vue'
 </script>

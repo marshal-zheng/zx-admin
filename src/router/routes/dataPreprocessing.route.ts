@@ -54,21 +54,77 @@ export const dataPreprocessingRoutes: AppRouteRecordRaw[] = [
       },
       {
         path: 'data-entry',
-        component: () => import('@/views/DataPreprocessing/DataEntry/list.vue'),
+        component: getParentLayout(),
         name: 'DataEntry',
+        redirect: '/data-preprocessing/data-entry/list',
         meta: {
-          title: '数据集',
+          title: '数据管理',
           icon: 'vi-ep:edit'
-        }
+        },
+        children: [
+          {
+            path: 'list',
+            component: () => import('@/views/DataPreprocessing/DataEntry/list.vue'),
+            name: 'DataEntryList',
+            meta: {
+              title: '数据管理',
+              hidden: true,
+              canTo: true,
+              noTagsView: true,
+              activeMenu: '/data-preprocessing/data-entry'
+            }
+          },
+          {
+            path: 'table-data/:id',
+            component: () => import('@/views/DataPreprocessing/DataEntry/tableList.vue'),
+            name: 'DataEntryTableData',
+            meta: {
+              title: '表数据查看',
+              icon: 'vi-ep:document',
+              hidden: true,
+              canTo: true,
+              noTagsView: false,
+              activeMenu: '/data-preprocessing/data-entry'
+            }
+          }
+        ]
       },
       {
         path: 'data-conversion',
-        component: () => import('@/views/DataPreprocessing/DataConversion/list.vue'),
+        component: getParentLayout(),
         name: 'DataConversion',
+        redirect: '/data-preprocessing/data-conversion/list',
         meta: {
           title: '数据转换',
           icon: 'vi-ep:refresh'
-        }
+        },
+        children: [
+          {
+            path: 'list',
+            component: () => import('@/views/DataPreprocessing/DataConversion/list.vue'),
+            name: 'DataConversionList',
+            meta: {
+              title: '数据转换',
+              hidden: true,
+              canTo: true,
+              noTagsView: true,
+              activeMenu: '/data-preprocessing/data-conversion'
+            }
+          },
+          {
+            path: 'table-data/:id',
+            component: () => import('@/views/DataPreprocessing/DataConversion/tableList.vue'),
+            name: 'DataConversionTableList',
+            meta: {
+              title: '表数据查看',
+              icon: 'vi-ep:document',
+              hidden: true,
+              canTo: true,
+              noTagsView: false,
+              activeMenu: '/data-preprocessing/data-conversion'
+            }
+          }
+        ]
       }
     ]
   }

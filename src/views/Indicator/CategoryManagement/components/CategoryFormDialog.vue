@@ -51,7 +51,6 @@
 <script setup>
 import { ref, reactive, computed, watch } from 'vue'
 import { ElMessage } from 'element-plus'
-import ZxDialog from '@/components/pure/ZxDialog'
 import { categoryApi } from '@/api/modules/indicator/category'
 
 // 定义 props
