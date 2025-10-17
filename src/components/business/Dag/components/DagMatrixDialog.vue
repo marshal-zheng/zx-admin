@@ -60,7 +60,6 @@
 import { ref, computed } from 'vue'
 import { ElMessage } from 'element-plus'
 import { Close, FullScreen, Minus, Download } from '@element-plus/icons-vue'
-import ZxDialog from '../../../pure/ZxDialog/index.vue'
 import DagMatrixView from './DagMatrixView.vue'
 
 defineOptions({

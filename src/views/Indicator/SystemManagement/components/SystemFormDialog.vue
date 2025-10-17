@@ -1,6 +1,6 @@
 <template>
-  <ZxDialog 
-    v-bind="dialogProps" 
+  <ZxDialog
+    v-bind="dialogProps"
     v-on="dialogEvents"
     :ok-text="currentMode === 'create' ? '下一步' : '确定'"
   >
@@ -37,6 +37,15 @@
             show-word-limit
           />
         </el-form-item>
+        <el-form-item label="体系标签" prop="tagId">
+          <SystemTagSelector
+            v-model="state.data.tagId"
+            placeholder="请输入或选择标签，按回车添加"
+            :show-tip="true"
+            tag-type="primary"
+            tag-effect="light"
+          />
+        </el-form-item>
       </el-form>
     </div>
   </ZxDialog>
@@ -45,9 +54,10 @@
 <script setup lang="ts">
 import { ref, computed, nextTick } from 'vue'
 import { ElMessage } from 'element-plus'
-import { useDialog } from '@/views/DataPreprocessing/DataConnection/components/use-dialog'
+import { useDialog } from 'zxui'
 import { systemApi } from '@/api/modules/indicator/system'
 import { CategorySelector } from '../../components/selector'
+import { SystemTagSelector } from './selector'
 
 // 定义指标体系表单数据接口
 interface SystemFormData {
@@ -55,6 +65,7 @@ interface SystemFormData {
   categoryId: string
   name: string
   description: string
+  tagId: string[]
 }
 
 // 当前模式（通过 open 方法的参数自动判断）
@@ -79,71 +90,73 @@ const formRules = computed(() => ({
 }))
 
 // 使用 useDialog hook
-const { state, dialogProps, dialogEvents, open, close, setLoading, updateField } =
-  useDialog<SystemFormData>({
-    // 动态标题
-    title: (data) => {
-      if (currentMode.value === 'edit') {
-        return data.name ? `编辑指标体系 - ${data.name}` : '编辑基础配置'
-      }
-      return '新建指标体系'
-    },
-
-    // 对话框配置
-    width: '50%',
-    okText: '确定',
-
-    // 表单配置
-    formRef: formRef,
-    preValidate: true,
-    autoScrollToError: true,
-
-    // 默认数据
-    defaultData: () => ({
-      categoryId: '',
-      name: '',
-      description: ''
-    }),
-
-    // 数据转换（编辑时使用）
-    dataTransform: (raw: SystemFormData) => ({
-      id: raw.id,
-      categoryId: raw.categoryId || '',
-      name: raw.name || '',
-      description: raw.description || ''
-    }),
-
-    // 确认回调
-    onConfirm: async (data) => {
-      // 准备提交数据
-      const submitData = {
-        categoryId: data.categoryId,
-        name: data.name,
-        description: data.description
-      }
-
-      let response
-      if (currentMode.value === 'edit' && data.id) {
-        // 编辑模式：直接全量提交
-        response = await systemApi.updateSystem({ id: data.id, ...submitData })
-      } else {
-        // 创建模式：保持原逻辑，交由父组件处理下一步
-        response = submitData
-      }
-
-      // 触发成功事件，通知父组件
-      emit('success', response)
-      return response
-    },
-
-    // 错误处理回调
-    onConfirmError: (error: any) => {
-      console.error('表单提交失败:', error)
-      // 显示错误提示
-      const errorMsg = error?.response?.data?.message || error?.message || '操作失败，请重试'
-      ElMessage.error(errorMsg)
+const { state, dialogProps, dialogEvents, open, close, setLoading } = useDialog<SystemFormData>({
+  // 动态标题
+  title: (data) => {
+    if (currentMode.value === 'edit') {
+      return data.name ? `编辑指标体系 - ${data.name}` : '编辑基础配置'
     }
-  })
+    return '新建指标体系'
+  },
+
+  // 对话框配置
+  width: '50%',
+  okText: '确定',
+
+  // 表单配置
+  formRef: formRef,
+  preValidate: true,
+  autoScrollToError: true,
+
+  // 默认数据
+  defaultData: () => ({
+    categoryId: '',
+    name: '',
+    description: '',
+    tagId: []
+  }),
+
+  // 数据转换（编辑时使用）
+  dataTransform: (raw: SystemFormData) => ({
+    id: raw.id,
+    categoryId: raw.categoryId || '',
+    name: raw.name || '',
+    description: raw.description || '',
+    tagId: raw.tagId || []
+  }),
+
+  // 确认回调
+  onConfirm: async (data) => {
+    // 准备提交数据
+    const submitData = {
+      categoryId: data.categoryId,
+      name: data.name,
+      description: data.description,
+      tagId: data.tagId
+    }
+
+    let response
+    if (currentMode.value === 'edit' && data.id) {
+      // 编辑模式：直接全量提交
+      response = await systemApi.updateSystem({ id: data.id, ...submitData })
+    } else {
+      // 创建模式：保持原逻辑，交由父组件处理下一步
+      response = submitData
+    }
+
+    // 触发成功事件，通知父组件
+    emit('success', response)
+    return response
+  },
+
+  // 错误处理回调
+  onConfirmError: (error: any) => {
+    console.error('表单提交失败:', error)
+    // 显示错误提示
+    const errorMsg = error?.response?.data?.message || error?.message || '操作失败，请重试'
+    ElMessage.error(errorMsg)
+  }
+})
 
 // 暴露方法给父组件
 defineExpose({

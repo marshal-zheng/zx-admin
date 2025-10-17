@@ -1,27 +1,31 @@
 <template>
   <ZxSelect
-    v-model="selectedValue"
-    mode="remote"
-    :remote-func="loadOptions"
+    v-model="innerValue"
+    :options="fetchOptions"
     :allow-search="filterable"
-    :allow-clear="clearable"
     :placeholder="placeholder"
     :disabled="disabled"
-    @change="handleChange"
-    @clear="handleClear"
+    labelKey="name"
+    valueKey="id"
+    @change="onChange"
+    @clear="onClear"
   />
 </template>
 
 <script setup>
 import { ref, watch } from 'vue'
-import { indicatorApi } from '@/api/modules/indicator'
+import { systemApi } from '@/api/modules/indicator/system'
 
 defineOptions({ name: 'IndicatorSystemSelector' })
 
 const props = defineProps({
   modelValue: {
-    type: [String, Number, Array],
+    type: [String, Number, null],
     default: ''
+  },
+  tagId: {
+    type: [String, Number, null],
+    default: null
   },
   placeholder: {
     type: String,
@@ -43,68 +47,63 @@ const props = defineProps({
 
 const emit = defineEmits(['update:modelValue', 'change', 'clear'])
 
-const selectedValue = ref(props.modelValue)
+const innerValue = ref(props.modelValue)
+const optionsList = ref([])
 
-// 监听外部值变化
 watch(
   () => props.modelValue,
-  (newVal) => {
-    selectedValue.value = newVal
+  (v) => {
+    innerValue.value = v
   }
 )
 
-// 监听内部值变化，同步到外部
-watch(selectedValue, (newVal) => {
-  emit('update:modelValue', newVal)
+watch(innerValue, (v) => {
+  emit('update:modelValue', v)
 })
 
-// 获取指标体系设计选项 - 供ZxSelect的remote-func使用
-const loadOptions = async () => {
+// 当 tagId 改变时，清空当前选择值
+watch(
+  () => props.tagId,
+  () => {
+    innerValue.value = ''
+  }
+)
+
+const fetchOptions = async () => {
   try {
-    console.log('🚀 开始加载指标体系选项...')
-    const response = await indicatorApi.getIndicatorSystemOptions()
-    console.log('📥 指标体系API响应:', response)
-    // 返回选项数组供ZxSelect使用
-    const options = Array.isArray(response) ? response : response?.data || []
-    console.log('📋 处理后的指标体系选项数据:', options)
+    const params = { page: 1, pageSize: 999 }
+    // 如果有 tagId，则添加到请求参数中
+    if (props.tagId) {
+      params.tagId = props.tagId
+    }
+
+    const res = await systemApi.getSystemList(params)
+    const list = Array.isArray(res) ? res : res?.data?.records || res?.records || res?.data || []
+    // 规范化字段为 { id, name }
+    const options = list
+      .map((item) => ({
+        id: item?.id ?? item?.evaluaId ?? item?.evaluaid,
+        name: item?.name ?? item?.evaluaName
+      }))
+      .filter((it) => it && it.id != null && it.name != null)
+    // 缓存选项列表
+    optionsList.value = options
     return options
-  } catch (error) {
-    console.error('❌ 获取指标体系设计选项失败:', error)
+  } catch (e) {
+    console.error('加载指标体系列表失败:', e)
     return []
   }
 }
 
-// 处理选择变化
-const handleChange = (value) => {
-  emit('change', value)
+const onChange = (val) => {
+  // 找到对应的选项对象
+  const selectedOption = optionsList.value.find((opt) => opt.id === val)
+  emit('change', val, selectedOption)
 }
 
-// 处理清空
-const handleClear = () => {
+const onClear = () => {
   emit('clear')
 }
 </script>
 
-<style scoped>
-.indicator-option {
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
-  width: 100%;
-}
-
-.indicator-name {
-  font-weight: 500;
-  color: var(--el-text-color-primary);
-  flex: 1;
-}
-
-.indicator-count {
-  padding: 2px 6px;
-  margin-left: 8px;
-  font-size: 12px;
-  color: var(--el-text-color-secondary);
-  background: var(--el-fill-color-light);
-  border-radius: 10px;
-}
-</style>
+<style scoped></style>

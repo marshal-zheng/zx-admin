@@ -102,6 +102,7 @@ import NumberCell from './cells/NumberCell.vue'
 import TextareaCell from './cells/TextareaCell.vue'
 import DatePickerCell from './cells/DatePickerCell.vue'
 import SwitchCell from './cells/SwitchCell.vue'
+import TextCell from './cells/TextCell.vue'
 
 // Re-export types
 export type { DataGridColumn, DataGridEmits, DataGridExpose } from './types'
@@ -115,7 +116,8 @@ const cellComponentMap: Record<string, Component> = {
   number: NumberCell,
   textarea: TextareaCell,
   datePicker: DatePickerCell,
-  switch: SwitchCell
+  switch: SwitchCell,
+  text: TextCell
 }
 
 /**

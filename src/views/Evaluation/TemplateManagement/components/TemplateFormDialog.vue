@@ -17,69 +17,69 @@
         ref="formRef"
         :model="formData"
         :rules="formRules"
-        label-width="120px"
+        label-width="100px"
         label-position="right"
       >
-        <!-- 必填项 -->
-        <div class="form-section">
-          <h4 class="section-title">基本信息</h4>
-
-          <el-form-item label="模版名称" prop="name" required>
-            <el-input
-              v-model="formData.name"
-              placeholder="请输入模版名称"
-              maxlength="50"
-              show-word-limit
-              :disabled="mode === 'view'"
-              class="form-input"
-            />
-          </el-form-item>
-
-          <el-form-item label="评估方案" prop="evaluationScheme" required>
-            <EvaluationSchemeSelector
-              v-model="formData.evaluationScheme"
-              placeholder="请选择评估方案"
-              :disabled="mode === 'view'"
-              class="form-input"
-            />
-          </el-form-item>
-
-          <el-form-item label="评估算法" prop="evaluationAlgorithm" required>
-            <EvaluationAlgorithmSelector
-              v-model="formData.evaluationAlgorithm"
-              placeholder="请选择评估算法"
-              :disabled="mode === 'view'"
-              class="form-input"
-            />
-          </el-form-item>
-
-          <el-form-item label="指标体系设计" prop="indicatorSystem" required>
-            <IndicatorSystemSelector
-              v-model="formData.indicatorSystem"
-              placeholder="请选择指标体系设计"
-              :disabled="mode === 'view'"
-              class="form-input"
-            />
-          </el-form-item>
-        </div>
-
-        <!-- 选填项 -->
-        <div class="form-section">
-          <h4 class="section-title">描述信息</h4>
-
-          <el-form-item label="模版描述" prop="description">
-            <el-input
-              v-model="formData.description"
-              type="textarea"
-              :rows="3"
-              placeholder="请输入模版描述"
-              maxlength="200"
-              show-word-limit
-              :disabled="mode === 'view'"
-              class="form-input"
-            />
-          </el-form-item>
-        </div>
+        <el-form-item label="模版名称" prop="taskName">
+          <el-input
+            v-model="formData.taskName"
+            placeholder="请输入模版名称"
+            maxlength="50"
+            show-word-limit
+            :disabled="mode === 'view'"
+          />
+        </el-form-item>
+        <el-form-item label="评估对象" prop="object">
+          <el-input
+            v-model="formData.object"
+            placeholder="请输入评估对象"
+            maxlength="100"
+            show-word-limit
+            :disabled="mode === 'view'"
+          />
+        </el-form-item>
+        <el-form-item label="评估流程" prop="process">
+          <el-input
+            v-model="formData.process"
+            type="textarea"
+            placeholder="请输入评估流程"
+            :rows="3"
+            maxlength="200"
+            show-word-limit
+            :disabled="mode === 'view'"
+          />
+        </el-form-item>
+        <el-form-item label="评估目的" prop="purpose">
+          <el-input
+            v-model="formData.purpose"
+            type="textarea"
+            placeholder="请输入评估目的"
+            :rows="3"
+            maxlength="200"
+            show-word-limit
+            :disabled="mode === 'view'"
+          />
+        </el-form-item>
+        <el-form-item label="评估方案" prop="scheme">
+          <el-input
+            v-model="formData.scheme"
+            placeholder="请输入评估方案"
+            maxlength="100"
+            show-word-limit
+            :disabled="mode === 'view'"
+          />
+        </el-form-item>
+        <el-form-item label="模版描述" prop="taskDescribe">
+          <el-input
+            v-model="formData.taskDescribe"
+            type="textarea"
+            placeholder="请输入模版描述"
+            :rows="4"
+            maxlength="200"
+            show-word-limit
+            :disabled="mode === 'view'"
+          />
+        </el-form-item>
       </el-form>
     </div>
   </ZxDialog>
@@ -88,12 +88,7 @@
 <script setup>
 import { ref, reactive, computed, watch } from 'vue'
 import { ElMessage } from 'element-plus'
-import { templateApi } from '@/api/modules/evaluation/template'
-import {
-  EvaluationSchemeSelector,
-  EvaluationAlgorithmSelector,
-  IndicatorSystemSelector
-} from '@/components/business/Selector'
+import { evaluationApi } from '@/api/modules/evaluation'
 
 // 定义 props
 const props = defineProps({
@@ -130,31 +125,36 @@ const dialogVisible = computed({
 // 弹窗标题
 const dialogTitle = computed(() => {
   const titleMap = {
-    create: '新建模版',
-    edit: '编辑模版',
-    view: '查看模版'
+    create: '新建任务模版',
+    edit: '编辑任务模版',
+    view: '查看任务模版'
   }
   return titleMap[props.mode] || '模版表单'
 })
 
 // 表单数据
 const formData = reactive({
-  name: '',
-  description: '',
-  evaluationScheme: '',
-  evaluationAlgorithm: '',
-  indicatorSystem: ''
+  taskName: '',
+  taskDescribe: '',
+  object: '',
+  process: '',
+  purpose: '',
+  scheme: ''
 })
 
 // 表单验证规则
 const formRules = {
-  name: [
+  taskName: [
     { required: true, message: '请输入模版名称', trigger: 'blur' },
     { min: 2, max: 50, message: '模版名称长度在 2 到 50 个字符', trigger: 'blur' }
   ],
-  evaluationScheme: [{ required: true, message: '请选择评估方案', trigger: 'change' }],
-  evaluationAlgorithm: [{ required: true, message: '请选择评估算法', trigger: 'change' }],
-  indicatorSystem: [{ required: true, message: '请选择指标体系设计', trigger: 'change' }]
+  taskDescribe: [{ max: 200, message: '模版描述不能超过 200 个字符', trigger: 'blur' }],
+  object: [
+    { max: 100, message: '评估对象不能超过 100 个字符', trigger: 'blur' }
+  ],
+  process: [{ max: 200, message: '评估流程不能超过 200 个字符', trigger: 'blur' }],
+  purpose: [{ max: 200, message: '评估目的不能超过 200 个字符', trigger: 'blur' }],
+  scheme: [{ max: 100, message: '评估方案不能超过 100 个字符', trigger: 'blur' }]
 }
 
 // 初始化表单数据
@@ -162,11 +162,12 @@ const initFormData = () => {
   if (props.templateData && (props.mode === 'edit' || props.mode === 'view')) {
     // 编辑或查看模式，填充现有数据
     Object.assign(formData, {
-      name: props.templateData.name || '',
-      description: props.templateData.description || '',
-      evaluationScheme: props.templateData.evaluationScheme || '',
-      evaluationAlgorithm: props.templateData.evaluationAlgorithm || '',
-      indicatorSystem: props.templateData.indicatorSystem || ''
+      taskName: props.templateData.taskName || '',
+      taskDescribe: props.templateData.taskDescribe || '',
+      object: props.templateData.object || '',
+      process: props.templateData.process || '',
+      purpose: props.templateData.purpose || '',
+      scheme: props.templateData.scheme || ''
     })
   } else {
     // 新建模式，重置表单
@@ -177,11 +178,12 @@ const initFormData = () => {
 // 重置表单数据
 const resetFormData = () => {
   Object.assign(formData, {
-    name: '',
-    description: '',
-    evaluationScheme: '',
-    evaluationAlgorithm: '',
-    indicatorSystem: ''
+    taskName: '',
+    taskDescribe: '',
+    object: '',
+    process: '',
+    purpose: '',
+    scheme: ''
   })
 }
 
@@ -191,19 +193,25 @@ const handleSubmit = async () => {
 
   // 准备提交数据
   const submitData = {
-    name: formData.name,
-    description: formData.description,
-    evaluationScheme: formData.evaluationScheme,
-    evaluationAlgorithm: formData.evaluationAlgorithm,
-    indicatorSystem: formData.indicatorSystem
+    taskName: formData.taskName,
+    taskDescribe: formData.taskDescribe,
+    object: formData.object,
+    process: formData.process,
+    purpose: formData.purpose,
+    scheme: formData.scheme,
+    taskTemplate: 1, // 标记为模版
+    taskType: 1
   }
 
   let requestPromise
 
   if (props.mode === 'create') {
-    requestPromise = templateApi.createTemplate(submitData)
+    requestPromise = evaluationApi.createEvaluation(submitData)
   } else if (props.mode === 'edit') {
-    requestPromise = templateApi.updateTemplate(props.templateData.id, submitData)
+    requestPromise = evaluationApi.updateEvaluation({
+      ...submitData,
+      id: props.templateData.id
+    })
   }
 
   if (!requestPromise) {

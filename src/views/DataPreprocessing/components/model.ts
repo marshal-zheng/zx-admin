@@ -134,3 +134,61 @@ export const FIELD_TYPE_OPTIONS: FieldTypeOption[] = [
     value: FieldType.DOUBLE
   }
 ]
+
+// 数据转换类型枚举
+export enum DataConversionType {
+  /** 脏数据检测 */
+  DIRTY_DATA_DETECTION = 'dirtyDataDetection',
+  /** 缺失值填充 */
+  MISSING_VALUE_FILL = 'missingValueFill',
+  /** 野值剔除 */
+  OUTLIER_REMOVAL = 'outlierRemoval'
+}
+
+// 检测方式枚举
+export enum DetectionMethod {
+  /** 空值检测 */
+  IS_NOT_NULL = 'isNotNull',
+  /** 格式错误检测 */
+  FORMAT_ERROR = 'formatError'
+}
+
+// 数据转换类型选项配置
+export interface DataConversionTypeOption {
+  label: string
+  value: DataConversionType
+}
+
+// 检测方式选项配置
+export interface DetectionMethodOption {
+  label: string
+  value: DetectionMethod
+}
+
+// 数据转换类型选项列表
+export const DATA_CONVERSION_TYPE_OPTIONS: DataConversionTypeOption[] = [
+  {
+    label: '脏数据检测',
+    value: DataConversionType.DIRTY_DATA_DETECTION
+  },
+  {
+    label: '缺失值填充',
+    value: DataConversionType.MISSING_VALUE_FILL
+  },
+  {
+    label: '野值剔除',
+    value: DataConversionType.OUTLIER_REMOVAL
+  }
+]
+
+// 检测方式选项列表
+export const DETECTION_METHOD_OPTIONS: DetectionMethodOption[] = [
+  {
+    label: '空值检测',
+    value: DetectionMethod.IS_NOT_NULL
+  },
+  {
+    label: '格式错误检测',
+    value: DetectionMethod.FORMAT_ERROR
+  }
+]

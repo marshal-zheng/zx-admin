@@ -1,6 +1,7 @@
 <template>
   <ContentWrap>
     <ZxGridList
+      ref="gridListRef"
       :load-data="loadTemplateData"
       :show-pagination="true"
       :page-sizes="[10, 20, 50, 100]"
@@ -12,35 +13,8 @@
       <!-- 工具栏：左-操作 | 中-筛选 | 右-搜索 -->
       <template #form="{ query, loading, refresh, updateState }">
         <div class="zx-grid-form-bar">
-          <div class="zx-grid-form-bar__left">
-            <ZxButton type="primary" @click="handleCreate">新建模版</ZxButton>
-          </div>
-          <div class="zx-grid-form-bar__filters">
-            <SelectStatus
-              v-model="query.status"
-              placeholder="选择状态"
-              style="width: 150px"
-              @change="(v) => onFilterChange('status', v, { refresh, updateState })"
-            />
-            <EvaluationSchemeSelector
-              v-model="query.evaluationScheme"
-              placeholder="评估方案"
-              style="width: 150px; margin-left: 12px"
-              @change="(v) => onFilterChange('evaluationScheme', v, { refresh, updateState })"
-            />
-            <EvaluationAlgorithmSelector
-              v-model="query.evaluationAlgorithm"
-              placeholder="评估算法"
-              style="width: 150px; margin-left: 12px"
-              @change="(v) => onFilterChange('evaluationAlgorithm', v, { refresh, updateState })"
-            />
-            <IndicatorSystemSelector
-              v-model="query.indicatorSystem"
-              placeholder="指标体系"
-              style="width: 150px; margin-left: 12px"
-              @change="(v) => onFilterChange('indicatorSystem', v, { refresh, updateState })"
-            />
-          </div>
+          <div class="zx-grid-form-bar__left"></div>
+          <div class="zx-grid-form-bar__filters"> </div>
           <div class="zx-grid-form-bar__right">
             <ZxSearch
               v-model="query.keyword"
@@ -57,7 +31,7 @@
       <!-- 表格内容 -->
       <template #table="{ grid, refresh }">
         <el-table :data="grid.list" style="width: 100%" max-height="calc(100vh - 230px)">
-          <el-table-column prop="name" label="模版名称" min-width="200" />
+          <el-table-column prop="taskName" label="模版名称" min-width="200" />
           <el-table-column prop="type" label="模版类型" width="120">
             <template #default="{ row }">
               {{ getTypeText(row.type) }}
@@ -83,10 +57,12 @@
           >
             <template #default="{ row }">
               <div class="op-col__wrap">
-                <ZxButton link type="primary" @click="viewDetail(row)">设计</ZxButton>
+                <ZxButton link type="primary" @click="viewDetail(row)">查看详情</ZxButton>
                 <ZxButton link type="primary" @click="handleEdit(row)">编辑</ZxButton>
-                <ZxButton link type="primary" @click="handleCopy(row)">复制</ZxButton>
-                <ZxButton link type="danger" @click="handleDelete(row, refresh)">删除</ZxButton>
+                <ZxMoreAction
+                  :list="getMoreActionList(row)"
+                  @select="handleMoreActionSelect($event, row, refresh)"
+                />
               </div>
             </template>
           </el-table-column>
@@ -108,16 +84,20 @@
 // Vue 3 API 和 Element Plus 组件现在通过 unplugin-auto-import 自动导入
 import { ContentWrap } from '@/components/ContentWrap'
 import { useI18n } from '@/hooks/web/useI18n'
-import { templateApi } from '@/api/modules/evaluation/template'
+import { evaluationApi } from '@/api/modules/evaluation'
 import TemplateFormDialog from './components/TemplateFormDialog.vue'
 import EvaluationSchemeSelector from '@/components/business/Selector/EvaluationSchemeSelector.vue'
 import EvaluationAlgorithmSelector from '@/components/business/Selector/EvaluationAlgorithmSelector.vue'
 import IndicatorSystemSelector from '@/components/business/Selector/IndicatorSystemSelector.vue'
 import SelectStatus from './components/selector/SelectStatus.vue'
+import { Delete } from '@element-plus/icons-vue'
 import { confirmInputDanger } from 'zxui'
 
 const { t } = useI18n()
 const router = useRouter()
+
+// 组件引用
+const gridListRef = ref(null)
 
 // 响应式数据
 const dialogVisible = ref(false)
@@ -150,7 +130,10 @@ const scenarioMap = {
 
 // 数据加载函数 - 适配 ZxGridList
 const loadTemplateData = async (params) => {
-  const data = await templateApi.getTemplateList(params)
+  const data = await evaluationApi.getEvaluationList({
+    ...params,
+    taskTemplate: 1
+  })
   return data
 }
 
@@ -199,11 +182,27 @@ const handleEdit = (row) => {
   dialogVisible.value = true
 }
 
-// 复制
-const handleCopy = (row) => {
-  currentTemplate.value = { ...row, id: null, name: `${row.name}_副本` }
-  dialogMode.value = 'create'
-  dialogVisible.value = true
+// 获取更多操作列表
+const getMoreActionList = (row) => {
+  return [
+    {
+      label: '删除',
+      eventTag: 'delete',
+      icon: Delete,
+      danger: true
+    }
+  ]
+}
+
+// 处理更多操作选择
+const handleMoreActionSelect = async (item, row, refresh) => {
+  switch (item.eventTag) {
+    case 'delete':
+      handleDelete(row, refresh)
+      break
+    default:
+      break
+  }
 }
 
 // 获取 ZxConfirmInput 服务
@@ -211,12 +210,7 @@ const instance = getCurrentInstance()
 const { proxy } = instance || {}
 
 // 添加调试信息
-onMounted(() => {
-  console.log('=== 检查 $confirmInput 服务 ===')
-  console.log('instance:', instance)
-  console.log('proxy:', proxy)
-  console.log('proxy.$confirmInput:', proxy?.$confirmInput)
-})
+onMounted(() => {})
 
 // 删除模版
 const handleDelete = async (row, refresh) => {
@@ -224,13 +218,13 @@ const handleDelete = async (row, refresh) => {
     // 方案1: 尝试使用全局服务
     if (proxy?.$confirmInput) {
       await proxy.$confirmInput.danger({
-        targetName: row.name,
+        targetName: row.taskName,
         targetType: '模版',
-        keyword: row.name,
-        dangerMessage: `您即将删除模版"${row.name}"`,
+        keyword: row.taskName,
+        dangerMessage: `您即将删除模版"${row.taskName}"`,
         description: '此操作不可恢复，请输入模版名称以确认删除。',
         confirmAction: async () => {
-          return templateApi.deleteTemplate(row.id).then(() => {
+          return evaluationApi.deleteEvaluation(row.id).then(() => {
             refresh()
           })
         }
@@ -239,13 +233,13 @@ const handleDelete = async (row, refresh) => {
       // 方案2: 使用直接导入的服务
       console.warn('⚠️ 使用备用方案：直接导入服务')
       await confirmInputDanger({
-        targetName: row.name,
+        targetName: row.taskName,
         targetType: '模版',
-        keyword: row.name,
-        dangerMessage: `您即将删除模版"${row.name}"`,
+        keyword: row.taskName,
+        dangerMessage: `您即将删除模版"${row.taskName}"`,
         description: '此操作不可恢复，请输入模版名称以确认删除。',
         confirmAction: async () => {
-          return templateApi.deleteTemplate(row.id).then(() => {
+          return evaluationApi.deleteEvaluation(row.id).then(() => {
             refresh()
           })
         }
@@ -259,8 +253,7 @@ const handleDelete = async (row, refresh) => {
 // 表单成功回调
 const handleFormSuccess = () => {
   dialogVisible.value = false
-  // 刷新列表会通过 ZxGridList 的 refresh 方法处理
+  // 刷新列表
+  gridListRef.value?.refresh()
 }
 </script>
-
-<style lang="scss" scoped></style>

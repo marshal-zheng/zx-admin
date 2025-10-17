@@ -67,6 +67,26 @@ const formRules = computed(() => ({
   file: [{ required: true, message: '请选择导入文件', trigger: 'change' }]
 }))
 
+// 清理文件状态的通用函数
+const clearFileState = () => {
+  fileList.value = []
+  state.data.file = null
+  
+  // 立即清理上传组件状态
+  if (uploadRef.value) {
+    uploadRef.value.clearFiles()
+  }
+  
+  // 延时再次确保清理，防止组件状态同步延迟
+  setTimeout(() => {
+    fileList.value = []
+    state.data.file = null
+    if (uploadRef.value) {
+      uploadRef.value.clearFiles()
+    }
+  }, 100)
+}
+
 // 使用 useDialog hook
 const { state, dialogProps, dialogEvents, open } = useDialog<ImportFormData>({
   // 对话框配置
@@ -94,6 +114,9 @@ const { state, dialogProps, dialogEvents, open } = useDialog<ImportFormData>({
     // 调用导入 API
     const response = await dataConnectionApi.importDataSource(data.baseDataName, data.file)
 
+    // 导入成功后立即清理文件状态
+    clearFileState()
+    
     emit('success', response)
     return response
   },
@@ -104,14 +127,12 @@ const { state, dialogProps, dialogEvents, open } = useDialog<ImportFormData>({
 
   // 打开后回调 - 重置文件列表
   onOpened: () => {
-    fileList.value = []
-    state.data.file = null
+    clearFileState()
   },
 
   // 关闭后回调 - 清理文件列表
   onClosed: () => {
-    fileList.value = []
-    state.data.file = null
+    clearFileState()
   }
 })
 

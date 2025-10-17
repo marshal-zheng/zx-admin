@@ -34,6 +34,19 @@ export const evaluationRoutes: AppRouteRecordRaw[] = [
         }
       },
       {
+        path: 'task-wizard',
+        component: () => import('@/views/Evaluation/TaskManagement/taskWizard.vue'),
+        name: 'TaskWizard',
+        meta: {
+          title: '创建评估任务',
+          noTagsView: true,
+          noCache: true,
+          hidden: true,
+          canTo: true,
+          activeMenu: '/evaluation/task-list'
+        }
+      },
+      {
         path: 'task-detail/:id',
         component: () => import('@/views/Evaluation/TaskManagement/detail.vue'),
         name: 'EvaluationDetail',
@@ -57,15 +70,6 @@ export const evaluationRoutes: AppRouteRecordRaw[] = [
           hidden: true,
           canTo: true,
           activeMenu: '/evaluation/template-list'
-        }
-      },
-      {
-        path: 'dashboard',
-        component: () => import('@/views/Evaluation/Dashboard/list.vue'),
-        name: 'EvaluationDashboard',
-        meta: {
-          title: '仪表盘设计',
-          icon: 'vi-ep:data-board'
         }
       }
     ]

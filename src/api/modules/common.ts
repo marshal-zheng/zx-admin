@@ -32,6 +32,14 @@ export function getEvaluationDataSources(params) {
   })
 }
 
+// 获取评估算法列表
+export function getEvaluationAlgorithms(params) {
+  return ZXR.get({
+    url: '/indicator/algorithm/list',
+    params
+  })
+}
+
 // 验证评估配置
 export function validateEvaluationConfig(data) {
   return ZXR.post({
@@ -69,6 +77,7 @@ export default {
   getEvaluationMetrics,
   getEvaluationEnvironments,
   getEvaluationDataSources,
+  getEvaluationAlgorithms,
   validateEvaluationConfig,
   getEvaluationHistory,
   getEvaluationLogs,

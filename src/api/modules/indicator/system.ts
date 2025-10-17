@@ -42,7 +42,7 @@ export const systemApi = {
 
   // 设为模版
   setAsTemplate: (evaluaId: string | number) => {
-    return ZXR.post({
+    return ZXR.put({
       url: `/zhpgxt/zhpgEvaluaSystem/${evaluaId}`,
       data: {
         evaluaTemplate: 1

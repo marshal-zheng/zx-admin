@@ -3,13 +3,13 @@
     <div class="dag-content">
       <DAGPage
         ref="dagPageRef"
-        :operators="useStaticOperators ? staticOperators : loadOperatorsData"
+        :operators="processedOperators"
         :operators-loading="operatorsLoading"
         :dnd-config="dndConfig"
         :layout="layoutMode"
         :custom-menu-handler="customMenuHandler"
         :initial-graph-data="processedGraphData"
-        :graph-loading="graphLoading"
+        :graph-loading="computedGraphLoading"
         :auto-layout="true"
         :show-sidebar="computedShowSidebar"
         :readonly="computedReadonly"
@@ -19,7 +19,11 @@
         @save="handleSave"
         @node-dblclick="handleNodeDblclick"
         @export-xmind="handleExportXmind"
-      />
+      >
+        <template #right>
+          <slot name="toolbar-right"></slot>
+        </template>
+      </DAGPage>
     </div>
 
     <!-- 指标详情表单抽屉 -->
@@ -40,7 +44,7 @@
 
 <script setup>
 import { ref, reactive, computed, onMounted, watch, nextTick } from 'vue'
-import { DAGPage } from '@/components/business/Dag/index.vue'
+import DAGPage from '@/components/business/Dag/index.vue'
 import IndicatorDetailFormDrawer from '../components/IndicatorDetailFormDrawer.vue'
 import { useMessageBox } from '@/hooks/comp/useElementPlus'
 import { useGraphStore } from '@/components/business/ZxFlow/composables/useGraphStore'
@@ -54,14 +58,14 @@ import {
 
 // Props 定义
 const props = defineProps({
-  // 基础指标数据（左侧树列表）
+  // 基础指标数据（左侧树列表），支持静态数据、Promise或函数
   listData: {
-    type: Array,
+    type: [Array, Promise, Function],
     default: () => []
   },
-  // 图数据
+  // 图数据，支持静态对象、Promise或函数
   graphData: {
-    type: [Object, Function],
+    type: [Object, Promise, Function],
     default: () => ({ nodes: [], edges: [] })
   },
   // 是否显示左侧导航树
@@ -169,13 +173,12 @@ const dagPageRef = ref(null)
 // 响应式数据
 const operatorsLoading = ref(false)
 const layoutMode = ref('vertical')
-const graphLoading = ref(false)
+const internalGraphLoading = ref(false) // 内部图数据加载状态
 
 // 控制状态
 const showSidebar = ref(props.isShowSideNav)
 const readonly = ref(!props.isEditable)
 const showToolbar = ref(true)
-const useStaticOperators = ref(true)
 
 // 指标详情抽屉相关
 const showIndicatorDrawer = ref(false)
@@ -189,32 +192,97 @@ const editingNodeId = ref('')
 // 计算属性
 const computedShowSidebar = computed(() => showSidebar.value)
 const computedReadonly = computed(() => readonly.value)
+// 合并外部和内部的图数据加载状态
+const computedGraphLoading = computed(() => props.graphLoading || internalGraphLoading.value)
 
-// 静态算子数据
-const staticOperators = computed(() => {
-  return props.listData.length > 0 ? props.listData : []
-})
+// 处理后的算子数据
+const processedOperators = ref([])
+
+// 加载 listData 数据的函数
+const loadListData = async (dataSource) => {
+  try {
+    operatorsLoading.value = true
+    let data
+
+    // 如果是函数，调用函数获取数据
+    if (typeof dataSource === 'function') {
+      data = await dataSource()
+    }
+    // 如果是Promise，等待解析
+    else if (dataSource && typeof dataSource.then === 'function') {
+      data = await dataSource
+    }
+    // 如果是数组，直接使用
+    else if (Array.isArray(dataSource)) {
+      data = dataSource
+    } else {
+      data = []
+    }
+
+    processedOperators.value = data || []
+  } catch (error) {
+    console.error('加载 listData 数据失败:', error)
+    processedOperators.value = []
+  } finally {
+    operatorsLoading.value = false
+  }
+}
+
+// 监听 listData 变化
+watch(
+  () => props.listData,
+  (newData) => {
+    if (newData) {
+      loadListData(newData)
+    }
+  },
+  { immediate: true }
+)
 
 // 处理图数据 - 使用 ref 而不是 computed，确保能触发响应式更新
 const processedGraphData = ref(null)
+
+// 加载图数据的函数
+const loadGraphData = async (dataSource) => {
+  try {
+    internalGraphLoading.value = true
+    let data
+
+    // 如果是函数，调用函数获取数据
+    if (typeof dataSource === 'function') {
+      data = await dataSource()
+    }
+    // 如果是Promise，等待解析
+    else if (dataSource && typeof dataSource.then === 'function') {
+      data = await dataSource
+    }
+    // 如果是对象，直接使用
+    else if (dataSource && typeof dataSource === 'object') {
+      data = dataSource
+    } else {
+      data = { nodes: [], edges: [] }
+    }
+
+    // 将处理后的数据包装成返回 Promise 的函数
+    processedGraphData.value = () => Promise.resolve(data || { nodes: [], edges: [] })
+  } catch (error) {
+    console.error('加载图数据失败:', error)
+    processedGraphData.value = () => Promise.resolve({ nodes: [], edges: [] })
+  } finally {
+    internalGraphLoading.value = false
+  }
+}
 
 // 监听 graphData 变化并更新 processedGraphData
 watch(
   () => props.graphData,
   (newData) => {
     console.log('IndicatorDagEditor - 图数据变化:', newData)
-    if (typeof newData === 'function') {
-      // 如果是函数，直接传递给 DAGPage
-      processedGraphData.value = newData
-    } else if (newData && typeof newData === 'object') {
-      // 如果是静态对象，包装成函数返回该对象
-      processedGraphData.value = () => Promise.resolve(newData)
-    } else {
-      // 默认返回空数据的函数
-      processedGraphData.value = () => Promise.resolve({ nodes: [], edges: [] })
+    if (newData) {
+      loadGraphData(newData)
     }
   },
-  { immediate: true, deep: true }
+  { immediate: true }
 )
 
 // DnD 配置
@@ -434,6 +502,7 @@ const handleIndicatorCancel = () => {
 }
 
 const handleNodeDblclick = (payload) => {
+  console.log('handleNodeDblclick', payload)
   const targetNode = payload?.node || payload
   if (targetNode) {
     handleEditNode(targetNode)
@@ -463,47 +532,6 @@ const handleExportXmind = (graphData) => {
 
   // 触发外部事件
   emit('export-xmind', graphData)
-}
-
-// 加载算子数据 - 支持Promise和静态数据两种方式
-const loadOperatorsData = async () => {
-  try {
-    operatorsLoading.value = true
-
-    // 模拟异步加载算子数据
-    await new Promise((resolve) => setTimeout(resolve, 1000)) // 模拟网络延迟
-
-    // 这里可以从API获取更丰富的算子数据
-    const operatorsData = [
-      // 数据源类
-      { name: 'MySQL数据源', value: '连接MySQL数据库读取数据', category: '数据源' },
-      { name: 'CSV文件读取', value: '读取本地CSV文件数据', category: '数据源' },
-      { name: 'API数据获取', value: 'REST API接口数据获取', category: '数据源' },
-
-      // 数据处理类
-      { name: '数据过滤', value: '按条件过滤和筛选数据', category: '数据处理' },
-      { name: '数据转换', value: '字段映射和数据转换', category: '数据处理' },
-      { name: '数据关联', value: '多表关联和数据合并', category: '数据处理' },
-
-      // 机器学习类
-      { name: '线性回归', value: '线性回归算法模型训练', category: '机器学习' },
-      { name: '决策树', value: '决策树分类算法', category: '机器学习' },
-      { name: '神经网络', value: '深度学习神经网络模型', category: '机器学习' },
-
-      // 数据输出类
-      { name: '文件导出', value: '导出结果到文件', category: '数据输出' },
-      { name: '数据库写入', value: '写入数据到数据库', category: '数据输出' },
-      { name: 'API发布', value: '发布为API服务接口', category: '数据输出' }
-    ]
-
-    return operatorsData
-  } catch (error) {
-    console.error('加载算子数据失败:', error)
-    // 返回空数组
-    return []
-  } finally {
-    operatorsLoading.value = false
-  }
 }
 
 // 图实例引用

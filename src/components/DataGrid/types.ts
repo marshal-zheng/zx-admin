@@ -17,7 +17,7 @@ export interface DataGridColumn {
   /** Maximum width */
   maxWidth?: number
   /** Cell input type */
-  type?: 'input' | 'select' | 'number' | 'textarea' | 'datePicker' | 'switch' | 'custom'
+  type?: 'input' | 'select' | 'number' | 'textarea' | 'datePicker' | 'switch' | 'text' | 'custom'
   /** Options for select type */
   options?: SelectOption[]
   /** Validation rules (Element Plus format) */

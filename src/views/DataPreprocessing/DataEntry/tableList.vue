@@ -19,6 +19,10 @@ import { computed, watch } from 'vue'
 
 // 使用 computed 计算路由上的值，并同步到已有的 ref
 const createTableId = computed(() => route.params?.id ?? '')
-const tableName = computed(() => route.query?.tableName ?? '')
+const tableName = computed(() => {
+  const name = route.query?.tableName ?? ''
+  console.log('当前路由参数:', route.params, route.query, '表名:', name)
+  return name
+})
 
 </script>

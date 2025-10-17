@@ -46,6 +46,16 @@ import './permission'
 const setupAll = async () => {
   const app = createApp(App)
 
+  // 过滤掉 vue-grid-layout 的已知警告
+  app.config.warnHandler = (msg, instance, trace) => {
+    // 忽略 vue-grid-layout 的 Slot "default" 警告
+    if (msg.includes('Slot "default" invoked outside of the render function')) {
+      return
+    }
+    // 其他警告正常输出
+    console.warn('[Vue warn]:', msg)
+  }
+
   await setupI18n(app)
 
   setupStore(app)

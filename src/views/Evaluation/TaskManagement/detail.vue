@@ -1,116 +1,77 @@
 <template>
-  <div class="evaluation-detail">
-    <div class="detail-header">
-      <h1>评估详情页面</h1>
-      <p>评估ID: {{ $route.params.id }}</p>
+  <ContentDetailWrap
+    :data="detailData"
+    header-type="compact"
+    :fixed-header="true"
+    :loading="loading"
+    :skeleton-animated="true"
+    :skeleton-rows="8"
+  >
+    <div v-if="taskDetail" class="detail-content">
+      <!-- 评估方案列表 -->
+      <TaskJobList v-if="taskId" :task-id="taskId" />
     </div>
 
-    <div class="detail-content">
-      <div class="section">
-        <h2>基本信息</h2>
-        <p>这里是评估基本信息的占位文字</p>
-        <p>评估名称：示例评估项目</p>
-        <p>评估类型：综合评估</p>
-        <p>创建时间：2024-01-01</p>
-        <p>评估状态：进行中</p>
-      </div>
-
-      <div class="section">
-        <h2>评估详情</h2>
-        <p>这里是评估详细内容的占位文字</p>
-        <p>评估描述：这是一个示例评估项目的详细描述信息</p>
-        <p>评估范围：包含多个维度的综合性评估</p>
-        <p>评估方法：采用定量与定性相结合的评估方法</p>
-      </div>
-
-      <div class="section">
-        <h2>评估结果</h2>
-        <p>这里是评估结果的占位文字</p>
-        <p>总体评分：85分</p>
-        <p>评估等级：良好</p>
-        <p>改进建议：需要在某些方面进行优化</p>
-      </div>
-
-      <div class="section">
-        <h2>附件信息</h2>
-        <p>这里是附件信息的占位文字</p>
-        <p>评估报告.pdf</p>
-        <p>数据分析表.xlsx</p>
-        <p>图表资料.png</p>
-      </div>
-    </div>
-
-    <div class="detail-actions">
-      <el-button @click="goBack">返回列表</el-button>
-      <el-button type="primary">编辑评估</el-button>
-      <el-button type="success">导出报告</el-button>
-    </div>
-  </div>
+    <el-empty v-else description="未找到任务详情" />
+  </ContentDetailWrap>
 </template>
 
 <script setup>
-import { useRouter } from 'vue-router'
+import { ContentDetailWrap } from '@/components/ContentDetailWrap'
+import { useRouter, useRoute } from 'vue-router'
+import { evaluationApi } from '@/api/modules/evaluation'
+import TaskJobList from '../components/TaskJobList.vue'
 
 const router = useRouter()
+const route = useRoute()
 
-const goBack = () => {
-  router.push('/evaluation/evaluate/list')
+// 获取任务ID
+const taskId = computed(() => route.params.id)
+
+// 任务详情数据
+const taskDetail = ref(null)
+const loading = ref(false)
+
+// 构建详情数据
+const detailData = computed(() => {
+  if (!taskDetail.value) return []
+
+  return [
+    { label: '任务名称', value: taskDetail.value.taskName || '-' },
+    { label: '评估方案', value: taskDetail.value.scheme || '-' },
+    { label: '评估目的', value: taskDetail.value.purpose || '-' },
+    { label: '评估流程', value: taskDetail.value.process || '-' },
+    { label: '评估对象', value: taskDetail.value.object || '-' },
+    { label: '创建时间', value: taskDetail.value.createTime || '-' },
+    { label: '任务描述', value: taskDetail.value.taskDescribe || '-' }
+  ]
+})
+
+// 获取任务详情
+const getTaskDetail = async () => {
+  if (!taskId.value) {
+    ElMessage.error('任务ID不存在')
+    return
+  }
+
+  loading.value = true
+  try {
+    const response = await evaluationApi.getEvaluationDetail(taskId.value)
+    taskDetail.value = response
+  } catch (error) {
+  } finally {
+    loading.value = false
+  }
 }
+
+// 页面挂载时获取详情
+onMounted(() => {
+  getTaskDetail()
+})
 </script>
 
-<style scoped>
-.evaluation-detail {
-  max-width: 1200px;
-  padding: 20px;
-  margin: 0 auto;
-}
-
-.detail-header {
-  padding-bottom: 20px;
-  margin-bottom: 30px;
-  border-bottom: 1px solid #e4e7ed;
-}
-
-.detail-header h1 {
-  margin-bottom: 10px;
-  color: #303133;
-}
-
-.detail-header p {
-  font-size: 14px;
-  color: #909399;
-}
-
+<style scoped lang="less">
 .detail-content {
-  margin-bottom: 30px;
-}
-
-.section {
   padding: 20px;
-  margin-bottom: 25px;
-  background: #f8f9fa;
-  border-radius: 8px;
-}
-
-.section h2 {
-  margin-bottom: 15px;
-  font-size: 18px;
-  color: #409eff;
-}
-
-.section p {
-  margin-bottom: 8px;
-  line-height: 1.6;
-  color: #606266;
-}
-
-.detail-actions {
-  padding-top: 20px;
-  text-align: center;
-  border-top: 1px solid #e4e7ed;
-}
-
-.detail-actions .el-button {
-  margin: 0 10px;
 }
 </style>

@@ -12,7 +12,7 @@ export function getDatasetByCreateTableId(createTableId: string | number, params
 // 根据表名查询表数据
 export function getTableDataByTableName(tableName: string, params = {}) {
   return ZXR.get({
-    url: `/zhpgxt/zhpgCreateTable/selectTable/${tableName}`,
+    url: `/zhpgxt/zhpgCreateTable/selectTable/${encodeURIComponent(tableName)}`,
     params
   })
 }
@@ -91,6 +91,107 @@ export function updateDataset(createTableId: string | number, data: {
   })
 }
 
+// 删除表
+export function deleteTable(tableName: string) {
+  return ZXR.delete({
+    url: `/zhpgxt/zhpgCreateTable/deleteTable/${encodeURIComponent(tableName)}`
+  })
+}
+
+// 获取表结构
+export function getTableStructure(tableName: string) {
+  return ZXR.get({
+    url: `/zhpgxt/zhpgCreateTable/structure/${encodeURIComponent(tableName)}`
+  })
+}
+
+// 获取表字段
+export function getTableField(tableName: string) {
+  return ZXR.get({
+    url: `/zhpgxt/zhpgCreateTable/getTableField/${encodeURIComponent(tableName)}`
+  })
+}
+
+// 新建表数据
+export function insertTable(data: {
+  tableName: string
+  createTableRowDtoLists: Array<Array<{
+    name: string
+    tValue: string
+  }>>
+}) {
+  return ZXR.post({
+    url: `/zhpgxt/zhpgCreateTable/insterTable`,
+    data
+  })
+}
+
+// 编辑表数据
+export function updateTableRow(data: {
+  updateId: string | number
+  tableName: string
+  createTableRowDtos: Array<{
+    name: string
+    tValue: string
+  }>
+}) {
+  return ZXR.post({
+    url: `/zhpgxt/zhpgCreateTable/updateTable`,
+    data
+  })
+}
+
+// 删除表数据行
+export function deleteTableRow(data: {
+  updateId: string | number
+  tableName: string
+}) {
+  return ZXR.post({
+    url: `/zhpgxt/zhpgCreateTable/deleteTable`,
+    data
+  })
+}
+
+// 数据转换 - 脏数据检测
+export function dirtyDataDetection(tableName: string, data: {
+  zsjSelectDataList: Array<{
+    name: string
+    type: string
+    regexp: string
+  }>
+}) {
+  return ZXR.post({
+    url: `/zhpgxt/zhpgCreateTable/dataConversion/dirtyDataDetection/${encodeURIComponent(tableName)}`,
+    data
+  })
+}
+
+// 数据转换 - 缺失值填充
+export function missingValueFill(tableName: string, data: {
+  fillDataList: Array<{
+    name: string
+    method: string
+    value: string
+  }>
+}) {
+  return ZXR.post({
+    url: `/zhpgxt/zhpgCreateTable/dataConversion/missingValueFill/${encodeURIComponent(tableName)}`,
+    data
+  })
+}
+
+// 数据转换 - 野值剔除
+export function outlierRemoval(tableName: string, data: {
+  fields: string[]
+  minValue?: number
+  maxValue?: number
+}) {
+  return ZXR.post({
+    url: `/zhpgxt/zhpgCreateTable/dataConversion/outlierRemoval/${encodeURIComponent(tableName)}`,
+    data
+  })
+}
+
 // 导出数据集API
 export const datasetsApi = {
   getTableData: getDatasetByCreateTableId,
@@ -99,7 +200,16 @@ export const datasetsApi = {
   getDatasetDetail,
   getDatasetFields,
   deleteDataset,
+  deleteTable,
+  deleteTableRow,
+  getTableStructure,
+  getTableField,
+  insertTable,
+  updateTableRow,
   migrationToLocalHost: migrationDatasetToLocalHost,
   createTable,
-  updateDataset
+  updateDataset,
+  dirtyDataDetection,
+  missingValueFill,
+  outlierRemoval
 }

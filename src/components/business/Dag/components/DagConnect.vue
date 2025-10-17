@@ -3,9 +3,8 @@
 <script setup>
 import { ElMessageBox } from 'element-plus'
 import { onMounted, onUnmounted, watch } from 'vue'
-import { useGraphEvent } from '../../ZxFlow/composables/useGraphEvent'
 import { useGraphStore } from '../../ZxFlow/composables/useGraphStore'
-import { useGraphInstance } from '../../ZxFlow/composables/useGraphInstance'
+import { useOptionalGraphInstance } from '../../ZxFlow/composables/useGraphInstance'
 import { willCreateCycle } from '../utils/graphConstraints.js'
 import {
   updateNodeTypeAndLevel,
@@ -16,7 +15,7 @@ import {
 import { refreshCollapseState } from '../utils/collapse.js'
 
 const graphStore = useGraphStore()
-const graph = useGraphInstance()
+const graph = useOptionalGraphInstance()
 
 // 检查节点是否为叶子节点并且有计算模型
 function checkNodeHasModel(node) {
@@ -271,7 +270,7 @@ watch(
 
 // 组件挂载时注册事件
 onMounted(() => {
-  // 如果图实例已存在，立即注册事件
+  // 如果图实例已存在,立即注册事件
   if (graph?.value) {
     registerEventListeners()
   }

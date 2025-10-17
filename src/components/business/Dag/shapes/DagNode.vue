@@ -28,58 +28,65 @@
 
     <!-- 状态指示器 / 模型信息 -->
     <div v-if="showIndicator" class="zx-dag-node__indicator">
-      <ZxIcon
-        :icon="modelIcon"
-        :size="14"
-        :color="modelIconColor"
-        :popover-title="modelPopoverTitle"
-        :tooltip="modelTooltip"
-        :tooltip-placement="tooltipPlacement"
-        :tooltip-offset="12"
-        :popover-width="hasModel ? 400 : undefined"
+      <el-popover
+        v-if="hasModel && modelData"
+        :width="400"
+        :title="modelPopoverTitle"
+        trigger="click"
+        :placement="tooltipPlacement"
       >
-        <!-- 紧凑型模型信息展示 -->
-        <template v-if="hasModel && modelData" #popoverContent>
-          <div class="model-info">
-            <div class="info-row">
-              <span class="label">名称</span>
-              <span class="value">{{ modelDisplayName }}</span>
-            </div>
-            <div v-if="modelData.oprModelDesc || modelData.description" class="info-row">
-              <span class="label">描述</span>
-              <span class="value">{{ modelData.oprModelDesc || modelData.description }}</span>
-            </div>
-            <div class="info-row">
-              <span class="label">ID</span>
-              <span class="value code">{{ modelData.id }}</span>
-            </div>
-            <div v-if="modelData.oprModelPath" class="info-row">
-              <span class="label">路径</span>
-              <span class="value code">{{ modelData.oprModelPath }}</span>
-            </div>
-            <div v-if="modelData.index !== undefined" class="info-row">
-              <span class="label">顺序</span>
-              <span class="value">{{ modelData.index }}</span>
-            </div>
-            <div class="info-row">
-              <span class="label">状态</span>
-              <span class="value" :class="modelStatusClass">{{ modelStatusText }}</span>
-            </div>
-            <div v-if="modelData.createTime" class="info-row">
-              <span class="label">创建</span>
-              <span class="value">{{ formatTime(modelData.createTime) }}</span>
-            </div>
-          </div>
+        <template #reference>
+          <el-tooltip :content="modelTooltip" :placement="tooltipPlacement" :offset="12">
+            <el-icon :size="14" :color="modelIconColor" style="cursor: pointer">
+              <Setting />
+            </el-icon>
+          </el-tooltip>
         </template>
-      </ZxIcon>
+        <!-- 紧凑型模型信息展示 -->
+        <div class="model-info">
+          <div class="info-row">
+            <span class="label">名称</span>
+            <span class="value">{{ modelDisplayName }}</span>
+          </div>
+          <div v-if="modelData.oprModelDesc || modelData.description" class="info-row">
+            <span class="label">描述</span>
+            <span class="value">{{ modelData.oprModelDesc || modelData.description }}</span>
+          </div>
+          <div class="info-row">
+            <span class="label">ID</span>
+            <span class="value code">{{ modelData.id }}</span>
+          </div>
+          <div v-if="modelData.oprModelPath" class="info-row">
+            <span class="label">路径</span>
+            <span class="value code">{{ modelData.oprModelPath }}</span>
+          </div>
+          <div v-if="modelData.index !== undefined" class="info-row">
+            <span class="label">顺序</span>
+            <span class="value">{{ modelData.index }}</span>
+          </div>
+          <div class="info-row">
+            <span class="label">状态</span>
+            <span class="value" :class="modelStatusClass">{{ modelStatusText }}</span>
+          </div>
+          <div v-if="modelData.createTime" class="info-row">
+            <span class="label">创建</span>
+            <span class="value">{{ formatTime(modelData.createTime) }}</span>
+          </div>
+        </div>
+      </el-popover>
+      <el-tooltip v-else :content="modelTooltip" :placement="tooltipPlacement" :offset="12">
+        <el-icon :size="14" :color="modelIconColor">
+          <QuestionFilled />
+        </el-icon>
+      </el-tooltip>
     </div>
   </div>
 </template>
 
 <script setup>
 import { computed, watch, ref } from 'vue'
-import ZxIcon from '@/components/pure/ZxIcon'
-import { useGraphInstance } from '@/components/pure/ZxFlow/composables/useGraphInstance'
+import { useOptionalGraphInstance } from '@/components/business/ZxFlow/composables/useGraphInstance'
+import { Setting, QuestionFilled } from '@element-plus/icons-vue'
 import { toggleNodeCollapse } from '../utils/collapse.js'
 
 const props = defineProps({
@@ -95,13 +102,7 @@ const props = defineProps({
 
 // 响应式数据版本号，用于强制重新计算
 const dataVersion = ref(0)
-const graphInstance = (() => {
-  try {
-    return useGraphInstance()
-  } catch (error) {
-    return null
-  }
-})()
+const graphInstance = useOptionalGraphInstance()
 
 const formatWeightDisplay = (value) => {
   const num = Number(value)
@@ -223,10 +224,6 @@ const toggleCollapse = () => {
 }
 
 // 模型图标配置
-const modelIcon = computed(() => {
-  return hasModel.value ? 'Setting' : 'QuestionFilled'
-})
-
 const modelIconColor = computed(() => {
   if (!isLeafNode.value) {
     return '#d9d9d9' // 非叶子节点置灰
@@ -337,7 +334,7 @@ if (props.node) {
   border-radius: 6px;
   background: #ffffff;
   box-shadow: 0 1px 3px rgba(15, 34, 58, 0.08);
-  cursor: default;
+  cursor: pointer;
   box-sizing: border-box;
   overflow: visible;
 

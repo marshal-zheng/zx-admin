@@ -10,6 +10,7 @@
     :form-ref="formRef"
     :form-model="formData"
     :auto-scroll-to-error="true"
+    :loading="dialogLoading"
     :class="{ 'dialog-form-readonly': mode === 'view' }"
   >
     <div class="dialog-form-container">
@@ -76,6 +77,9 @@ const emit = defineEmits(['update:modelValue', 'success'])
 // 表单引用
 const formRef = ref()
 
+// Dialog loading 状态
+const dialogLoading = ref(false)
+
 // 弹窗显示状态
 const dialogVisible = computed({
   get: () => props.modelValue,
@@ -108,13 +112,10 @@ const formRules = {
 }
 
 // 初始化表单数据
-const initFormData = () => {
+const initFormData = async () => {
   if (props.categoryData && (props.mode === 'edit' || props.mode === 'view')) {
-    // 编辑或查看模式，填充现有数据
-    Object.assign(formData, {
-      clazzName: props.categoryData.clazzName || '',
-      clazzDescr: props.categoryData.clazzDescr || ''
-    })
+    // 编辑或查看模式，调用接口获取最新数据
+    await loadCategoryDetail(props.categoryData.id)
   } else {
     // 新建模式，重置表单
     resetFormData()
@@ -127,6 +128,25 @@ const resetFormData = () => {
     clazzName: '',
     clazzDescr: ''
   })
+}
+
+// 加载分类详情
+const loadCategoryDetail = async (id) => {
+  dialogLoading.value = true
+  try {
+    const detail = await categoryApi.getCategoryDetail(id)
+    
+    // 填充表单数据
+    Object.assign(formData, {
+      clazzName: detail.clazzName || '',
+      clazzDescr: detail.clazzDescr || ''
+    })
+  } catch (error) {
+    ElMessage.error('获取分类详情失败')
+    throw error
+  } finally {
+    dialogLoading.value = false
+  }
 }
 
 // 表单提交 - 返回 Promise，ZxDialog 会自动处理 loading 状态
@@ -161,9 +181,9 @@ const handleSubmit = async () => {
 // 监听弹窗显示状态
 watch(
   () => props.modelValue,
-  (newValue) => {
+  async (newValue) => {
     if (newValue) {
-      initFormData()
+      await initFormData()
     }
   },
   { immediate: true }
@@ -172,9 +192,9 @@ watch(
 // 监听分类数据变化
 watch(
   () => props.categoryData,
-  () => {
+  async () => {
     if (props.modelValue) {
-      initFormData()
+      await initFormData()
     }
   },
   { deep: true }

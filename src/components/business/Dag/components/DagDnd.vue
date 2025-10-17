@@ -55,7 +55,7 @@
 </template>
 
 <script setup>
-import { computed, ref } from 'vue'
+import { computed, ref, toRef } from 'vue'
 import { Search, Box, Loading } from '@element-plus/icons-vue'
 import { useDnd } from '../../ZxFlow/composables/useDnd'
 import { DAG_NODE, registerDagShapes } from '../shapes/registerDagShapes'
@@ -67,6 +67,20 @@ registerDagShapes()
 
 // Props 定义
 const props = defineProps({
+  /**
+   * 主图实例引用（可选），用于在图渲染后获取最新的 Graph
+   */
+  graphInstance: {
+    type: [Object, Function],
+    default: null
+  },
+  /**
+   * 是否为只读模式（只读时禁用拖拽）
+   */
+  readonly: {
+    type: Boolean,
+    default: false
+  },
   /**
    * 用户传入的简单数据列表
    * @type {Array<{name: string, value: string}>}
@@ -121,7 +135,8 @@ const props = defineProps({
 
 const searchKeyword = ref('')
 const idSeed = ref(0)
-const { startDrag } = useDnd()
+const graphInstanceRef = toRef(props, 'graphInstance')
+const { startDrag } = useDnd(graphInstanceRef)
 
 // 使用新的 composable 处理用户数据
 const { processedOperators, categoryGroups, stats } = useUserOperators(
@@ -149,6 +164,9 @@ const createNodeId = () => {
 }
 
 const handleMouseDown = (event, item) => {
+  if (props.readonly) {
+    return
+  }
   const id = createNodeId()
   const layoutDirection = props.layout === 'vertical' ? 'vertical' : 'horizontal'
   const sizeConfig = getNodeSizeByLayout(layoutDirection)

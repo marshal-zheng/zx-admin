@@ -87,7 +87,6 @@
 import { ref, computed, watch, nextTick } from 'vue'
 import { ElMessage } from 'element-plus'
 import { Setting, RefreshRight, ArrowDown, ArrowUp } from '@element-plus/icons-vue'
-import ZxDrawer from '@/components/pure/ZxDrawer'
 
 // Props 定义
 const props = defineProps({

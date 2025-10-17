@@ -6,6 +6,7 @@
       :class="hdClass"
       :title="panel.title"
       :draggable="isEditable"
+      :showMenu="isEditable"
       @menu-action="onHeaderMenuAction"
     >
       <template #content>

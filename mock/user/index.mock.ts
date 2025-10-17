@@ -8,20 +8,134 @@ const List: {
   role: string
   roleId: string
   permissions: string | string[]
+  realName?: string
+  department?: string
+  phone?: string
 }[] = [
   {
     username: 'admin',
     password: 'admin',
-    role: 'admin',
+    role: '系统管理员',
     roleId: '1',
-    permissions: ['*.*.*']
+    permissions: ['*.*.*'],
+    realName: '系统管理员',
+    department: '信息技术部',
+    phone: '13800138000'
   },
   {
-    username: 'test',
-    password: 'test',
-    role: 'test',
+    username: 'safety_expert',
+    password: '123456',
+    role: '安全评估专家',
     roleId: '2',
-    permissions: ['example:dialog:create', 'example:dialog:delete']
+    permissions: [
+      'evaluation:create',
+      'evaluation:edit',
+      'evaluation:delete',
+      'evaluation:view',
+      'analysis:view',
+      'report:create',
+      'report:edit'
+    ],
+    realName: '张安全',
+    department: '安全评估部',
+    phone: '13800138001'
+  },
+  {
+    username: 'emergency_expert',
+    password: '123456',
+    role: '应急响应专家',
+    roleId: '3',
+    permissions: [
+      'emergency:create',
+      'emergency:edit',
+      'emergency:view',
+      'response:manage',
+      'analysis:view',
+      'report:view'
+    ],
+    realName: '李应急',
+    department: '应急管理部',
+    phone: '13800138002'
+  },
+  {
+    username: 'risk_analyst',
+    password: '123456',
+    role: '风险分析师',
+    roleId: '4',
+    permissions: [
+      'risk:analyze',
+      'risk:view',
+      'evaluation:view',
+      'analysis:create',
+      'analysis:edit',
+      'analysis:view'
+    ],
+    realName: '王评估',
+    department: '风险分析部',
+    phone: '13800138003'
+  },
+  {
+    username: 'fire_expert',
+    password: '123456',
+    role: '消防专家',
+    roleId: '5',
+    permissions: [
+      'fire:evaluate',
+      'fire:view',
+      'equipment:check',
+      'response:view',
+      'report:view'
+    ],
+    realName: '陈消防',
+    department: '消防安全部',
+    phone: '13800138004'
+  },
+  {
+    username: 'env_expert',
+    password: '123456',
+    role: '环境影响专家',
+    roleId: '6',
+    permissions: [
+      'environment:evaluate',
+      'environment:view',
+      'pollution:assess',
+      'analysis:view',
+      'report:create'
+    ],
+    realName: '刘环保',
+    department: '环境保护部',
+    phone: '13800138005'
+  },
+  {
+    username: 'auditor',
+    password: '123456',
+    role: '质量审核员',
+    roleId: '7',
+    permissions: [
+      'audit:review',
+      'audit:approve',
+      'evaluation:view',
+      'report:review',
+      'report:approve'
+    ],
+    realName: '赵审核',
+    department: '质量控制部',
+    phone: '13800138006'
+  },
+  {
+    username: 'operator',
+    password: '123456',
+    role: '系统操作员',
+    roleId: '8',
+    permissions: [
+      'data:input',
+      'data:view',
+      'evaluation:view',
+      'report:view'
+    ],
+    realName: '孙操作',
+    department: '数据管理部',
+    phone: '13800138007'
   }
 ]
 

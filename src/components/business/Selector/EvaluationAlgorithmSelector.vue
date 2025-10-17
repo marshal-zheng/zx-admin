@@ -1,26 +1,32 @@
 <template>
   <ZxSelect
-    v-model="selectedValue"
-    mode="remote"
-    :remote-func="loadOptions"
+    v-model="innerValue"
+    :options="fetchOptions"
     :allow-search="filterable"
-    :allow-clear="clearable"
     :placeholder="placeholder"
     :disabled="disabled"
-    @change="handleChange"
-    @clear="handleClear"
+    labelKey="label"
+    valueKey="value"
+    @change="onChange"
+    @clear="onClear"
   />
 </template>
 
-<script setup>
+<script setup lang="ts">
 import { ref, watch } from 'vue'
-import { evaluateApi } from '@/api/modules/evaluate'
+import { EVALUATION_ALGORITHM_OPTIONS } from '@/constants/evaluation'
 
 defineOptions({ name: 'EvaluationAlgorithmSelector' })
 
+interface OptionItem {
+  label: string
+  value: number
+  description?: string
+}
+
 const props = defineProps({
   modelValue: {
-    type: [String, Number, Array],
+    type: [String, Number, null],
     default: ''
   },
   placeholder: {
@@ -43,63 +49,32 @@ const props = defineProps({
 
 const emit = defineEmits(['update:modelValue', 'change', 'clear'])
 
-const selectedValue = ref(props.modelValue)
+const innerValue = ref(props.modelValue)
+const optionsList = ref<OptionItem[]>(EVALUATION_ALGORITHM_OPTIONS)
 
-// 监听外部值变化
 watch(
   () => props.modelValue,
-  (newVal) => {
-    selectedValue.value = newVal
+  (v) => {
+    innerValue.value = v
   }
 )
 
-// 监听内部值变化，同步到外部
-watch(selectedValue, (newVal) => {
-  emit('update:modelValue', newVal)
+watch(innerValue, (v) => {
+  emit('update:modelValue', v)
 })
 
-// 获取评估算法选项 - 供ZxSelect的remote-func使用
-const loadOptions = async () => {
-  try {
-    console.log('🚀 开始加载评估算法选项...')
-    const response = await evaluateApi.getEvaluationAlgorithmOptions()
-    console.log('📥 评估算法API响应:', response)
-    // 返回选项数组供ZxSelect使用
-    const options = Array.isArray(response) ? response : response?.data || []
-    console.log('📋 处理后的算法选项数据:', options)
-    return options
-  } catch (error) {
-    console.error('❌ 获取评估算法选项失败:', error)
-    return []
-  }
+const fetchOptions = async () => {
+  // 直接返回枚举选项，保持异步接口兼容性
+  return EVALUATION_ALGORITHM_OPTIONS
 }
 
-// 处理选择变化
-const handleChange = (value) => {
-  emit('change', value)
+const onChange = (val: number) => {
+  // 找到对应的选项对象
+  const selectedOption = optionsList.value.find((opt) => opt.value === val)
+  emit('change', val, selectedOption)
 }
 
-// 处理清空
-const handleClear = () => {
+const onClear = () => {
   emit('clear')
 }
 </script>
-
-<style scoped>
-.algorithm-option {
-  display: flex;
-  flex-direction: column;
-  gap: 2px;
-}
-
-.algorithm-name {
-  font-weight: 500;
-  color: var(--el-text-color-primary);
-}
-
-.algorithm-desc {
-  font-size: 12px;
-  line-height: 1.2;
-  color: var(--el-text-color-secondary);
-}
-</style>

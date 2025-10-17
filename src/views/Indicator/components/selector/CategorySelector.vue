@@ -1,10 +1,8 @@
 <template>
   <ZxSelect
     v-model="innerValue"
-    mode="remote"
-    :remote-func="fetchOptions"
+    :options="fetchOptions"
     :allow-search="true"
-    :not-auto-init-search="true"
     labelKey="clazzName"
     valueKey="id"
     :allow-clear="true"

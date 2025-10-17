@@ -1,3 +1,5 @@
+import cloneDeep from 'lodash-es/cloneDeep'
+
 const deepClone = (value) => {
   if (value == null || typeof value !== 'object') {
     return value
@@ -7,16 +9,29 @@ const deepClone = (value) => {
     try {
       return structuredClone(value)
     } catch (error) {
-      console.warn('[indicatorHelper] structuredClone failed, falling back to JSON clone:', error)
+      if (import.meta.env?.DEV) {
+        console.debug('[indicatorHelper] structuredClone fallback, using cloneDeep instead.', error)
+      }
+    }
+  }
+
+  try {
+    return cloneDeep(value)
+  } catch (error) {
+    if (import.meta.env?.DEV) {
+      console.debug('[indicatorHelper] cloneDeep failed, attempting JSON fallback.', error)
     }
   }
 
   try {
     return JSON.parse(JSON.stringify(value))
   } catch (error) {
-    console.warn('[indicatorHelper] deepClone fallback warning:', error)
-    return value
+    if (import.meta.env?.DEV) {
+      console.error('[indicatorHelper] deepClone failed. Returning source reference.', error)
+    }
   }
+
+  return value
 }
 
 const ensureObject = (value, fallback = {}) => {

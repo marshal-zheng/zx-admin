@@ -57,7 +57,7 @@ import AsyncLoadComp from '../Widget/AsyncLoadComp.vue'
 import PanelComponent from './PanelComponent/index.vue'
 import { DashboardPanelsChangedEvent } from './model/events.ts'
 import { GRID_CELL_HEIGHT, GRID_CELL_VMARGIN, GRID_COLUMN_COUNT } from './constants'
-import { getDragPayload } from './dragPayloadStore'
+import { getDragPayload } from './dragPayloadStore.ts'
 
 const VueGridLayout = WidthProvider(VueGridLayoutProvider)
 
@@ -102,7 +102,9 @@ const renderPanels = computed(() => {
 
 // 响应式布局计算
 const layout = computed(() => {
-  return buildLayout()
+  const builtLayout = buildLayout()
+  // 确保返回的是一个新数组，避免响应式跟踪问题
+  return builtLayout.length > 0 ? builtLayout : []
 })
 
 // 方法
@@ -330,8 +332,8 @@ const onDropDragOver = (e) => {
   if (payload && typeof payload.w === 'number' && typeof payload.h === 'number') {
     return { w: payload.w, h: payload.h }
   }
-  // 默认尺寸（适中大小）
-  return { w: 6, h: 5 }
+  // 默认尺寸（占据一半宽度）
+  return { w: 12, h: 8 }
 }
 
 // 生命周期

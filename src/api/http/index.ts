@@ -165,7 +165,7 @@ transform.beforeRequestHook = (config, options) => {
 
   const params = config.params || {}
   // const data = config.data || false
-  
+
   // 添加调试日志 - 处理前
   if (config.url?.includes('zhpgCreateTable') && config.method?.toLowerCase() === 'post') {
     console.log('=== beforeRequestHook 开始 - config.data ===', config.data)
@@ -202,13 +202,13 @@ transform.beforeRequestHook = (config, options) => {
       config.url = config.url + (config.url?.includes('?') ? '&' : '?') + paramString
     }
   }
-  
+
   // 添加调试日志 - 处理后
   if (config.url?.includes('zhpgCreateTable') && config.method?.toLowerCase() === 'post') {
     console.log('=== beforeRequestHook 结束 - config.data ===', config.data)
     console.log('=== beforeRequestHook 结束 - config.params ===', config.params)
   }
-  
+
   return config
 }
 
@@ -312,7 +312,7 @@ transform.requestInterceptors = (config, options) => {
       ? `${options.authenticationScheme} ${token}`
       : token
   }
-  
+
   return config
 }
 
@@ -323,6 +323,41 @@ transform.responseInterceptors = (res) => {
   if (res && Object.prototype.hasOwnProperty.call(res, 'data')) {
     res[RAW_RESPONSE_KEY] = res.data
   }
+
+  // 处理文件下载
+  const contentDisposition = res.headers?.['content-disposition']
+  if (contentDisposition && contentDisposition.includes('attachment')) {
+    // 这是一个文件下载响应
+    const blob = new Blob([res.data as BlobPart])
+    const url = window.URL.createObjectURL(blob)
+    const link = document.createElement('a')
+    link.style.display = 'none'
+    link.href = url
+
+    // 尝试从 Content-Disposition 中提取文件名
+    let filename = '下载文件'
+    const filenameMatch = contentDisposition.match(/filename[^;=\n]*=((['"]).*?\2|[^;\n]*)/)
+    if (filenameMatch && filenameMatch[1]) {
+      filename = filenameMatch[1].replace(/['"]/g, '')
+      // 处理 UTF-8 编码的文件名
+      if (filename.includes('UTF-8')) {
+        const utf8Match = contentDisposition.match(/filename\*=UTF-8''(.+)/)
+        if (utf8Match && utf8Match[1]) {
+          filename = decodeURIComponent(utf8Match[1])
+        }
+      }
+    }
+
+    link.setAttribute('download', filename)
+    document.body.appendChild(link)
+    link.click()
+    document.body.removeChild(link)
+    window.URL.revokeObjectURL(url)
+
+    // 返回下载成功的标识
+    res.data = { success: true, message: '文件下载成功' }
+  }
+
   return res
 }
 

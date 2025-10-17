@@ -110,7 +110,7 @@ const { state, dialogProps, dialogEvents, open, close, setLoading, updateField }
     },
 
     // 对话框配置
-    width: '50%',
+    width: '70%',
 
     // 表单配置
     formRef: formRef,

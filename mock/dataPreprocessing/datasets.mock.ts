@@ -230,7 +230,6 @@ const mockDatasetFields = {
 }
 
 export default [
-
   // 根据创建表ID查询数据集数据
   // 根据创建表ID查询数据集详情
   {
@@ -239,7 +238,7 @@ export default [
     timeout,
     response: ({ url }) => {
       const createTableId = url.split('/')[4]
-      
+
       // 根据ID选择对应的数据集，如果找不到就使用第一个
       let dataset = mockDatasets.find((item) => item.createTableId === String(createTableId))
       if (!dataset) {
@@ -263,18 +262,18 @@ export default [
           createTime: dataset.createTime,
           updateTime: dataset.updateTime,
           status: dataset.status,
-          createTableRowDtos: fields.map(field => ({
+          createTableRowDtos: fields.map((field) => ({
             name: field.name,
             type: field.type,
-            extent: field.type.includes('(') ? field.type.match(/\(([^)]+)\)/)?.[1] || '255' : '255',
+            extent: field.type.includes('(')
+              ? field.type.match(/\(([^)]+)\)/)?.[1] || '255'
+              : '255',
             comment: field.comment
           }))
         }
       }
     }
   },
-
-
 
   // 获取数据集字段信息
   {
@@ -315,7 +314,7 @@ export default [
     response: ({ url }) => {
       const createTableId = url.split('/')[4]
       console.log('迁移数据集到本地数据库:', createTableId)
-      
+
       return {
         code: SUCCESS_CODE,
         data: {
@@ -325,6 +324,49 @@ export default [
       }
     }
   },
+  // 查询表字段
+  {
+    url: '/api/zhpgxt/zhpgCreateTable/getTableField/:tableName',
+    method: 'get',
+    timeout,
+    response: ({ url }) => {
+      const tableName = decodeURIComponent(url.split('/').pop()?.split('?')[0] || '')
+      console.log('查询表字段:', tableName)
+
+      // 根据表名返回对应的字段信息
+      if (tableName === '用户信息表') {
+        return {
+          code: SUCCESS_CODE,
+          success: true,
+          msg: 'SUCCESS',
+          data: [
+            { name: 'id', comment: '用户ID', type: 'int(11)' },
+            { name: 'username', comment: '用户名', type: 'varchar(50)' },
+            { name: 'email', comment: '邮箱', type: 'varchar(100)' },
+            { name: 'age', comment: '年龄', type: 'int(3)' },
+            { name: 'department', comment: '部门', type: 'varchar(50)' },
+            { name: 'salary', comment: '薪资', type: 'decimal(10,2)' },
+            { name: 'join_date', comment: '入职日期', type: 'date' },
+            { name: 'status', comment: '状态', type: 'varchar(20)' }
+          ]
+        }
+      }
+
+      // 默认返回通用字段
+      return {
+        code: SUCCESS_CODE,
+        success: true,
+        msg: 'SUCCESS',
+        data: [
+          { name: 'id', comment: '主键ID', type: 'int(11)' },
+          { name: 'name', comment: '名称', type: 'varchar(100)' },
+          { name: 'created_at', comment: '创建时间', type: 'datetime' },
+          { name: 'updated_at', comment: '更新时间', type: 'datetime' }
+        ]
+      }
+    }
+  },
+
   // 创建表
   {
     url: '/api/zhpgxt/zhpgCreateTable',
@@ -335,7 +377,7 @@ export default [
       console.log('=== Mock body 的类型 ===', typeof body)
       console.log('=== Mock body 的 keys ===', body ? Object.keys(body) : 'body is null')
       console.log('=== Mock body.createTableRowDtos ===', body?.createTableRowDtos)
-      
+
       // 容错处理：检查必要字段
       if (!body || !body.tableName || !body.tableComment) {
         return {
@@ -343,7 +385,7 @@ export default [
           message: '缺少必要参数：tableName 或 tableComment'
         }
       }
-      
+
       // 容错处理：检查字段数据
       const fields = body.createTableRowDtos || body.fields || []
       if (!Array.isArray(fields)) {
@@ -352,10 +394,10 @@ export default [
           message: '字段数据格式错误'
         }
       }
-      
+
       // 生成新的表ID
       const newCreateTableId = String(mockDatasets.length + 1)
-      
+
       // 创建新的数据集记录
       const newDataset = {
         createTableId: newCreateTableId,
@@ -369,12 +411,12 @@ export default [
         updateTime: new Date().toISOString().replace('T', ' ').substring(0, 19),
         status: 'active'
       }
-      
+
       // 添加到模拟数据中
       mockDatasets.push(newDataset)
-      
+
       // 添加字段信息 - 兼容不同的字段格式
-      mockDatasetFields[newCreateTableId] = fields.map(field => {
+      mockDatasetFields[newCreateTableId] = fields.map((field) => {
         // 兼容 createTableRowDtos 格式
         if (field.name && field.type) {
           return {
@@ -401,16 +443,135 @@ export default [
           nullable: true
         }
       })
-      
+
       // 初始化空数据
       mockDatasetData[newCreateTableId] = []
-      
+
       return {
         code: SUCCESS_CODE,
         data: {
           createTableId: newCreateTableId,
           tableName: body.tableName,
           message: '表创建成功'
+        }
+      }
+    }
+  },
+
+  // 更新表数据
+  {
+    url: '/api/zhpgxt/zhpgCreateTable/updateTable',
+    method: 'put',
+    timeout,
+    response: ({ body }) => {
+      console.log('=== Mock updateTable 接收到的 body ===', body)
+
+      // 容错处理：检查必要字段
+      if (!body || !body.tableName) {
+        return {
+          code: 400,
+          message: '缺少必要参数：tableName'
+        }
+      }
+
+      // 查找对应的表数据
+      const tableName = decodeURIComponent(body.tableName)
+      let targetDataset: any = null
+
+      for (const dataset of mockDatasets) {
+        if (dataset.tableName === tableName) {
+          targetDataset = dataset
+          break
+        }
+      }
+
+      if (!targetDataset) {
+        return {
+          code: 404,
+          message: `表 ${tableName} 不存在`
+        }
+      }
+
+      // 获取表数据
+      const tableData = mockDatasetData[targetDataset.createTableId] || []
+
+      // 更新数据（这里可以根据实际需要添加更新逻辑）
+      if (body.updateId && body.formData) {
+        // 查找要更新的行
+        const updateIndex = tableData.findIndex((row) => row.id == body.updateId)
+        if (updateIndex !== -1) {
+          // 更新行数据
+          tableData[updateIndex] = { ...tableData[updateIndex], ...body.formData }
+        } else {
+          return {
+            code: 404,
+            message: `未找到ID为 ${body.updateId} 的数据行`
+          }
+        }
+      }
+
+      return {
+        code: SUCCESS_CODE,
+        data: {
+          message: '表数据更新成功'
+        }
+      }
+    }
+  },
+
+  // 删除表数据行
+  {
+    url: '/api/zhpgxt/zhpgCreateTable/deleteTable',
+    method: 'post',
+    timeout,
+    response: ({ body }) => {
+      console.log('删除表数据行:', body)
+      const { updateId, tableName } = body
+
+      if (!updateId || !tableName) {
+        return {
+          code: 400,
+          message: '缺少必要参数: updateId 或 tableName'
+        }
+      }
+
+      // 查找对应的表数据
+      const decodedTableName = decodeURIComponent(tableName)
+      let targetDataset: any = null
+
+      for (const dataset of mockDatasets) {
+        if (dataset.tableName === decodedTableName) {
+          targetDataset = dataset
+          break
+        }
+      }
+
+      if (!targetDataset) {
+        return {
+          code: 404,
+          message: `表 ${decodedTableName} 不存在`
+        }
+      }
+
+      // 获取表数据
+      const tableData = mockDatasetData[targetDataset.createTableId] || []
+      const deleteIndex = tableData.findIndex((row) => row.id == updateId)
+
+      if (deleteIndex !== -1) {
+        // 删除行数据
+        tableData.splice(deleteIndex, 1)
+        console.log(`已删除表 ${decodedTableName} 中ID为 ${updateId} 的数据行`)
+
+        return {
+          code: SUCCESS_CODE,
+          data: {
+            message: '表数据删除成功'
+          }
+        }
+      } else {
+        return {
+          code: 404,
+          message: `未找到ID为 ${updateId} 的数据行`
         }
       }
     }

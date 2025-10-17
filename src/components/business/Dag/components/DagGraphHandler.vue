@@ -4,7 +4,7 @@
 
 <script>
 import { defineComponent, onMounted, inject } from 'vue'
-import { useGraphInstance } from '../../ZxFlow/composables/useGraphInstance'
+import { useOptionalGraphInstance } from '../../ZxFlow/composables/useGraphInstance'
 import { useContextMenu } from '../../ZxFlow/composables/useContextMenu'
 import { useClipboard } from '../../ZxFlow/composables/useClipboard'
 import { useHistory } from '../../ZxFlow/composables/useHistory'
@@ -26,7 +26,7 @@ export default defineComponent({
     onMounted(() => {
       try {
         // 获取图实例
-        const graph = useGraphInstance()
+        const graph = useOptionalGraphInstance()
         console.log('DagGraphHandler: Graph instance obtained:', graph)
 
         // 初始化右键菜单

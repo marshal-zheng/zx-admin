@@ -39,9 +39,6 @@
 
 <script setup lang="ts">
 import { computed } from 'vue'
-import ZxButton from '../../../../pure/ZxButton/index.vue'
-import ZxTooltipOrPopover from '../../../../pure/ZxTooltipOrPopover/index.vue'
-import ZxIcon from '../../../../pure/ZxIcon/index.vue'
 import type { PanelNotice, PanelMenuSeverity } from './types'
 
 interface Props {

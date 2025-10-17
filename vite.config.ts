@@ -141,28 +141,28 @@ export default ({ command, mode }: ConfigEnv): UserConfig => {
         // 直连 ZXUI 入口（全量安装）
         {
           find: 'zxui',
-          replacement: '/Users/hqz/dev/element-plus/packages/zxui/index.ts'
+          replacement: 'D:/HQ/element-plus/packages/zxui/index.ts'
         },
         // 直连各子包（按需引用）
         {
           find: '@zxui/components',
-          replacement: '/Users/hqz/dev/element-plus/packages/components'
+          replacement: 'D:/HQ/element-plus/packages/components'
         },
         {
           find: '@zxui/utils',
-          replacement: '/Users/hqz/dev/element-plus/packages/utils'
+          replacement: 'D:/HQ/element-plus/packages/utils'
         },
         {
           find: '@zxui/hooks',
-          replacement: '/Users/hqz/dev/element-plus/packages/hooks'
+          replacement: 'D:/HQ/element-plus/packages/hooks'
         },
         {
           find: '@zxui/constants',
-          replacement: '/Users/hqz/dev/element-plus/packages/constants'
+          replacement: 'D:/HQ/element-plus/packages/constants'
         },
         {
           find: '@zxui/theme-chalk',
-          replacement: '/Users/hqz/dev/element-plus/packages/theme-chalk'
+          replacement: 'D:/HQ/element-plus/packages/theme-chalk'
         },
       ]
     },
@@ -203,13 +203,7 @@ export default ({ command, mode }: ConfigEnv): UserConfig => {
       hmr: {
         overlay: false
       },
-      host: '0.0.0.0',
-
-      fs: {
-        
-        // 允许访问源码所在仓库
-        allow: ['/Users/hqz/dev/element-plus', '/Users/hqz/dev/vue-element-plus-admin'],
-      },
+      host: '0.0.0.0'
     },
     optimizeDeps: {
       include: [

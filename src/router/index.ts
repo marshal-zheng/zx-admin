@@ -9,7 +9,7 @@ import { dashboardOnlyRoutes } from './routes/dashboard-only.route'
 // import { dashboardRoutes } from './routes/dashboard.route'
 // import { componentsRoutes } from './routes/components.route'
 import { evaluationRoutes } from './routes/evaluation.route'
-// import { evaluationResultRoutes } from './routes/evaluationResult.route'
+import { evaluationResultRoutes } from './routes/evaluationResult.route'
 import { dataPreprocessingRoutes } from './routes/dataPreprocessing.route'
 import { indicatorRoutes } from './routes/indicator.route'
 // import { functionRoutes } from './routes/function.route'
@@ -29,7 +29,7 @@ export const asyncRouterMap: AppRouteRecordRaw[] = [
   ...dataPreprocessingRoutes,
   ...indicatorRoutes,
   ...evaluationRoutes,
-  // ...evaluationResultRoutes
+  ...evaluationResultRoutes
   // ...functionRoutes,
   // ...hooksRoutes,
   // ...levelRoutes,

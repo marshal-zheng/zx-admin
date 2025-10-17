@@ -9,11 +9,15 @@
       :load-on-mounted="true"
       :clear-selection-on-load="true"
       class="table-query-grid zx-grid-list--page"
+      :pageViewportOffset="tableType === 'datasets' ? 1 : 20"
     >
       <!-- 工具栏：左-操作 | 中-数据源信息 | 右-搜索 -->
       <template #form="{ query, loading, refresh, updateState, grid }">
         <div class="zx-grid-form-bar">
           <div class="zx-grid-form-bar__left">
+            <ZxButton v-if="tableType === 'datasets'" type="primary" @click="handleCreateTable">
+              录入数据
+            </ZxButton>
           </div>
           <div class="zx-grid-form-bar__right">
             <ZxSearch
@@ -60,18 +64,20 @@
           <el-table-column prop="createTime" label="创建时间" width="160" show-overflow-tooltip />
           <el-table-column
             label="操作"
-            width="250"
+            :width="isConversionType ? '120' : '250'"
             class-name="op-col"
             label-class-name="op-col__header"
           >
             <template #default="{ row }">
               <div class="op-col__wrap">
                 <ZxButton link type="primary" @click="handleViewData(row)">查看数据</ZxButton>
-                <ZxButton link type="primary" @click="handleEdit(row)">编辑</ZxButton>
-                <ZxMoreAction
-                  :list="getMoreActionList(row)"
-                  @select="handleMoreActionSelect($event, row, refresh)"
-                />
+                <template v-if="!isConversionType">
+                  <ZxButton link type="primary" @click="handleEdit(row)">编辑</ZxButton>
+                  <ZxMoreAction
+                    :list="getMoreActionList(row)"
+                    @select="handleMoreActionSelect($event, row, refresh)"
+                  />
+                </template>
               </div>
             </template>
           </el-table-column>
@@ -92,6 +98,7 @@ import { ContentWrap } from '@/components/ContentWrap'
 import CreateTableDrawer from './CreateTableDrawer.vue'
 import { confirmInputDanger } from 'zxui'
 import { datasetsApi } from '@/api/modules/dataPreprocessing/datasets'
+import { Delete, View } from '@element-plus/icons-vue'
 import { dataConnectionApi } from '@/api/modules/dataPreprocessing/dataConnection'
 
 // 定义 Props
@@ -128,26 +135,30 @@ const router = useRouter()
 const gridListRef = ref()
 const createTableDrawerRef = ref()
 
+// 计算属性：判断是否为转换类型（转换前或转换后）
+const isConversionType = computed(() => {
+  return props.tableType === 'before-conversion' || props.tableType === 'after-conversion'
+})
+
 // 数据加载函数 - 适配 ZxGridList
 const loadTableData = async (params) => {
   // 如果传入了自定义加载函数，优先使用
   if (props.loadData && typeof props.loadData === 'function') {
     return await props.loadData(params)
   }
-  
+
   // 根据表格类型添加不同的筛选条件
   const queryParams = { ...params }
   if (props.tableType === 'before-conversion') {
-    queryParams.conversionStatus = 'before'
+    queryParams.handType = 2
   } else if (props.tableType === 'after-conversion') {
-    queryParams.conversionStatus = 'after'
+    queryParams.handType = 3
   }
-  
+
   // 使用默认的数据加载
   const response = await datasetsApi.getDatasetList(queryParams)
   return response
 }
-
 
 // 根据表格类型获取搜索框占位符
 const getSearchPlaceholder = () => {
@@ -170,11 +181,11 @@ const onSearch = ({ refresh, updateState }) => {
 const handleViewData = (row) => {
   // 根据来源区分跳转到不同的表数据查看页面
   let routeName = 'DataEntryTableData' // 默认数据录入页面
-  
+
   if (props.source === 'data-conversion') {
     routeName = 'DataConversionTableList' // 数据转换页面
   }
-  
+
   router.push({
     name: routeName,
     params: {
@@ -219,16 +230,16 @@ const handleImportToLocal = async (row) => {
   }
 }
 
-const handleDelete = async (createTableId, handleRefresh) => {
+const handleDelete = async (row, handleRefresh) => {
   try {
     await confirmInputDanger({
       targetName: '数据集',
       targetType: '数据集',
       keyword: '确认删除',
-      dangerMessage: '您即将删除该数据集',
+      dangerMessage: `您即将删除数据集"${row.createTableName}"`,
       description: '此操作不可恢复,请输入"确认删除"以确认删除。',
       confirmAction: async () => {
-        const result = await datasetsApi.deleteDataset(createTableId)
+        const result = await datasetsApi.deleteDataset(row.createTableId)
         handleRefresh()
       }
     })
@@ -250,16 +261,17 @@ const getMoreActionList = (row) => {
   return [
     {
       label: '删除',
-      value: 'delete',
-      type: 'danger'
+      eventTag: 'delete',
+      icon: Delete,
+      danger: true
     }
   ]
 }
 
 const handleMoreActionSelect = async (action, row, handleRefresh) => {
-  switch (action.value) {
+  switch (action.eventTag) {
     case 'delete':
-      await handleDelete(row.createTableId, handleRefresh)
+      await handleDelete(row, handleRefresh)
       break
     default:
       break
@@ -290,11 +302,6 @@ const handleCreateSuccess = () => {
     font-size: 14px;
     margin-left: 8px;
   }
-}
-
-.op-col__wrap {
-  display: flex;
-  gap: 8px;
 }
 
 .table-type-indicator {

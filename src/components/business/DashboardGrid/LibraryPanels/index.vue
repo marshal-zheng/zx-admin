@@ -67,7 +67,7 @@
 
 <script setup>
 import { ref, computed } from 'vue'
-import { setDragPayload, clearDragPayload } from '../dragPayloadStore'
+import { setDragPayload, clearDragPayload } from '../dragPayloadStore.ts'
 import { allComponentTypes, getDefaultConfig } from './config'
 
 // 组件名称

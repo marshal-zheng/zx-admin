@@ -4,14 +4,17 @@
       <el-tabs v-model="activeTab" class="data-conversion-tabs" tab-position="top">
         <el-tab-pane label="转换前" name="before-conversion">
           <TableQuery
+            v-if="activeTab === 'before-conversion'"
             :show-create-button="true"
             table-type="before-conversion"
             source="data-conversion"
             @create-success="handleCreateSuccess"
+            @conversion-success="handleConversionSuccess"
           />
         </el-tab-pane>
         <el-tab-pane label="转换后" name="after-conversion">
           <TableQuery
+             v-if="activeTab === 'after-conversion'"
             :show-create-button="false"
             table-type="after-conversion"
             source="data-conversion"
@@ -24,17 +27,39 @@
 </template>
 
 <script setup>
-import { ref, onMounted } from 'vue'
+import { ref, onMounted, watch } from 'vue'
+import { useRoute } from 'vue-router'
 import { ContentWrap } from '@/components/ContentWrap'
 import TableQuery from '../components/TableQuery.vue'
 
+// 路由
+const route = useRoute()
+
 // 当前激活的标签页
 const activeTab = ref('before-conversion')
+
+// 监听路由查询参数变化，自动切换 tab
+watch(
+  () => route.query.tab,
+  (newTab) => {
+    if (newTab && (newTab === 'before-conversion' || newTab === 'after-conversion')) {
+      activeTab.value = newTab
+      console.log('根据路由参数切换标签页:', newTab)
+    }
+  },
+  { immediate: true }
+)
 
 // 创建成功回调
 const handleCreateSuccess = () => {
   console.log('数据创建成功，刷新当前标签页数据')
   // 这里可以添加刷新逻辑，或者通过事件通知TableQuery组件刷新
+}
+
+// 数据转换成功回调 - 切换到"转换后"标签页
+const handleConversionSuccess = () => {
+  console.log('数据转换成功，切换到转换后标签页')
+  activeTab.value = 'after-conversion'
 }
 
 // 添加组件初始化调试

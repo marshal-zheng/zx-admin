@@ -66,7 +66,7 @@
 
 <script setup>
 import { ContentWrap } from '@/components/ContentWrap'
-import { indicatorTemplateApi } from '@/api/modules/indicator/template'
+import { systemApi } from '@/api/modules/indicator/system'
 import { CategorySelector } from '../components/selector'
 import { confirmInputDanger } from 'zxui'
 
@@ -74,8 +74,7 @@ const router = useRouter()
 
 // 数据加载函数 - 适配 ZxGridList
 const loadTemplateData = async (params) => {
-  const response = await indicatorTemplateApi.getTemplateList(params)
-  return response
+  return systemApi.getSystemList({ ...params, evaluaTemplate: 1 })
 }
 
 const onFilterChange = (field, value, { refresh, updateState }) => {
@@ -113,7 +112,7 @@ const handleDelete = async (row, refresh) => {
         dangerMessage: `您即将删除模版"${row.evaluaName}"`,
         description: '此操作不可恢复，请输入模版名称以确认删除。',
         confirmAction: async () => {
-          return indicatorTemplateApi.deleteTemplate(row.evaluaId).then(() => {
+          return systemApi.deleteSystem(row.evaluaId).then(() => {
             refresh()
           })
         }
@@ -126,7 +125,7 @@ const handleDelete = async (row, refresh) => {
         dangerMessage: `您即将删除模版"${row.evaluaName}"`,
         description: '此操作不可恢复，请输入模版名称以确认删除。',
         confirmAction: async () => {
-          return indicatorTemplateApi.deleteTemplate(row.evaluaId).then(() => {
+          return systemApi.deleteSystem(row.evaluaId).then(() => {
             refresh()
           })
         }

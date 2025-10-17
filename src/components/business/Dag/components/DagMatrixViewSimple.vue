@@ -166,7 +166,6 @@ import { ref, computed, watch } from 'vue'
 import { ElMessage, ElMessageBox } from 'element-plus'
 import { Search, Folder, Document, Connection, Plus, Edit, Delete } from '@element-plus/icons-vue'
 import { transformGraphToMatrix } from '../utils/matrixDataTransform.js'
-import ZxTooltipOrPopover from '../../../pure/ZxTooltipOrPopover/index.vue'
 
 defineOptions({
   name: 'DagMatrixViewSimple'

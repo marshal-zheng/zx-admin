@@ -71,23 +71,23 @@
           </template>
         </el-table-column>
 
-        <!-- 描述 - 最大50字符，超过用tooltip -->
-        <el-table-column label="描述" width="200">
+        <!-- 描述 - 使用CSS省略号，hover时显示完整内容 -->
+        <el-table-column label="描述" min-width="200">
           <template #default="{ row }">
             <div class="description-cell">
-              <ZxTooltipOrPopover
-                v-if="needsTooltip(row.properties?.content?.description)"
+              <el-tooltip
+                v-if="row.properties?.content?.description"
                 :content="row.properties?.content?.description"
-                trigger="hover"
                 placement="top"
+                :show-after="300"
+                :hide-after="0"
+                effect="light"
               >
-                <span class="truncated-text">
-                  {{ getTruncatedDescription(row.properties?.content?.description) }}
-                </span>
-              </ZxTooltipOrPopover>
-              <span v-else class="normal-text">
-                {{ row.properties?.content?.description || '-' }}
-              </span>
+                <div class="description-text">
+                  {{ row.properties?.content?.description }}
+                </div>
+              </el-tooltip>
+              <span v-else class="description-empty">-</span>
             </div>
           </template>
         </el-table-column>
@@ -166,7 +166,6 @@ import { ref, computed, watch } from 'vue'
 import { ElMessage, ElMessageBox } from 'element-plus'
 import { Search, Folder, Document, Connection, Plus, Edit, Delete } from '@element-plus/icons-vue'
 import { transformGraphToMatrix } from '../utils/matrixDataTransform.js'
-import ZxTooltipOrPopover from '../../../pure/ZxTooltipOrPopover/index.vue'
 
 defineOptions({
   name: 'DagMatrixView'
@@ -334,17 +333,6 @@ const needsPopover = (pathArray) => {
   return Array.isArray(pathArray) && pathArray.length > 2
 }
 
-// 描述处理
-const getTruncatedDescription = (description) => {
-  if (!description) return '-'
-  if (description.length <= 50) return description
-  return description.substring(0, 47) + '...'
-}
-
-const needsTooltip = (description) => {
-  return description && description.length > 50
-}
-
 // 层级标签类型
 const getLevelTagType = (level) => {
   const types = ['', 'primary', 'success', 'info', 'warning', 'danger']
@@ -492,16 +480,25 @@ defineExpose({
   }
 
   .description-cell {
-    .truncated-text,
-    .normal-text {
+    width: 100%;
+    max-width: 100%;
+    overflow: hidden;
+
+    .description-text {
       font-size: 12px;
       color: #606266;
       line-height: 1.4;
+      cursor: help;
+      display: block;
+      overflow: hidden;
+      text-overflow: ellipsis;
+      white-space: nowrap;
+      max-width: 100%;
     }
 
-    .truncated-text {
-      cursor: help;
-      border-bottom: 1px dashed #dcdfe6;
+    .description-empty {
+      font-size: 12px;
+      color: #909399;
     }
   }
 

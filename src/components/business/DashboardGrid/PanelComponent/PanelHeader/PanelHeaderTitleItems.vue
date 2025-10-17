@@ -103,9 +103,6 @@
 import { computed } from 'vue'
 import { ElDropdown, ElDropdownMenu, ElDropdownItem } from 'element-plus'
 import { Link as ElIconLink } from '@element-plus/icons-vue'
-import ZxIcon from '../../../../pure/ZxIcon/index.vue'
-import ZxTooltipOrPopover from '../../../../pure/ZxTooltipOrPopover/index.vue'
-import ZxButton from '../../../../pure/ZxButton/index.vue'
 import type { PanelTitleItem, PanelMenuSeverity } from './types'
 
 interface PanelLink {

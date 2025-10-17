@@ -1,5 +1,5 @@
 <template>
-  <ZxDrawer v-bind="drawer.drawerProps.value" v-on="drawer.drawerEvents.value">
+  <ZxDrawer v-bind="drawer.drawerProps.value" :loading="drawerLoading" loadingType="skeleton" v-on="drawer.drawerEvents.value">
     <div class="create-table-container">
       <!-- 基本信息表单 -->
       <el-form
@@ -50,6 +50,9 @@ const emit = defineEmits(['success'])
 
 // 表单引用
 const formRef = ref<FormInstance | null>(null)
+
+// Drawer loading 状态
+const drawerLoading = ref(false)
 
 // 字段接口定义
 interface TableField {
@@ -248,33 +251,22 @@ const drawer = useDrawer<FormData>({
     if (isEditMode.value && editingTableId.value) {
       // 编辑模式：调用更新接口
       response = await datasetsApi.updateDataset(editingTableId.value, submitData)
-      if (response.code === '200' || response.success) {
-        ElMessage.success('表更新成功')
-        emit('success')
-      } else {
-        throw new Error(response.msg || response.message || '更新表失败')
-      }
     } else {
       // 新增模式：调用创建接口
       response = await datasetsApi.createTable(submitData)
-      if (response.code === '200' || response.success) {
-        ElMessage.success('表创建成功')
-        emit('success')
-      } else {
-        throw new Error(response.msg || response.message || '创建表失败')
-      }
     }
+
+    emit('success')
+    drawer.close()
+    
   },
   onConfirmError: (error: any) => {
-    if (error.message !== '字段验证失败') {
-      const action = isEditMode.value ? '更新' : '创建'
-      ElMessage.error(error.message || `${action}表失败`)
-    }
   }
 })
 
 // 加载数据集详情
 const loadDatasetDetail = async (createTableId: string) => {
+  drawerLoading.value = true
   try {
     const detail = await datasetsApi.getDatasetDetail(createTableId)
     
@@ -302,8 +294,9 @@ const loadDatasetDetail = async (createTableId: string) => {
       ]
     }
   } catch (error: any) {
-     ElMessage.error(`获取数据集详情失败: ${error.message || '未知错误'}`)
      throw error
+   } finally {
+     drawerLoading.value = false
    }
 }
 
@@ -317,13 +310,8 @@ const openDrawer = async (createTableId?: string) => {
     // 先打开抽屉
     drawer.open()
     
-    // 然后加载数据
-    try {
-      await loadDatasetDetail(createTableId)
-    } catch (error) {
-      // 如果加载失败，关闭抽屉
-      drawer.close()
-    }
+    await loadDatasetDetail(createTableId)
+  
   } else {
     // 新增模式
     isEditMode.value = false

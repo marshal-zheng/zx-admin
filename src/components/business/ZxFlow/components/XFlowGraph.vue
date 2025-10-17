@@ -257,6 +257,11 @@ const initGraph = async () => {
       min: props.minScale,
       max: props.maxScale
     },
+    // 关键：确保交互功能启用，这对 vue-shape 特别重要
+    interacting: true,
+    // 确保右键菜单不会干扰事件
+    preventDefaultContextMenu: false,
+    preventDefaultBlankAction: false,
     // 启用内置选择功能
     selecting: {
       enabled: true,
@@ -387,6 +392,9 @@ const initGraph = async () => {
   updateRestrict(props.restrict, props.restrictOptions)
   updateReadonly(props.readonly)
 
+  console.log('XFlowGraph - 图实例初始化完成:', g)
+  console.log('XFlowGraph - 图中的节点数量:', g.getNodes?.()?.length || 0)
+
   // 初始化键盘管理器
   const keyboardMgr = initKeyboardManager()
 
@@ -450,13 +458,60 @@ const initGraph = async () => {
   }
   nodeClickHandler = ({ node, e }) => {
     if (!node) return
+    console.log('XFlowGraph - node:click 事件触发:', { node, detail: e?.detail, event: e })
     emit('node-click', { node, event: e, type: 'node' })
     const detail = e?.detail
+    console.log('XFlowGraph - 检测双击, detail =', detail)
     if (detail === 2) {
+      console.log('XFlowGraph - 触发 node-dblclick 事件')
       emit('node-dblclick', { node, event: e, type: 'node' })
     }
   }
+  console.log('XFlowGraph - 绑定 node:click 事件监听器')
   g.on('node:click', nodeClickHandler)
+
+  // 测试：添加更底层的事件监听
+  g.on('node:mousedown', ({ node }) => {
+    console.log('XFlowGraph - node:mousedown 事件触发:', node?.id)
+  })
+  g.on('node:mouseup', ({ node }) => {
+    console.log('XFlowGraph - node:mouseup 事件触发:', node?.id)
+  })
+
+  // 同时监听 X6 原生的双击事件（如果存在）
+  g.on('node:dblclick', ({ node, e }) => {
+    console.log('XFlowGraph - node:dblclick 原生事件触发:', { node, event: e })
+    if (!node) return
+    emit('node-dblclick', { node, event: e, type: 'node' })
+  })
+
+  // 底层事件兜底日志：判断事件是否到达 Graph 层
+  g.on('cell:click', ({ cell, e }) => {
+    console.log('XFlowGraph - cell:click 事件触发:', {
+      cell,
+      isNode: cell?.isNode?.(),
+      isEdge: cell?.isEdge?.(),
+      detail: e?.detail
+    })
+  })
+  g.on('cell:dblclick', ({ cell, e }) => {
+    console.log('XFlowGraph - cell:dblclick 事件触发:', {
+      cell,
+      isNode: cell?.isNode?.(),
+      isEdge: cell?.isEdge?.()
+    })
+  })
+
+  // 容器原生 dblclick 捕获（用于排查是否被上层遮挡）
+  try {
+    containerRef?.value?.addEventListener?.(
+      'dblclick',
+      (ev) => {
+        console.log('XFlowGraph - 容器原生 dblclick 捕获:', ev?.target)
+      },
+      true
+    )
+  } catch (e) {}
 
   // 向外通知已就绪，同时传递键盘管理器和标准交互
   emit('ready', g, keyboardMgr, standardInteractions)
@@ -536,7 +591,14 @@ const applyInteractions = () => {
     edgeLabelMovable: (view) => {
       const cell = view.cell
       return cell.prop('labelDraggable') === true
-    }
+    },
+    // 关键：确保事件可以穿透到 foreignObject 内的 Vue 组件
+    magnetConnectable: true
+  }
+
+  // 关键修复：启用 interacting 功能，确保事件正常工作
+  if (graph.value.options.interacting === false) {
+    graph.value.options.interacting = true
   }
 }
 
@@ -636,7 +698,14 @@ const handleContextMenuClick = (item) => {
 }
 
 onMounted(async () => {
+  console.log('XFlowGraph - onMounted 开始')
+  console.log('XFlowGraph - containerRef:', containerRef.value)
+
   await initGraph()
+
+  console.log('XFlowGraph - initGraph 完成')
+  console.log('XFlowGraph - graph.value:', graph?.value)
+
   handleViewOperations()
   // 注册分组拖拽行为处理
   if (graph && graph.value) {

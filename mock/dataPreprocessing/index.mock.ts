@@ -984,6 +984,36 @@ export default [
     }
   },
 
+  // 根据表名获取表字段信息
+  {
+    url: '/api/zhpgxt/zhpgCreateTable/getTableField/:tableName',
+    method: 'get',
+    timeout,
+    response: ({ url }) => {
+      // 从 URL 中提取表名
+      const tableName = url.split('/').pop()
+      
+      // 根据表名返回对应的字段信息，这里提供一个通用的字段结构
+      const tableFields = mockTableFields[tableName] || [
+        { name: 'id', comment: '主键ID', type: 'int(11)' },
+        { name: 'name', comment: '姓名', type: 'varchar(50)' },
+        { name: 'age', comment: '年龄', type: 'int(11)' },
+        { name: 'email', comment: '邮箱', type: 'varchar(100)' },
+        { name: 'department', comment: '部门', type: 'varchar(50)' },
+        { name: 'salary', comment: '薪资', type: 'decimal(10,2)' },
+        { name: 'create_time', comment: '创建时间', type: 'date' },
+        { name: 'status', comment: '状态', type: 'varchar(20)' }
+      ]
+
+      return {
+        success: true,
+        code: '200',
+        msg: 'SUCCESS',
+        data: tableFields
+      }
+    }
+  },
+
   // 获取创建表列表
   {
     url: '/api/zhpgxt/zhpgCreateTable',
@@ -1272,6 +1302,103 @@ export default [
         code: 200,
         msg: "SUCCESS",
         data: pageData
+      }
+    }
+  },
+
+  // 数据转换接口 - 脏数据检测
+  {
+    url: '/api/zhpgxt/zhpgCreateTable/dataConversion/dirtyDataDetection/:tableName',
+    method: 'post',
+    timeout,
+    response: ({ body, url }) => {
+      const tableName = url.split('/').pop()
+      const { zsjSelectDataList } = body || {}
+      
+      console.log('脏数据检测请求:', { tableName, zsjSelectDataList })
+      
+      // 模拟检测结果
+      const detectionResults = zsjSelectDataList?.map(config => ({
+        field: config.name,
+        type: config.type,
+        regexp: config.regexp,
+        issueCount: Math.floor(Math.random() * 10), // 随机问题数量
+        issues: [
+          { rowIndex: 1, value: 'test', reason: '格式不匹配' },
+          { rowIndex: 3, value: null, reason: '空值' }
+        ]
+      })) || []
+      
+      return {
+        success: true,
+        code: '200',
+        msg: 'SUCCESS',
+        data: {
+          totalIssues: detectionResults.reduce((sum, result) => sum + result.issueCount, 0),
+          results: detectionResults
+        }
+      }
+    }
+  },
+
+  // 数据转换接口 - 缺失值填充
+  {
+    url: '/api/zhpgxt/zhpgCreateTable/dataConversion/missingValueFill/:tableName',
+    method: 'post',
+    timeout,
+    response: ({ body, url }) => {
+      const tableName = url.split('/').pop()
+      const { fillDataList } = body || {}
+      
+      console.log('缺失值填充请求:', { tableName, fillDataList })
+      
+      // 模拟填充结果
+      const fillResults = fillDataList?.map(config => ({
+        field: config.name,
+        method: config.method,
+        value: config.value,
+        filledCount: Math.floor(Math.random() * 20) // 随机填充数量
+      })) || []
+      
+      return {
+        success: true,
+        code: '200',
+        msg: 'SUCCESS',
+        data: {
+          totalFilled: fillResults.reduce((sum, result) => sum + result.filledCount, 0),
+          results: fillResults
+        }
+      }
+    }
+  },
+
+  // 数据转换接口 - 野值剔除
+  {
+    url: '/api/zhpgxt/zhpgCreateTable/dataConversion/outlierRemoval/:tableName',
+    method: 'post',
+    timeout,
+    response: ({ body, url }) => {
+      const tableName = url.split('/').pop()
+      const { fields, minValue, maxValue } = body || {}
+      
+      console.log('野值剔除请求:', { tableName, fields, minValue, maxValue })
+      
+      // 模拟剔除结果
+      const removalResults = fields?.map(field => ({
+        field: field,
+        minValue: minValue,
+        maxValue: maxValue,
+        removedCount: Math.floor(Math.random() * 5) // 随机剔除数量
+      })) || []
+      
+      return {
+        success: true,
+        code: '200',
+        msg: 'SUCCESS',
+        data: {
+          totalRemoved: removalResults.reduce((sum, result) => sum + result.removedCount, 0),
+          results: removalResults
+        }
       }
     }
   }

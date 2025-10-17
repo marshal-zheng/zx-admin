@@ -187,9 +187,6 @@
 
 <script setup>
 import { ref, reactive, computed, watch, isRef } from 'vue'
-import ZxDrawer from '@/components/pure/ZxDrawer'
-import ZxTag from '@/components/pure/ZxTag'
-import ZxInput from '@/components/pure/ZxInput'
 import ModelSelectDialog from './ModelSelectDialog.vue'
 import AlgorithmFormFields from './AlgorithmFormFields.vue'
 import {

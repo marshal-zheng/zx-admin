@@ -2,7 +2,7 @@
 
 <script setup>
 import { onMounted, watch, nextTick } from 'vue'
-import { useGraphInstance } from '../../ZxFlow/composables/useGraphInstance'
+import { useOptionalGraphInstance } from '../../ZxFlow/composables/useGraphInstance'
 import { useGraphStore } from '../../ZxFlow/composables/useGraphStore'
 import { dagreLayout } from '../utils/layout.js'
 import { getNodeSizeByLayout } from '../utils/nodeGeometry.js'
@@ -30,13 +30,30 @@ const props = defineProps({
   }
 })
 
-const graph = useGraphInstance()
+const graph = useOptionalGraphInstance()
 const graphStore = useGraphStore()
 // 向父级通知数据或布局完成
 const emit = defineEmits(['data-updated'])
 
 // 注册 DAG 图形
 registerDagShapes()
+
+const wait = (ms) => new Promise((resolve) => setTimeout(resolve, ms))
+
+const ensureGraphReady = async (maxAttempts = 20, delay = 100) => {
+  let attempts = 0
+
+  while (attempts < maxAttempts) {
+    const instance = graph?.value
+    if (instance) {
+      return instance
+    }
+    attempts++
+    await wait(delay)
+  }
+
+  return null
+}
 
 // 将数据转换为DAG画布格式
 const convertToDAGFormat = (data) => {
@@ -119,6 +136,12 @@ const loadAndSetData = async (dataSource) => {
       return
     }
 
+    // 获取 graphStore，如果还未准备好则等待
+    if (!graphStore) {
+      console.warn('GraphStore not ready, cannot load data')
+      return
+    }
+
     // 清空现有数据 - 使用正确的方法
     const allNodes = graphStore.nodes.map((node) => node.id)
     const allEdges = graphStore.edges.map((edge) => edge.id)
@@ -142,41 +165,28 @@ const loadAndSetData = async (dataSource) => {
       graphStore.addEdges(edges)
     }
 
-    refreshCollapseState(graph)
-
     // 等待图实例准备好，然后进行布局
-    const waitForGraphAndLayout = async () => {
-      let attempts = 0
-      const maxAttempts = 20 // 最多等待2秒
-
-      while (attempts < maxAttempts) {
-        const g = graph?.value
-
-        if (g) {
-          if (props.autoLayout && nodes.length > 0) {
-            // 先让节点渲染完成，再进行布局
-            await new Promise((resolve) => setTimeout(resolve, 200))
-            await dagreLayout(g, props.layoutDirection, 100, 80)
-            refreshCollapseState(g)
-            g.centerContent()
-          }
-
-          // 通知父级刷新小地图
-          emit('data-updated')
-          return
-        }
-
-        attempts++
-        await new Promise((resolve) => setTimeout(resolve, 100))
-      }
-
-      // 即使没有图实例，也通知父级
-      emit('data-updated')
-    }
-
-    // 启动等待和布局流程
-    waitForGraphAndLayout()
+    waitForGraphAndLayout(nodes)
   } catch (error) {}
+}
+
+const waitForGraphAndLayout = async (nodes) => {
+  const g = await ensureGraphReady()
+
+  if (g) {
+    refreshCollapseState(g)
+
+    if (props.autoLayout && nodes.length > 0) {
+      // 先让节点渲染完成，再进行布局
+      await wait(200)
+      await dagreLayout(g, props.layoutDirection, 100, 80)
+      refreshCollapseState(g)
+      g.centerContent()
+    }
+  }
+
+  // 通知父级刷新小地图或其他依赖
+  emit('data-updated')
 }
 
 // 监听初始数据变化
@@ -198,10 +208,8 @@ watch(
   async (newDirection, oldDirection) => {
     if (!newDirection || newDirection === oldDirection) return
     await nextTick()
-    const g = graph?.value
-    if (!g) {
-      return
-    }
+    const g = graph?.value || (await ensureGraphReady(10, 100))
+    if (!g) return
     try {
       await dagreLayout(g, newDirection, 100, 80)
       refreshCollapseState(g)
@@ -212,7 +220,8 @@ watch(
 
 onMounted(async () => {
   // 等待足够的时间确保 XFlowGraph 完全初始化
-  await new Promise((resolve) => setTimeout(resolve, 500))
+  await ensureGraphReady(10, 100)
+  await wait(300)
 
   // 如果有初始数据，加载它
   if (props.initialData) {

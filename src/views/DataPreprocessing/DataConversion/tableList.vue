@@ -6,11 +6,8 @@
 </template>
 
 <script setup>
-import { ref, onMounted } from 'vue'
-import { useRoute, useRouter } from 'vue-router'
-import { ElMessage } from 'element-plus'
+import { useRoute } from 'vue-router'
 import TableList from '../components/TableList.vue'
-import { Icon } from '@/components/Icon'
 
 // 路由相关
 const route = useRoute()

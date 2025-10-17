@@ -185,7 +185,7 @@ const handleMoreActionSelect = async (item, row, handleRefresh) => {
       handleExport(row)
       break
     case 'delete':
-      handleDelete(row.baseId, handleRefresh)
+      handleDelete(row, handleRefresh)
       break
     default:
       break
@@ -197,16 +197,17 @@ const handleExport = async (row) => {
   downloadByUrl(`/api/zhpgxt/zhpgBase/export/${row.baseId}`, 'hahha')
 }
 
-const handleDelete = async (baseId, handleRefresh) => {
+const handleDelete = async (row, handleRefresh) => {
   try {
     await confirmInputDanger({
       targetName: '数据源',
       targetType: '数据源',
       keyword: '确认删除',
-      dangerMessage: '您即将删除该数据源',
+      // 指定具体的数据源
+      dangerMessage: `您即将删除 '${row.baseName}' 的数据源`,
       description: '此操作不可恢复,请输入"确认删除"以确认删除。',
       confirmAction: async () => {
-        const result = await dataConnectionApi.deleteDataSource(baseId)
+        const result = await dataConnectionApi.deleteDataSource(row.baseId)
         handleRefresh()
       }
     })

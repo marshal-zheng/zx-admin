@@ -1,6 +1,7 @@
 // 指标体系相关 mock 接口
 // 导出为数组，便于在 index.js 中统一聚合
 import { SUCCESS_CODE } from '@/constants'
+import { fireAccidentGraphData } from './graph.mock'
 
 export default [
   // ========== 算子管理接口 ==========
@@ -219,7 +220,7 @@ export default [
         code: SUCCESS_CODE,
         message: '更新成功',
         data: {
-          id: params.id,
+          id: params?.id,
           ...body,
           updateTime: new Date().toLocaleString('zh-CN')
         }
@@ -246,7 +247,7 @@ export default [
     method: 'get',
     response: ({ params }) => {
       const mockOperator = {
-        id: params.id,
+        id: params?.id,
         operatorName: '数据清洗算子',
         operatorDesc: '用于清洗和预处理原始数据，去除噪声和异常值',
         operatorType: 1,
@@ -259,7 +260,7 @@ export default [
             id: '1-out-1',
             operatorNamePar: '清洗后数据',
             operatorDescPar: '经过清洗处理的数据集',
-            operatorId: params.id,
+            operatorId: params?.id,
             parType: 1
           }
         ],
@@ -268,7 +269,7 @@ export default [
             id: '1-in-1',
             operatorNamePar: '原始数据',
             operatorDescPar: '待清洗的原始数据集',
-            operatorId: params.id,
+            operatorId: params?.id,
             parType: 2
           }
         ]
@@ -295,61 +296,71 @@ export default [
         {
           id: '1',
           oprModelName: '线性回归模型',
-          oprModelDesc: '用于预测连续数值的线性回归算法，适用于简单的预测场景，具有良好的解释性和快速的训练速度',
+          oprModelDesc:
+            '用于预测连续数值的线性回归算法，适用于简单的预测场景，具有良好的解释性和快速的训练速度',
           createTime: '2024-01-15 10:30:00'
         },
         {
           id: '2',
           oprModelName: '决策树模型',
-          oprModelDesc: '基于树形结构的分类和回归算法，能够处理非线性关系，具有良好的可解释性，适合特征选择和规则提取',
+          oprModelDesc:
+            '基于树形结构的分类和回归算法，能够处理非线性关系，具有良好的可解释性，适合特征选择和规则提取',
           createTime: '2024-01-16 14:20:00'
         },
         {
           id: '3',
           oprModelName: '随机森林模型',
-          oprModelDesc: '集成学习算法，通过构建多个决策树并投票决定最终结果，具有较高的准确性和鲁棒性，能有效防止过拟合',
+          oprModelDesc:
+            '集成学习算法，通过构建多个决策树并投票决定最终结果，具有较高的准确性和鲁棒性，能有效防止过拟合',
           createTime: '2024-01-17 09:15:00'
         },
         {
           id: '4',
           oprModelName: '支持向量机模型',
-          oprModelDesc: '基于最大边界原理的分类算法，通过核函数处理非线性问题，在高维数据和小样本情况下表现优异',
+          oprModelDesc:
+            '基于最大边界原理的分类算法，通过核函数处理非线性问题，在高维数据和小样本情况下表现优异',
           createTime: '2024-01-18 16:45:00'
         },
         {
           id: '5',
           oprModelName: '神经网络模型',
-          oprModelDesc: '深度学习算法，通过多层神经元模拟人脑处理信息的方式，能够学习复杂的非线性模式，适用于图像、文本等复杂数据',
+          oprModelDesc:
+            '深度学习算法，通过多层神经元模拟人脑处理信息的方式，能够学习复杂的非线性模式，适用于图像、文本等复杂数据',
           createTime: '2024-01-19 11:30:00'
         },
         {
           id: '6',
           oprModelName: '朴素贝叶斯模型',
-          oprModelDesc: '基于贝叶斯定理的概率分类算法，假设特征间相互独立，计算简单高效，特别适用于文本分类和垃圾邮件过滤',
+          oprModelDesc:
+            '基于贝叶斯定理的概率分类算法，假设特征间相互独立，计算简单高效，特别适用于文本分类和垃圾邮件过滤',
           createTime: '2024-01-20 08:45:00'
         },
         {
           id: '7',
           oprModelName: 'K-均值聚类模型',
-          oprModelDesc: '无监督学习算法，将数据分为K个簇，使簇内数据相似度最高，簇间差异最大，适用于市场细分和客户分群',
+          oprModelDesc:
+            '无监督学习算法，将数据分为K个簇，使簇内数据相似度最高，簇间差异最大，适用于市场细分和客户分群',
           createTime: '2024-01-21 13:20:00'
         },
         {
           id: '8',
           oprModelName: '时间序列预测模型',
-          oprModelDesc: 'ARIMA等时间序列分析方法，专门处理时序数据的趋势、季节性和周期性，适用于销售预测和股价分析',
+          oprModelDesc:
+            'ARIMA等时间序列分析方法，专门处理时序数据的趋势、季节性和周期性，适用于销售预测和股价分析',
           createTime: '2024-01-22 15:10:00'
         },
         {
           id: '9',
           oprModelName: '关联规则挖掘模型',
-          oprModelDesc: 'Apriori等关联分析算法，发现数据项之间的关联关系，常用于购物篮分析和推荐系统',
+          oprModelDesc:
+            'Apriori等关联分析算法，发现数据项之间的关联关系，常用于购物篮分析和推荐系统',
           createTime: '2024-01-23 09:30:00'
         },
         {
           id: '10',
           oprModelName: 'XGBoost梯度提升模型',
-          oprModelDesc: '优化的梯度提升算法，具有高效的并行处理能力和优异的预测性能，在各种机器学习竞赛中表现突出',
+          oprModelDesc:
+            '优化的梯度提升算法，具有高效的并行处理能力和优异的预测性能，在各种机器学习竞赛中表现突出',
           createTime: '2024-01-24 12:15:00'
         }
       ]
@@ -409,7 +420,7 @@ export default [
         code: SUCCESS_CODE,
         message: '更新成功',
         data: {
-          id: params.id,
+          id: params?.id,
           ...body,
           updateTime: new Date().toLocaleString('zh-CN')
         }
@@ -436,9 +447,10 @@ export default [
     method: 'get',
     response: ({ params }) => {
       const mockModel = {
-        id: params.id,
+        id: params?.id,
         oprModelName: '线性回归模型',
-        oprModelDesc: '用于预测连续数值的线性回归算法，适用于简单的预测场景，具有良好的解释性和快速的训练速度',
+        oprModelDesc:
+          '用于预测连续数值的线性回归算法，适用于简单的预测场景，具有良好的解释性和快速的训练速度',
         createTime: '2024-01-15 10:30:00',
         updateTime: '2024-01-15 14:20:00'
       }
@@ -548,7 +560,7 @@ export default [
         code: SUCCESS_CODE,
         message: '更新成功',
         data: {
-          id: params.id,
+          id: params?.id,
           ...body,
           updateTime: new Date().toLocaleString('zh-CN')
         }
@@ -573,10 +585,53 @@ export default [
     url: '/api/zhpgxt/zhpgEvaluaSystemClazz/:id',
     method: 'get',
     response: ({ params }) => {
-      const mockCategory = {
-        id: params.id,
-        clazzName: '综合评估分类',
-        clazzDescr: '用于综合性评估的指标分类，涵盖多个维度的评估指标',
+      // 根据ID返回对应的分类数据
+      const allCategories = {
+        '1': {
+          id: '1',
+          clazzName: '综合评估分类',
+          clazzDescr: '用于综合性评估的指标分类，涵盖多个维度的评估指标',
+          createTime: '2024-01-15 10:30:00',
+          updateTime: '2024-01-15 14:20:00'
+        },
+        '2': {
+          id: '2',
+          clazzName: '性能评估分类',
+          clazzDescr: '专注于系统性能评估的指标分类，包括响应时间、吞吐量等',
+          createTime: '2024-01-16 14:20:00',
+          updateTime: '2024-01-16 16:30:00'
+        },
+        '3': {
+          id: '3',
+          clazzName: '安全评估分类',
+          clazzDescr: '安全相关的评估指标分类，涵盖安全漏洞、威胁检测等',
+          createTime: '2024-01-17 09:15:00',
+          updateTime: '2024-01-17 11:25:00'
+        },
+        '4': {
+          id: '4',
+          clazzName: '质量评估分类',
+          clazzDescr: '软件质量评估相关的指标分类，包括代码质量、测试覆盖率等',
+          createTime: '2024-01-18 16:45:00',
+          updateTime: '2024-01-18 18:50:00'
+        },
+        '5': {
+          id: '5',
+          clazzName: '用户体验分类',
+          clazzDescr: '用户体验相关的评估指标分类，关注用户满意度和操作便捷性',
+          createTime: '2024-01-19 11:30:00',
+          updateTime: '2024-01-19 13:40:00'
+        }
+      }
+      console.log('params', params)
+
+      // 保护性获取参数，避免 params 未定义导致报错
+      const idParam = params?.id ? String(params?.id) : '1'
+
+      const mockCategory = allCategories[idParam] || {
+        id: idParam,
+        clazzName: '默认分类',
+        clazzDescr: '默认分类描述',
         createTime: '2024-01-15 10:30:00',
         updateTime: '2024-01-15 14:20:00'
       }
@@ -696,7 +751,7 @@ export default [
         code: SUCCESS_CODE,
         message: '更新成功',
         data: {
-          id: params.id,
+          id: params?.id,
           ...body,
           updateTime: new Date().toLocaleString('zh-CN')
         }
@@ -721,8 +776,24 @@ export default [
   {
     url: '/api/zhpgxt/zhpgEvaluaSystemTemplate/:id',
     method: 'get',
-    response: ({ params }) => {
-      const { id } = params
+    response: ({ params, query }) => {
+      const templateId = params?.id ?? query?.id
+
+      if (!templateId) {
+        console.warn(
+          '[mock] /api/zhpgxt/zhpgEvaluaSystemTemplate/:id 请求缺少路径参数 id',
+          params,
+          query
+        )
+        return {
+          success: false,
+          code: 400,
+          msg: '缺少模版ID',
+          data: null
+        }
+      }
+
+      const id = String(templateId)
 
       // 模拟模版详情数据
       const templateDetail = {
@@ -750,49 +821,18 @@ export default [
     url: '/api/zhpgxt/zhpgEvaluaSystem',
     method: 'get',
     response: ({ query }) => {
-      const { page = 1, pageSize = 10, keyword = '', categoryId = '' } = query
+      const { page = 1, pageSize = 10, keyword = '', categoryId = '', evaluaTemplate = '' } = query
 
-      // 模拟体系数据
+      // 模拟体系数据 - 只有油料库火灾损毁评估体系
       const allSystems = [
         {
           id: '1',
           categoryId: '1',
           categoryName: '综合评估分类',
-          name: '综合效能评估体系',
-          description: '涵盖系统性能、可靠性、安全性等多维度的综合评估体系',
+          name: '油料库火灾损毁评估体系',
+          description: '涵盖泄漏扩散、危害影响、应急响应、处置效果等多维度的综合评估体系',
+          evaluaTemplate: 1,
           createTime: '2024-01-15 10:30:00'
-        },
-        {
-          id: '2',
-          categoryId: '2',
-          categoryName: '性能评估分类',
-          name: '系统性能评估体系',
-          description: '专注于系统响应时间、吞吐量、资源利用率等性能指标的评估体系',
-          createTime: '2024-01-16 14:20:00'
-        },
-        {
-          id: '3',
-          categoryId: '3',
-          categoryName: '安全评估分类',
-          name: '安全风险评估体系',
-          description: '针对安全漏洞、威胁检测、防护能力等安全相关指标的评估体系',
-          createTime: '2024-01-17 09:15:00'
-        },
-        {
-          id: '4',
-          categoryId: '4',
-          categoryName: '质量评估分类',
-          name: '软件质量评估体系',
-          description: '评估软件质量、代码质量、测试覆盖率等质量相关指标的体系',
-          createTime: '2024-01-18 16:45:00'
-        },
-        {
-          id: '5',
-          categoryId: '5',
-          categoryName: '用户体验分类',
-          name: '用户体验评估体系',
-          description: '关注用户满意度、界面友好性、操作便捷性等用户体验指标的评估体系',
-          createTime: '2024-01-19 11:30:00'
         }
       ]
 
@@ -800,6 +840,14 @@ export default [
       let filteredSystems = allSystems
       if (categoryId) {
         filteredSystems = filteredSystems.filter((item) => item.categoryId === categoryId)
+      }
+
+      // 按是否为模版过滤
+      if (evaluaTemplate !== '') {
+        const needTemplate = evaluaTemplate === 1 || evaluaTemplate === '1'
+        filteredSystems = filteredSystems.filter(
+          (item) => (item.evaluaTemplate === 1) === needTemplate
+        )
       }
 
       // 根据关键词过滤
@@ -813,7 +861,25 @@ export default [
       const total = filteredSystems.length
       const start = (page - 1) * pageSize
       const end = start + parseInt(pageSize)
-      const records = filteredSystems.slice(start, end)
+      const pageRecords = filteredSystems.slice(start, end)
+
+      // 适配后端字段：evalua* 与 clazz*，同时保留旧字段以兼容旧页面
+      const records = pageRecords.map((item) => ({
+        // 新字段
+        evaluaId: item.id,
+        clazzId: item.categoryId,
+        clazzName: item.categoryName,
+        evaluaName: item.name,
+        evaluaExpplain: item.description,
+        evaluaTemplate: item.evaluaTemplate ?? 0,
+        createTime: item.createTime,
+        // 旧字段兼容
+        id: item.id,
+        categoryId: item.categoryId,
+        categoryName: item.categoryName,
+        name: item.name,
+        description: item.description
+      }))
 
       return {
         success: true,
@@ -847,16 +913,107 @@ export default [
     }
   },
 
+  // 获取体系详情
+  {
+    url: '/api/zhpgxt/zhpgEvaluaSystem/:id',
+    method: 'get',
+    response: ({ params, query }) => {
+      const systemId = params?.id ?? query?.id ?? '1'
+
+      const id = String(systemId)
+
+      // 模拟详细的体系数据，包含图数据
+      const systemDetails = {
+        '1': {
+          evaluaId: '1',
+          clazzId: '1',
+          clazzName: '综合评估分类',
+          evaluaName: '油料库火灾损毁评估体系',
+          evaluaExpplain: '涵盖泄漏扩散、危害影响、应急响应、处置效果等多维度的综合评估体系',
+          evaluaTemplate: 1,
+          strings: '火灾事故,应急响应,损失评估',
+          reEvaluaSystemTags: [
+            { id: '1', tagName: '火灾事故' },
+            { id: '2', tagName: '应急响应' },
+            { id: '21', tagName: '损失评估' }
+          ],
+          createTime: '2024-01-15 10:30:00',
+          detailContent: JSON.stringify(fireAccidentGraphData)
+        },
+        '2': {
+          evaluaId: '2',
+          clazzId: '2',
+          clazzName: '性能评估分类',
+          evaluaName: '系统性能评估体系',
+          evaluaExpplain: '专注于系统响应时间、吞吐量、资源利用率等性能指标的评估体系',
+          evaluaTemplate: 0,
+          strings: '质量保证',
+          reEvaluaSystemTags: [{ id: '3', tagName: '质量保证' }],
+          createTime: '2024-01-16 14:20:00',
+          detailContent: JSON.stringify({
+            nodes: [
+              {
+                id: '2663477489012345678',
+                type: 'root-node',
+                x: 836,
+                y: 120,
+                properties: {
+                  content: { id: '2663477489012345679', label: '系统性能评估' },
+                  weight: 100,
+                  otherData: {},
+                  parentNodeId: null,
+                  level: 1
+                }
+              }
+            ],
+            edges: []
+          })
+        }
+      }
+
+      const systemData = systemDetails[id] || {
+        evaluaId: id,
+        clazzId: '',
+        clazzName: '',
+        evaluaName: '未知体系',
+        evaluaExpplain: '',
+        evaluaTemplate: 0,
+        strings: '',
+        reEvaluaSystemTags: [],
+        createTime: new Date().toLocaleString('zh-CN'),
+        detailContent: JSON.stringify({ nodes: [], edges: [] })
+      }
+
+      return {
+        code: SUCCESS_CODE,
+        message: '获取成功',
+        data: systemData
+      }
+    }
+  },
+
   // 更新体系
   {
     url: '/api/zhpgxt/zhpgEvaluaSystem/:id',
     method: 'put',
     response: ({ params, body }) => {
+      const isSetTemplate = body && (body.evaluaTemplate === 1 || body.evaluaTemplate === '1')
+      if (isSetTemplate) {
+        return {
+          code: SUCCESS_CODE,
+          message: '设为模版成功',
+          data: {
+            id: params?.id,
+            evaluaTemplate: 1,
+            updateTime: new Date().toLocaleString('zh-CN')
+          }
+        }
+      }
       return {
         code: SUCCESS_CODE,
         message: '更新成功',
         data: {
-          id: params.id,
+          id: params?.id,
           ...body,
           updateTime: new Date().toLocaleString('zh-CN')
         }
@@ -873,23 +1030,6 @@ export default [
         code: SUCCESS_CODE,
         message: '删除成功',
         data: null
-      }
-    }
-  },
-
-  // 设为模版
-  {
-    url: '/api/zhpgxt/zhpgEvaluaSystem/:id',
-    method: 'post',
-    response: ({ params, body }) => {
-      return {
-        code: SUCCESS_CODE,
-        message: '设为模版成功',
-        data: {
-          id: params.id,
-          evaluaTemplate: 1,
-          updateTime: new Date().toLocaleString('zh-CN')
-        }
       }
     }
   },
@@ -1146,7 +1286,7 @@ export default [
 
       return {
         success: true,
-        code: '200',
+        code: 200,
         msg: 'SUCCESS',
         data: {
           current: page,
@@ -1374,6 +1514,91 @@ export default [
             createTime: '2024-01-05 11:15:00'
           }
         ]
+      }
+    }
+  },
+
+  // ========== 指标体系标签管理接口 ==========
+  // 获取指标体系标签列表
+  {
+    url: '/api/zhpgxt/zhpgEvaluaSystemTag',
+    method: 'get',
+    response: ({ query }) => {
+      const { current = 1, size = 10 } = query
+
+      // 模拟标签数据
+      const allTags = [
+        { id: '1', tagName: '性能评估', createTime: '2024-01-15 10:30:00' },
+        { id: '2', tagName: '安全测评', createTime: '2024-01-16 14:20:00' },
+        { id: '3', tagName: '质量保证', createTime: '2024-01-17 09:15:00' },
+        { id: '4', tagName: '用户体验', createTime: '2024-01-18 16:45:00' },
+        { id: '5', tagName: '可靠性', createTime: '2024-01-19 11:30:00' },
+        { id: '6', tagName: '可维护性', createTime: '2024-01-20 08:45:00' },
+        { id: '7', tagName: '可扩展性', createTime: '2024-01-21 13:20:00' },
+        { id: '8', tagName: '兼容性', createTime: '2024-01-22 15:10:00' },
+        { id: '9', tagName: '易用性', createTime: '2024-01-23 09:30:00' },
+        { id: '10', tagName: '效率', createTime: '2024-01-24 12:15:00' },
+        { id: '11', tagName: '成本效益', createTime: '2024-01-25 10:00:00' },
+        { id: '12', tagName: '功能完整性', createTime: '2024-01-26 14:30:00' },
+        { id: '13', tagName: '规范性', createTime: '2024-01-27 16:20:00' },
+        { id: '14', tagName: '可测试性', createTime: '2024-01-28 11:45:00' },
+        { id: '15', tagName: '可移植性', createTime: '2024-01-29 09:00:00' },
+        { id: '16', tagName: '互操作性', createTime: '2024-01-30 13:15:00' },
+        { id: '17', tagName: '资源利用率', createTime: '2024-01-31 10:30:00' },
+        { id: '18', tagName: '响应时间', createTime: '2024-02-01 15:20:00' },
+        { id: '19', tagName: '吞吐量', createTime: '2024-02-02 11:10:00' },
+        { id: '20', tagName: '并发处理', createTime: '2024-02-03 14:00:00' }
+      ]
+
+      // 分页处理
+      const total = allTags.length
+      const start = (current - 1) * size
+      const end = start + parseInt(size)
+      const records = allTags.slice(start, end)
+
+      return {
+        success: true,
+        code: SUCCESS_CODE,
+        msg: 'SUCCESS',
+        data: {
+          records,
+          total,
+          size: parseInt(size),
+          current: parseInt(current),
+          pages: Math.ceil(total / size)
+        }
+      }
+    }
+  },
+
+  // 创建指标体系标签
+  {
+    url: '/api/zhpgxt/zhpgEvaluaSystemTag',
+    method: 'post',
+    response: ({ body }) => {
+      return {
+        success: true,
+        code: SUCCESS_CODE,
+        msg: 'SUCCESS',
+        data: {
+          id: Date.now().toString(),
+          tagName: body.tagName,
+          createTime: new Date().toLocaleString('zh-CN')
+        }
+      }
+    }
+  },
+
+  // 删除指标体系标签
+  {
+    url: '/api/zhpgxt/zhpgEvaluaSystemTag/:id',
+    method: 'delete',
+    response: ({ params }) => {
+      return {
+        success: true,
+        code: SUCCESS_CODE,
+        msg: '删除成功',
+        data: null
       }
     }
   }

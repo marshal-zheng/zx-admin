@@ -18,7 +18,7 @@
 
 <script setup>
 import { ref } from 'vue'
-import { useGraphInstance } from '../../ZxFlow/composables/useGraphInstance'
+import { useOptionalGraphInstance } from '../../ZxFlow/composables/useGraphInstance'
 import { useGraphStore } from '../../ZxFlow/composables/useGraphStore'
 import { useKeyboard } from '../../ZxFlow/composables/useKeyboard'
 import { Document } from '@element-plus/icons-vue'
@@ -28,7 +28,7 @@ import { ElMessage } from 'element-plus'
 
 const emit = defineEmits(['layout-change', 'save'])
 
-const graph = useGraphInstance()
+const graph = useOptionalGraphInstance()
 const graphStore = useGraphStore()
 
 const layoutDir = ref('LR')

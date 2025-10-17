@@ -1,6 +1,7 @@
 <template>
   <ContentWrap>
     <ZxGridList
+      ref="gridListRef"
       :load-data="loadCategoryData"
       :show-pagination="true"
       :page-sizes="[10, 20, 50, 100]"
@@ -76,6 +77,7 @@ import { confirmInputDanger } from 'zxui'
 const router = useRouter()
 
 // 响应式数据
+const gridListRef = ref(null)
 const dialogVisible = ref(false)
 const currentCategory = ref(null)
 const dialogMode = ref('create') // create | edit
@@ -105,48 +107,27 @@ const handleEdit = (row) => {
   dialogVisible.value = true
 }
 
-// 获取当前实例
-const instance = getCurrentInstance()
-const { proxy } = instance || {}
-
 // 删除分类
 const handleDelete = async (row, refresh) => {
-  try {
-    if (proxy?.$confirmInput) {
-      await proxy.$confirmInput.danger({
-        targetName: row.clazzName,
-        targetType: '分类',
-        keyword: row.clazzName,
-        dangerMessage: `您即将删除分类"${row.clazzName}"`,
-        description: '此操作不可恢复，请输入分类名称以确认删除。',
-        confirmAction: async () => {
-          return categoryApi.deleteCategory(row.id).then(() => {
-            refresh()
-          })
-        }
-      })
-    } else {
-      await confirmInputDanger({
-        targetName: row.name,
-        targetType: '分类',
-        keyword: row.name,
-        dangerMessage: `您即将删除分类"${row.name}"`,
-        description: '此操作不可恢复，请输入分类名称以确认删除。',
-        confirmAction: async () => {
-          return categoryApi.deleteCategory(row.id).then(() => {
-            refresh()
-          })
-        }
+  await confirmInputDanger({
+    targetName: row.clazzName,
+    targetType: '分类',
+    keyword: row.clazzName,
+    dangerMessage: `您即将删除分类"${row.clazzName}"`,
+    description: '此操作不可恢复，请输入分类名称以确认删除。',
+    confirmAction: async () => {
+      return categoryApi.deleteCategory(row.id).then(() => {
+        refresh()
       })
     }
-  } catch (error) {
-    console.log('用户取消删除或操作失败:', error)
-  }
+  })
 }
 
 // 表单成功回调
 const handleFormSuccess = () => {
   dialogVisible.value = false
+  // 编辑或创建成功后刷新列表
+  gridListRef.value?.refresh?.()
 }
 </script>
 

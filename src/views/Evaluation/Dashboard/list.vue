@@ -39,13 +39,6 @@
             min-width="300"
             show-overflow-tooltip
           />
-          <el-table-column prop="type" label="类型" width="120">
-            <template #default="{ row }">
-              <el-tag :type="getDashboardTypeTag(row.type)">
-                {{ getDashboardTypeName(row.type) }}
-              </el-tag>
-            </template>
-          </el-table-column>
           <el-table-column prop="createTime" label="创建时间" width="180" />
           <el-table-column
             label="操作"
@@ -55,6 +48,7 @@
           >
             <template #default="{ row }">
               <div class="op-col__wrap">
+                <ZxButton link type="primary" @click="handleView(row)">查看</ZxButton>
                 <ZxButton link type="primary" @click="handleEdit(row)">编辑</ZxButton>
                 <ZxMoreAction
                   :list="getMoreActionList(row)"
@@ -74,7 +68,7 @@ import { ContentWrap } from '@/components/ContentWrap'
 import { dashboardApi } from '@/api/modules/evaluation/dashboard'
 import { confirmInputDanger } from 'zxui'
 import { ElMessage } from 'element-plus'
-import { Delete, View } from '@element-plus/icons-vue'
+import { Delete } from '@element-plus/icons-vue'
 
 const router = useRouter()
 
@@ -83,14 +77,9 @@ const gridListRef = ref(null)
 
 // 数据加载函数 - 适配 ZxGridList
 const loadDashboardData = async (params) => {
-  try {
-    const data = await dashboardApi.getDashboardList(params)
-    console.log('=== Dashboard API 返回数据 ===', data)
-    return data
-  } catch (error) {
-    console.error('=== loadDashboardData 错误 ===', error)
-    throw error
-  }
+  const response = await dashboardApi.getDashboardList(params)
+  console.log('response', response)
+  return response
 }
 
 const onSearch = ({ handleRefresh, updateState }) => {
@@ -100,27 +89,23 @@ const onSearch = ({ handleRefresh, updateState }) => {
 
 // 新建仪表盘
 const handleAdd = () => {
-  ElMessage.info('新建仪表盘功能开发中...')
+  // 清除可能存在的旧数据
+  sessionStorage.removeItem('dashboard-design-data')
+  router.push('/evaluation-result/dashboard-create')
 }
 
 // 编辑仪表盘
 const handleEdit = (row) => {
-  ElMessage.info('编辑仪表盘功能开发中...')
+  // 将当前行数据存入 sessionStorage
+  sessionStorage.setItem('dashboard-design-data', JSON.stringify(row))
+  router.push(`/evaluation-result/dashboard-edit/${row.id}`)
 }
 
 // 查看详情
 const handleView = (row) => {
-  ElMessage.info('查看仪表盘详情功能开发中...')
-}
-
-// 获取仪表盘类型名称
-const getDashboardTypeName = (type) => {
-  const typeMap = {
-    1: '基础面板',
-    2: '高级面板',
-    3: '自定义面板'
-  }
-  return typeMap[type] || '未知类型'
+  // 将当前行数据存入 sessionStorage
+  sessionStorage.setItem('dashboard-design-data', JSON.stringify(row))
+  router.push(`/evaluation-result/dashboard-view/${row.id}`)
 }
 
 // 获取仪表盘类型标签样式
@@ -137,15 +122,6 @@ const getDashboardTypeTag = (type) => {
 const getMoreActionList = (row) => {
   return [
     {
-      label: '查看',
-      eventTag: 'view',
-      icon: View,
-      danger: false
-    },
-    {
-      isDivider: true
-    },
-    {
       label: '删除',
       eventTag: 'delete',
       icon: Delete,
@@ -157,9 +133,6 @@ const getMoreActionList = (row) => {
 // 处理更多操作选择
 const handleMoreActionSelect = async (item, row, handleRefresh) => {
   switch (item.eventTag) {
-    case 'view':
-      handleView(row)
-      break
     case 'delete':
       handleDelete(row.id, handleRefresh)
       break

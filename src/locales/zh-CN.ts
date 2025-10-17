@@ -194,7 +194,12 @@ export default {
     evaluationDetail: '评估详情',
     templateManagement: '模版管理',
     templateList: '模版列表',
-    templateDetail: '模版详情'
+    templateDetail: '模版详情',
+    evaluationResultGeneration: '评估结果生成',
+    evaluationResultManagement: '评估结果管理',
+    evaluationReportManagement: '评估报告模版',
+    evaluationResultDetail: '评估结果详情',
+    evaluationReport: '评估报告'
   },
   permission: {
     hasPermission: '请设置操作权限值'

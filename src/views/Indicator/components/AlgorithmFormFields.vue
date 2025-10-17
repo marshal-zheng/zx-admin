@@ -119,8 +119,6 @@
 <script setup>
 import { computed, watch, reactive, ref } from 'vue'
 import { Setting, InfoFilled } from '@element-plus/icons-vue'
-import ZxInput from '@/components/pure/ZxInput'
-import ZxTag from '@/components/pure/ZxTag'
 import FuzzyTypeSelector from './selector/FuzzyTypeSelector.vue'
 import TopsisTypeSelector from './selector/TopsisTypeSelector.vue'
 import {

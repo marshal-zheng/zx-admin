@@ -83,7 +83,6 @@
 <script setup lang="ts">
 import { computed } from 'vue'
 import { ElDropdown, ElDropdownMenu, ElDropdownItem } from 'element-plus'
-import ZxIcon from '../../../../pure/ZxIcon/index.vue'
 import type { PanelMenuItem } from './types'
 import { MoreFilled } from '@element-plus/icons-vue'
 

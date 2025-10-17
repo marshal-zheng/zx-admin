@@ -51,6 +51,36 @@ function parseNumberArray(arr: (string | number)[]): number[] {
   return arr.map((str) => parseFloat(String(str)) || 0)
 }
 
+const DEFAULT_DECIMAL_PLACES = 2
+
+/**
+ * 将任意输入安全转换为有限数字
+ */
+function toFiniteNumber(value: unknown, fallback = 0): number {
+  const num = typeof value === 'number' ? value : parseFloat(String(value))
+  return Number.isFinite(num) ? num : fallback
+}
+
+/**
+ * 将数值格式化为最多保留指定位小数的字符串，移除末尾无意义的 0
+ */
+function formatWithMaxDecimals(value: unknown, decimals = DEFAULT_DECIMAL_PLACES): string {
+  if (Array.isArray(value)) {
+    return value.map((item) => formatWithMaxDecimals(item, decimals)).join(', ')
+  }
+  const num = toFiniteNumber(value)
+  const rounded = Number(num.toFixed(decimals))
+  return rounded.toString()
+}
+
+/**
+ * 修正浮点精度问题，避免出现 110.000000000001 这样的值
+ */
+function normalizePrecision(value: number, precision = 12): number {
+  if (!Number.isFinite(value)) return 0
+  return Number(value.toPrecision(precision))
+}
+
 /**
  * 处理评估数据为柱状图格式
  * @param evaluationData - 评估接口返回的数据
@@ -67,11 +97,19 @@ export function transformToBarChart(
     return baseOptions
   }
 
+  const parsedData = zhpgObjectResultList.map((dataArray) => parseNumberArray(dataArray))
+
+  // 动态计算 Y 轴的最大值和最小值
+  const allValues = parsedData.flat()
+  const maxValue = Math.max(...allValues)
+  const minValue = Math.min(...allValues, 0)
+  const adjustedMax = normalizePrecision(maxValue * 1.1)
+
   // 转换数据为ECharts series格式
-  const series = zhpgObjectResultList.map((dataArray, index) => ({
+  const series = parsedData.map((dataArray, index) => ({
     name: titleList[index] || `系列${index + 1}`,
     type: 'bar',
-    data: parseNumberArray(dataArray),
+    data: dataArray,
     ...baseOptions.series?.[index] // 合并基础配置中的series配置
   }))
 
@@ -89,9 +127,16 @@ export function transformToBarChart(
     yAxis: {
       type: 'value',
       name: '评估值',
-      min: 0,
-      max: 1,
-      ...baseOptions.yAxis
+      min: normalizePrecision(minValue),
+      max: adjustedMax,
+      ...baseOptions.yAxis,
+      axisLabel: {
+        ...(baseOptions.yAxis?.axisLabel || {}),
+        formatter: (value: number) => {
+          // 保留最多两位小数，去掉末尾无意义的0
+          return formatWithMaxDecimals(value)
+        }
+      }
     },
     series,
     legend: {
@@ -106,7 +151,7 @@ export function transformToBarChart(
       formatter: function (params) {
         let result = `${params[0].axisValue}<br/>`
         params.forEach((param) => {
-          result += `${param.marker}${param.seriesName}: ${param.value}<br/>`
+          result += `${param.marker}${param.seriesName}: ${formatWithMaxDecimals(param.value)}<br/>`
         })
         return result
       },
@@ -132,21 +177,34 @@ export function transformToRadarChart(
     return baseOptions
   }
 
-  // 构建雷达图指示器
-  const indicator = detailNames.map((name) => ({
-    name,
-    max: 1,
-    min: 0
-  }))
+  // 动态计算每个指标的最大值和最小值
+  const parsedData = zhpgObjectResultList.map((dataArray) => parseNumberArray(dataArray))
+  const indicator = detailNames.map((name, index) => {
+    // 获取该指标在所有评估对象中的值
+    const values = parsedData.map((data) => data[index])
+    const maxValue = Math.max(...values)
+    const minValue = Math.min(...values)
 
+    // 为了让雷达图更美观，给最大值增加 20% 的余量
+    const adjustedMax = normalizePrecision(maxValue * 1.2)
+    const minBound = Math.min(0, minValue)
+
+    return {
+      name,
+      max: adjustedMax > 0 ? adjustedMax : 1, // 避免 max 为 0
+      min: normalizePrecision(minBound) // 最小值至少为 0
+    }
+  })
+
+  console.log('Radar chart indicators:', indicator)
   console.log('isArea', isArea)
 
   // 转换数据为雷达图series格式
   const series = [
     {
       type: 'radar',
-      data: zhpgObjectResultList.map((dataArray, index) => ({
-        value: parseNumberArray(dataArray),
+      data: parsedData.map((dataArray, index) => ({
+        value: dataArray,
         name: titleList[index] || `系列${index + 1}`,
         areaStyle: isArea ? { opacity: 0.2 } : null
       })),
@@ -158,6 +216,29 @@ export function transformToRadarChart(
     ...baseOptions,
     radar: {
       indicator,
+      // 让雷达图更加清晰
+      splitNumber: 5,
+      name: {
+        textStyle: {
+          color: '#666'
+        }
+      },
+      splitLine: {
+        lineStyle: {
+          color: '#ddd'
+        }
+      },
+      splitArea: {
+        show: true,
+        areaStyle: {
+          color: ['rgba(250,250,250,0.3)', 'rgba(200,200,200,0.1)']
+        }
+      },
+      axisLine: {
+        lineStyle: {
+          color: '#ccc'
+        }
+      },
       ...baseOptions.radar
     },
     series,
@@ -169,9 +250,9 @@ export function transformToRadarChart(
       trigger: 'item',
       formatter: function (params) {
         const { name, value } = params.data
-        let result = `${name}<br/>`
+        let result = `<strong>${name}</strong><br/>`
         value.forEach((val, index) => {
-          result += `${detailNames[index]}: ${val}<br/>`
+          result += `${detailNames[index]}: <strong>${formatWithMaxDecimals(val)}</strong><br/>`
         })
         return result
       },
@@ -196,10 +277,20 @@ export function transformToLineChart(
     return baseOptions
   }
 
-  const series = zhpgObjectResultList.map((dataArray, index) => ({
+  const parsedData = zhpgObjectResultList.map((dataArray) => parseNumberArray(dataArray))
+
+  // 动态计算 Y 轴的最大值和最小值
+  const allValues = parsedData.flat()
+  const maxValue = Math.max(...allValues)
+  const minValue = Math.min(...allValues, 0)
+
+  // 给最大值增加 10% 的余量，让图表更美观
+  const adjustedMax = normalizePrecision(maxValue * 1.1)
+
+  const series = parsedData.map((dataArray, index) => ({
     name: titleList[index] || `系列${index + 1}`,
     type: 'line',
-    data: parseNumberArray(dataArray),
+    data: dataArray,
     smooth: false, // 折线图不使用平滑
     ...baseOptions.series?.[index]
   }))
@@ -218,9 +309,16 @@ export function transformToLineChart(
     yAxis: {
       type: 'value',
       name: '评估值',
-      min: 0,
-      max: 1,
-      ...baseOptions.yAxis
+      min: normalizePrecision(minValue),
+      max: adjustedMax,
+      ...baseOptions.yAxis,
+      axisLabel: {
+        ...(baseOptions.yAxis?.axisLabel || {}),
+        formatter: (value: number) => {
+          // 保留最多两位小数，去掉末尾无意义的0
+          return formatWithMaxDecimals(value)
+        }
+      }
     },
     series,
     legend: {
@@ -250,10 +348,18 @@ export function transformToCurveChart(
     return baseOptions
   }
 
-  const series = zhpgObjectResultList.map((dataArray, index) => ({
+  const parsedData = zhpgObjectResultList.map((dataArray) => parseNumberArray(dataArray))
+
+  // 动态计算 Y 轴的最大值和最小值
+  const allValues = parsedData.flat()
+  const maxValue = Math.max(...allValues)
+  const minValue = Math.min(...allValues, 0)
+  const adjustedMax = normalizePrecision(maxValue * 1.1)
+
+  const series = parsedData.map((dataArray, index) => ({
     name: titleList[index] || `系列${index + 1}`,
     type: 'line',
-    data: parseNumberArray(dataArray),
+    data: dataArray,
     smooth: true, // 曲线图使用贝塞尔平滑曲线
     symbolSize: 6,
     lineStyle: {
@@ -276,9 +382,16 @@ export function transformToCurveChart(
     yAxis: {
       type: 'value',
       name: '评估值',
-      min: 0,
-      max: 1,
-      ...baseOptions.yAxis
+      min: normalizePrecision(minValue),
+      max: adjustedMax,
+      ...baseOptions.yAxis,
+      axisLabel: {
+        ...(baseOptions.yAxis?.axisLabel || {}),
+        formatter: (value: number) => {
+          // 保留最多两位小数，去掉末尾无意义的0
+          return formatWithMaxDecimals(value)
+        }
+      }
     },
     series,
     legend: {
@@ -308,10 +421,18 @@ export function transformToAreaChart(
     return baseOptions
   }
 
-  const series = zhpgObjectResultList.map((dataArray, index) => ({
+  const parsedData = zhpgObjectResultList.map((dataArray) => parseNumberArray(dataArray))
+
+  // 动态计算 Y 轴的最大值和最小值
+  const allValues = parsedData.flat()
+  const maxValue = Math.max(...allValues)
+  const minValue = Math.min(...allValues, 0)
+  const adjustedMax = normalizePrecision(maxValue * 1.1)
+
+  const series = parsedData.map((dataArray, index) => ({
     name: titleList[index] || `系列${index + 1}`,
     type: 'line',
-    data: parseNumberArray(dataArray),
+    data: dataArray,
     smooth: true,
     areaStyle: {
       opacity: 0.3
@@ -333,9 +454,16 @@ export function transformToAreaChart(
     yAxis: {
       type: 'value',
       name: '评估值',
-      min: 0,
-      max: 1,
-      ...baseOptions.yAxis
+      min: normalizePrecision(minValue),
+      max: adjustedMax,
+      ...baseOptions.yAxis,
+      axisLabel: {
+        ...(baseOptions.yAxis?.axisLabel || {}),
+        formatter: (value: number) => {
+          // 保留最多两位小数，去掉末尾无意义的0
+          return formatWithMaxDecimals(value)
+        }
+      }
     },
     series,
     legend: {
@@ -605,16 +733,30 @@ export function transformToScatterChart(
       xAxis: {
         type: 'value',
         name: titleList[0] || 'X轴',
-        min: baseOptions.xAxis?.min ?? xMin - xPad,
-        max: baseOptions.xAxis?.max ?? xMax + xPad,
-        ...baseOptions.xAxis
+        min: baseOptions.xAxis?.min ?? normalizePrecision(xMin - xPad),
+        max: baseOptions.xAxis?.max ?? normalizePrecision(xMax + xPad),
+        ...baseOptions.xAxis,
+        axisLabel: {
+          ...(baseOptions.xAxis?.axisLabel || {}),
+          formatter: (value: number) => {
+            // 保留最多两位小数，去掉末尾无意义的0
+            return formatWithMaxDecimals(value)
+          }
+        }
       },
       yAxis: {
         type: 'value',
         name: titleList[1] || 'Y轴',
-        min: baseOptions.yAxis?.min ?? yMin - yPad,
-        max: baseOptions.yAxis?.max ?? yMax + yPad,
-        ...baseOptions.yAxis
+        min: baseOptions.yAxis?.min ?? normalizePrecision(yMin - yPad),
+        max: baseOptions.yAxis?.max ?? normalizePrecision(yMax + yPad),
+        ...baseOptions.yAxis,
+        axisLabel: {
+          ...(baseOptions.yAxis?.axisLabel || {}),
+          formatter: (value: number) => {
+            // 保留最多两位小数，去掉末尾无意义的0
+            return formatWithMaxDecimals(value)
+          }
+        }
       },
       series,
       legend: {
@@ -624,8 +766,8 @@ export function transformToScatterChart(
       tooltip: {
         trigger: 'item',
         formatter: function (params) {
-          const [x, y] = params.value
-          return `${titleList[0] || 'X'}: ${x}<br/>${titleList[1] || 'Y'}: ${y}`
+          const [x, y] = Array.isArray(params.value) ? params.value : [params.value, null]
+          return `${titleList[0] || 'X'}: ${formatWithMaxDecimals(x)}<br/>${titleList[1] || 'Y'}: ${formatWithMaxDecimals(y)}`
         },
         ...baseOptions.tooltip
       }
@@ -651,6 +793,12 @@ export function transformToScatterChart(
 
   const series = titleList.map((_, idx) => buildSeries(idx))
 
+  // 动态计算 Y 轴的最大值和最小值
+  const allYValues = series.flatMap((s) => s.data.map((point) => point[1]))
+  const maxValue = allYValues.length ? Math.max(...allYValues) : 1
+  const minValue = allYValues.length ? Math.min(...allYValues, 0) : 0
+  const adjustedMax = normalizePrecision(maxValue * 1.1)
+
   return {
     ...baseOptions,
     xAxis: {
@@ -662,9 +810,16 @@ export function transformToScatterChart(
     yAxis: {
       type: 'value',
       name: '值',
-      min: 0,
-      max: 1,
-      ...baseOptions.yAxis
+      min: normalizePrecision(minValue),
+      max: adjustedMax,
+      ...baseOptions.yAxis,
+      axisLabel: {
+        ...(baseOptions.yAxis?.axisLabel || {}),
+        formatter: (value: number) => {
+          // 保留最多两位小数，去掉末尾无意义的0
+          return formatWithMaxDecimals(value)
+        }
+      }
     },
     series,
     legend: {
@@ -674,9 +829,9 @@ export function transformToScatterChart(
     tooltip: {
       trigger: 'item',
       formatter: function (params) {
-        const [xIdx, y] = params.value
-        const cat = rowIndicators[xIdx]
-        return `${params.seriesName}<br/>${cat}: ${y}`
+        const [xIdx, y] = Array.isArray(params.value) ? params.value : [params.value, null]
+        const cat = rowIndicators[xIdx] ?? xIdx
+        return `${params.seriesName}<br/>${cat}: ${formatWithMaxDecimals(y)}`
       },
       ...baseOptions.tooltip
     }
@@ -699,21 +854,34 @@ export function transformToParallelChart(
     return baseOptions
   }
 
-  // 构建平行坐标轴配置
-  const parallelAxis = detailNames.map((name, index) => ({
-    dim: index,
-    name,
-    min: 0,
-    max: 1,
-    nameLocation: 'end',
-    nameGap: 20,
-    nameTextStyle: {
-      fontSize: 12
-    },
-    axisLabel: {
-      formatter: '{value}'
+  const parsedData = zhpgObjectResultList.map((dataArray) => parseNumberArray(dataArray))
+
+  // 动态计算每个维度的最大值和最小值
+  const parallelAxis = detailNames.map((name, index) => {
+    // 获取该维度在所有数据中的值
+    const values = parsedData.map((data) => data[index])
+    const maxValue = Math.max(...values)
+    const minValue = Math.min(...values)
+    const minBound = Math.min(0, minValue)
+
+    // 给最大值增加 20% 的余量
+    const adjustedMax = normalizePrecision(maxValue * 1.2)
+
+    return {
+      dim: index,
+      name,
+      min: normalizePrecision(minBound),
+      max: adjustedMax > 0 ? adjustedMax : 1,
+      nameLocation: 'end',
+      nameGap: 20,
+      nameTextStyle: {
+        fontSize: 12
+      },
+      axisLabel: {
+        formatter: (value: number) => formatWithMaxDecimals(value)
+      }
     }
-  }))
+  })
 
   // 转换数据为平行坐标格式
   // 每个系列对应一条平行坐标线
@@ -777,7 +945,8 @@ export function transformToParallelChart(
           show: false
         },
         axisLabel: {
-          color: '#999'
+          color: '#999',
+          formatter: (value: number) => formatWithMaxDecimals(value)
         }
       },
       ...baseOptions.parallel
@@ -795,7 +964,7 @@ export function transformToParallelChart(
         const { name, value } = params.data
         let result = `${name}<br/>`
         value.forEach((val, index) => {
-          result += `${detailNames[index]}: ${val}<br/>`
+          result += `${detailNames[index]}: ${formatWithMaxDecimals(val)}<br/>`
         })
         return result
       },
@@ -913,7 +1082,9 @@ export function transformByChartType(
       return transformToPieChart(evaluationData, baseOptions)
 
     case 'donut':
+    case 'doughnut':
     case 'donutchart':
+    case 'doughnutchart':
     case 'donutpie':
       return transformToDonutChart(evaluationData, baseOptions)
 

@@ -40,7 +40,7 @@
 </template>
 
 <script setup>
-import { onMounted, ref } from 'vue'
+import { isRef, onMounted, ref, watch } from 'vue'
 import { Aim, FullScreen, ZoomIn, ZoomOut } from '@element-plus/icons-vue'
 import { useGraphEvent } from '../../ZxFlow/composables/useGraphEvent'
 import { useGraphInstance } from '../../ZxFlow/composables/useGraphInstance'
@@ -53,19 +53,47 @@ const dropDownItems = [
   { key: '5', label: '150%' }
 ]
 
-const graph = useGraphInstance()
-const zoom = ref(1)
-
-useGraphEvent('scale', ({ sx }) => {
-  zoom.value = sx
-})
-
-onMounted(() => {
-  const g = graph?.value
-  if (g) {
-    zoom.value = g.zoom()
+const props = defineProps({
+  graph: {
+    type: Object,
+    default: null
   }
 })
+
+const graph = props.graph
+  ? isRef(props.graph)
+    ? props.graph
+    : ref(props.graph)
+  : useGraphInstance({ required: false })
+const zoom = ref(1)
+
+useGraphEvent(
+  'scale',
+  ({ sx }) => {
+    zoom.value = sx
+  },
+  graph
+)
+
+const syncZoom = () => {
+  const g = graph?.value
+  if (g && typeof g.zoom === 'function') {
+    zoom.value = g.zoom()
+  }
+}
+
+onMounted(() => {
+  syncZoom()
+})
+
+watch(
+  () => graph?.value,
+  (next) => {
+    if (next) {
+      syncZoom()
+    }
+  }
+)
 
 const changeZoom = (type, key) => {
   const g = graph?.value

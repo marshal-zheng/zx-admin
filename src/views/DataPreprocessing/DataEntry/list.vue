@@ -1,5 +1,5 @@
 <template>
-  <TableQuery />
+  <TableQuery tableType="datasets" />
 </template>
 
 <script setup>

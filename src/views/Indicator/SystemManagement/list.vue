@@ -15,6 +15,7 @@
         <div class="zx-grid-form-bar">
           <div class="zx-grid-form-bar__left">
             <ZxButton type="primary" @click="handleCreate">新建指标体系</ZxButton>
+            <ZxButton @click="handleManageTags">标签管理</ZxButton>
           </div>
           <div class="zx-grid-form-bar__filters">
             <CategorySelector
@@ -72,6 +73,12 @@
 
     <!-- 指标体系表单弹窗 -->
     <SystemFormDialog ref="systemFormDialogRef" @success="handleFormSuccess" />
+
+    <!-- 指标体系表单抽屉 -->
+    <SystemFormDrawer ref="systemFormDrawerRef" @success="handleFormSuccess" />
+
+    <!-- 标签管理弹框 -->
+    <SystemTagManageDialog ref="tagManageDialogRef" />
   </ContentWrap>
 </template>
 
@@ -81,6 +88,8 @@ import { systemApi } from '@/api/modules/indicator/system'
 import { CategorySelector } from '../components/selector'
 import { confirmInputDanger } from 'zxui'
 import SystemFormDialog from './components/SystemFormDialog.vue'
+import SystemFormDrawer from './components/SystemFormDrawer.vue'
+import SystemTagManageDialog from './components/SystemTagManageDialog.vue'
 import { ElMessage } from 'element-plus'
 import { Delete, Setting, Edit } from '@element-plus/icons-vue'
 
@@ -89,11 +98,13 @@ const router = useRouter()
 // 组件引用
 const gridListRef = ref(null)
 const systemFormDialogRef = ref()
+const systemFormDrawerRef = ref()
+const tagManageDialogRef = ref()
 
 // 数据加载函数 - 适配 ZxGridList
 const loadSystemData = async (params) => {
   try {
-    const data = await systemApi.getSystemList(params)
+    const data = await systemApi.getSystemList({ ...params, evaluaTemplate: 0 })
     console.log('=== System API 返回数据 ===', data)
     return data
   } catch (error) {
@@ -119,10 +130,15 @@ const onSearch = ({ refresh, updateState }) => {
   refresh()
 }
 
-// 新建 - 显示对话框
+// 新建 - 显示 Drawer
 const handleCreate = () => {
   // 调用子组件的 open 方法，不传数据表示新增
-  systemFormDialogRef.value?.open()
+  systemFormDrawerRef.value?.open()
+}
+
+// 标签管理 - 显示标签管理弹框
+const handleManageTags = () => {
+  tagManageDialogRef.value?.open([])
 }
 
 // 编辑指标 - 跳转到designEdit.vue页面
@@ -137,17 +153,33 @@ const handleEditIndicator = (row) => {
   })
 }
 
-// 编辑配置 - 弹出对话框
+// 编辑配置 - 显示 Drawer
 const handleEdit = (row) => {
   // 调用子组件的 open 方法，传递数据表示编辑
-  systemFormDialogRef.value?.open(row)
+  systemFormDrawerRef.value?.open(row)
 }
 
 // 处理表单成功提交
 const handleFormSuccess = (response) => {
+  console.log('=== list.vue 接收到的 response ===', response)
+
   // 判断是创建还是编辑模式
   if (response && typeof response === 'object' && !response.id) {
-    // 创建模式：跳转到创建页面
+    // 创建模式：跳转到创建页面，通过 sessionStorage 传递表单数据
+    const formData = {
+      clazzId: response.categoryId,
+      evaluaName: response.name,
+      evaluaExpplain: response.description,
+      evaluaTemplate: 0,
+      tagId: response.tagId || []
+    }
+
+    console.log('=== list.vue 准备传递的 formData ===', formData)
+
+    // 使用 sessionStorage 临时存储表单数据
+    sessionStorage.setItem('system_create_form_data', JSON.stringify(formData))
+
+    // 跳转到创建页面
     router.push('/indicator/system-create')
   } else {
     // 编辑模式：刷新列表

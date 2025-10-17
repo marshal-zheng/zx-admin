@@ -27,8 +27,8 @@ export const chartComponentTypes = [
     icon: 'line',
     widget: 'echarts',
     defaultConfig: {
-      w: 8,
-      h: 6
+      w: 12,
+      h: 8
     }
   },
   {
@@ -39,8 +39,8 @@ export const chartComponentTypes = [
     icon: 'barchart',
     widget: 'echarts',
     defaultConfig: {
-      w: 8,
-      h: 6
+      w: 12,
+      h: 8
     }
   },
   {
@@ -65,7 +65,7 @@ export const chartComponentTypes = [
     widget: 'echarts',
     defaultConfig: {
       w: 12,
-      h: 10
+      h: 8
     }
   },
   {
@@ -76,8 +76,8 @@ export const chartComponentTypes = [
     icon: 'radar-area',
     widget: 'echarts',
     defaultConfig: {
-      w: 6,
-      h: 6
+      w: 12,
+      h: 8
     }
   },
   {
@@ -89,8 +89,8 @@ export const chartComponentTypes = [
     size: 32,
     widget: 'echarts',
     defaultConfig: {
-      w: 6,
-      h: 6
+      w: 12,
+      h: 8
     }
   },
   {
@@ -101,8 +101,8 @@ export const chartComponentTypes = [
     icon: 'smooth-line',
     widget: 'echarts',
     defaultConfig: {
-      w: 8,
-      h: 6
+      w: 12,
+      h: 8
     }
   },
   {
@@ -113,8 +113,8 @@ export const chartComponentTypes = [
     icon: 'scatter',
     widget: 'echarts',
     defaultConfig: {
-      w: 8,
-      h: 6
+      w: 12,
+      h: 8
     }
   },
   {
@@ -125,8 +125,8 @@ export const chartComponentTypes = [
     icon: 'area',
     widget: 'echarts',
     defaultConfig: {
-      w: 8,
-      h: 6
+      w: 12,
+      h: 8
     }
   },
   {
