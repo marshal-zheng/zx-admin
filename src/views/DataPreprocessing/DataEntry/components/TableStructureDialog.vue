@@ -50,7 +50,7 @@
 <script setup>
 import { ref, computed, watch } from 'vue'
 import { ElMessage } from 'element-plus'
-// import { ZxDialog } from 'zxui'
+// import { ZxDialog } from '@zxio/zxui'
 // import { Icon } from '@/components/Icon'
 import { dataConnectionApi } from '@/api/modules/dataPreprocessing/dataConnection'
 

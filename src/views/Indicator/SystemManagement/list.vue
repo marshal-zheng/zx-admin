@@ -86,7 +86,7 @@
 import { ContentWrap } from '@/components/ContentWrap'
 import { systemApi } from '@/api/modules/indicator/system'
 import { CategorySelector } from '../components/selector'
-import { confirmInputDanger } from 'zxui'
+import { confirmInputDanger } from '@zxio/zxui'
 import SystemFormDialog from './components/SystemFormDialog.vue'
 import SystemFormDrawer from './components/SystemFormDrawer.vue'
 import SystemTagManageDialog from './components/SystemTagManageDialog.vue'

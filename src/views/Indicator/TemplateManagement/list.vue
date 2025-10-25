@@ -68,7 +68,7 @@
 import { ContentWrap } from '@/components/ContentWrap'
 import { systemApi } from '@/api/modules/indicator/system'
 import { CategorySelector } from '../components/selector'
-import { confirmInputDanger } from 'zxui'
+import { confirmInputDanger } from '@zxio/zxui'
 
 const router = useRouter()
 

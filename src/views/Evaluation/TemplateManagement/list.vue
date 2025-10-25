@@ -91,7 +91,7 @@ import EvaluationAlgorithmSelector from '@/components/business/Selector/Evaluati
 import IndicatorSystemSelector from '@/components/business/Selector/IndicatorSystemSelector.vue'
 import SelectStatus from './components/selector/SelectStatus.vue'
 import { Delete } from '@element-plus/icons-vue'
-import { confirmInputDanger } from 'zxui'
+import { confirmInputDanger } from '@zxio/zxui'
 
 const { t } = useI18n()
 const router = useRouter()

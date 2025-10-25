@@ -1,4 +1,4 @@
-declare module 'zxui' {
+declare module '@zxio/zxui' {
   // Minimal typings for runtime-resolved local UI library
   export function useDialog<T = any>(options?: any): {
     state: any

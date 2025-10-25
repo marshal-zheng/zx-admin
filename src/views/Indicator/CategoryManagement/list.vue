@@ -72,7 +72,7 @@
 import { ContentWrap } from '@/components/ContentWrap'
 import { categoryApi } from '@/api/modules/indicator/category'
 import CategoryFormDialog from './components/CategoryFormDialog.vue'
-import { confirmInputDanger } from 'zxui'
+import { confirmInputDanger } from '@zxio/zxui'
 
 const router = useRouter()
 

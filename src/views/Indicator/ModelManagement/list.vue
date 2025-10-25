@@ -65,7 +65,7 @@
 <script setup>
 import { ContentWrap } from '@/components/ContentWrap'
 import { modelApi } from '@/api/modules/indicator/model'
-import { confirmInputDanger } from 'zxui'
+import { confirmInputDanger } from '@zxio/zxui'
 import { ElMessage } from 'element-plus'
 import { Delete, View } from '@element-plus/icons-vue'
 

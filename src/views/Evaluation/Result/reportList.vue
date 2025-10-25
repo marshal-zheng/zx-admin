@@ -92,7 +92,7 @@ import { ContentWrap } from '@/components/ContentWrap'
 import { useI18n } from '@/hooks/web/useI18n'
 import { evaluationApi } from '@/api/modules/evaluation'
 import { Delete } from '@element-plus/icons-vue'
-import { confirmInputDanger } from 'zxui'
+import { confirmInputDanger } from '@zxio/zxui'
 import { TemplateTypeText } from '@/views/Evaluation/components/model'
 import { SelectTemplateType } from '@/views/Evaluation/TemplateManagement/components/selector'
 

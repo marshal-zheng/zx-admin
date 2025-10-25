@@ -139,31 +139,31 @@ export default ({ command, mode }: ConfigEnv): UserConfig => {
           replacement: `${pathResolve('src')}/`
         },
         // 直连 ZXUI 入口（全量安装）
-        {
-          find: 'zxui',
-          replacement: 'D:/HQ/element-plus/packages/zxui/index.ts'
-        },
-        // 直连各子包（按需引用）
-        {
-          find: '@zxui/components',
-          replacement: 'D:/HQ/element-plus/packages/components'
-        },
-        {
-          find: '@zxui/utils',
-          replacement: 'D:/HQ/element-plus/packages/utils'
-        },
-        {
-          find: '@zxui/hooks',
-          replacement: 'D:/HQ/element-plus/packages/hooks'
-        },
-        {
-          find: '@zxui/constants',
-          replacement: 'D:/HQ/element-plus/packages/constants'
-        },
-        {
-          find: '@zxui/theme-chalk',
-          replacement: 'D:/HQ/element-plus/packages/theme-chalk'
-        },
+        // {
+        //   find: '@zxio/zxui',
+        //   replacement: 'D:/HQ/element-plus/packages/zxui/index.ts'
+        // },
+        // // 直连各子包（按需引用）
+        // {
+        //   find: '@zxui/components',
+        //   replacement: 'D:/HQ/element-plus/packages/components'
+        // },
+        // {
+        //   find: '@zxui/utils',
+        //   replacement: 'D:/HQ/element-plus/packages/utils'
+        // },
+        // {
+        //   find: '@zxui/hooks',
+        //   replacement: 'D:/HQ/element-plus/packages/hooks'
+        // },
+        // {
+        //   find: '@zxui/constants',
+        //   replacement: 'D:/HQ/element-plus/packages/constants'
+        // },
+        // {
+        //   find: '@zxui/theme-chalk',
+        //   replacement: 'D:/HQ/element-plus/packages/theme-chalk'
+        // },
       ]
     },
     esbuild: {
@@ -192,6 +192,7 @@ export default ({ command, mode }: ConfigEnv): UserConfig => {
     },
     server: {
       port: 5174,
+      open: true,
       proxy: {
         // 选项写法
         '/api': {
@@ -227,12 +228,12 @@ export default ({ command, mode }: ConfigEnv): UserConfig => {
         'cropperjs'
       ],
        exclude: [
-        'zxui',
-        '@zxui/components',
-        '@zxui/utils',
-        '@zxui/hooks',
-        '@zxui/constants',
-        '@zxui/theme-chalk',
+        // '@zxio/zxui',
+        // '@zxui/components',
+        // '@zxui/utils',
+        // '@zxui/hooks',
+        // '@zxui/constants',
+        // '@zxui/theme-chalk',
       ],
     }
   }

@@ -42,7 +42,7 @@ import { ElMessage } from 'element-plus'
 import type { FormInstance } from 'element-plus'
 import { DataGrid } from '@/components/DataGrid'
 import { datasetsApi } from '@/api/modules/dataPreprocessing/datasets'
-import { useDrawer } from 'zxui'
+import { useDrawer } from '@zxio/zxui'
 import FieldTypeSelector from '@/views/DataPreprocessing/components/selector/FieldTypeSelector.vue'
 
 // 定义事件

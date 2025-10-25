@@ -73,7 +73,7 @@
 import { ref, computed, onMounted, nextTick } from 'vue'
 import { ElMessage } from 'element-plus'
 import type { FormInstance } from 'element-plus'
-import { useDrawer } from 'zxui'
+import { useDrawer } from '@zxio/zxui'
 import { systemApi } from '@/api/modules/indicator/system'
 import { systemTagApi, type SystemTag } from '@/api/modules/indicator/systemTag'
 import { CategorySelector } from '../../components/selector'

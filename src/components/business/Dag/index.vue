@@ -153,7 +153,7 @@
 import { toRefs, ref, onMounted, onUnmounted, watch, computed } from 'vue'
 import { FullScreen, ScaleToOriginal } from '@element-plus/icons-vue'
 import { ElMessage } from 'element-plus'
-import { ZxButton } from 'zxui'
+import { ZxButton } from '@zxio/zxui'
 import { willCreateCycle } from './utils/graphConstraints.js'
 import {
   XFlow,

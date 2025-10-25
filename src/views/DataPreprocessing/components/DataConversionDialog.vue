@@ -84,7 +84,7 @@
 import { ref, reactive, computed, watch, nextTick, h, defineComponent } from 'vue'
 import { useRouter } from 'vue-router'
 import { ElMessage, ElInput, type FormInstance, type FormRules } from 'element-plus'
-import { useDialog } from 'zxui'
+import { useDialog } from '@zxio/zxui'
 import { DataConversionTypeSelector, DetectionMethodSelector, DetectionFieldSelector } from './selector'
 import { DataConversionType, DetectionMethod } from './model'
 import { datasetsApi } from '@/api/modules/dataPreprocessing/datasets'

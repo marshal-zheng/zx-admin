@@ -2154,7 +2154,7 @@ export default [
             '直接经济损失'
           ],
           // 评估对象列表
-          titleList: ['学校A事件', '学校B事件'],
+          titleList: ['A事件', 'B事件'],
           // 类型：1-折线图
           type: 1,
           // 每个评估对象的数据（来自 final.md 的原始数据）

@@ -35,8 +35,8 @@ import { createApp } from 'vue'
 import VXETable from 'vxe-table'
 import 'vxe-table/lib/style.css'
 
-import ZXUI from 'zxui'
-import '@zxui/theme-chalk/src/index.scss'
+import ZXUI from '@zxio/zxui'
+import '@zxio/zxui/theme-chalk/src/index.scss'
 
 import App from './App.vue'
 

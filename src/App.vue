@@ -3,6 +3,7 @@ import { computed } from 'vue'
 import { useAppStore, setupAppStoreSync } from '@/store/modules/app'
 import { ConfigGlobal } from '@/components/ConfigGlobal'
 import { useDesign } from '@/hooks/web/useDesign'
+import { AppTourHost } from '@/components/AppTourHost'
 // import { ElNotification } from 'element-plus'
 
 const { getPrefixCls } = useDesign()
@@ -34,6 +35,8 @@ setupAppStoreSync()
   <ConfigGlobal :size="currentSize">
     <RouterView :class="greyMode ? `${prefixCls}-grey-mode` : ''" />
   </ConfigGlobal>
+  <!-- 全局引导宿主组件 -->
+  <AppTourHost />
 </template>
 
 <style lang="less">

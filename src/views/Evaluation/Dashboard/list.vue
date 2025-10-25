@@ -66,7 +66,7 @@
 <script setup>
 import { ContentWrap } from '@/components/ContentWrap'
 import { dashboardApi } from '@/api/modules/evaluation/dashboard'
-import { confirmInputDanger } from 'zxui'
+import { confirmInputDanger } from '@zxio/zxui'
 import { ElMessage } from 'element-plus'
 import { Delete } from '@element-plus/icons-vue'
 

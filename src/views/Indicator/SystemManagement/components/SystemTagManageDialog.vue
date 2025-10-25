@@ -27,7 +27,7 @@
 <script setup lang="ts">
 import { ref, computed } from 'vue'
 import { ElMessage, ElMessageBox } from 'element-plus'
-import { useDialog } from 'zxui'
+import { useDialog } from '@zxio/zxui'
 import { systemTagApi, type SystemTag } from '@/api/modules/indicator/systemTag'
 
 // 定义事件

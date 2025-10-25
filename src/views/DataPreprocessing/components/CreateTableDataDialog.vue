@@ -21,7 +21,7 @@ import { ref, computed, nextTick } from 'vue'
 import { ElMessage } from 'element-plus'
 import { DataGrid } from '@/components/DataGrid'
 import { datasetsApi } from '@/api/modules/dataPreprocessing/datasets'
-import { useDialog } from 'zxui'
+import { useDialog } from '@zxio/zxui'
 
 // 定义接口
 interface TableField {

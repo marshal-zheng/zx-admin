@@ -54,7 +54,7 @@
 <script setup lang="ts">
 import { ref, computed, nextTick } from 'vue'
 import { ElMessage } from 'element-plus'
-import { useDialog } from 'zxui'
+import { useDialog } from '@zxio/zxui'
 import { systemApi } from '@/api/modules/indicator/system'
 import { CategorySelector } from '../../components/selector'
 import { SystemTagSelector } from './selector'

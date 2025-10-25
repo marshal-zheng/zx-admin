@@ -30,7 +30,7 @@
       </template>
       <!-- 表格内容 -->
       <template #table="{ grid }">
-        <el-table :data="grid.list || []" style="width: 100%" stripe>
+        <el-table :data="grid.list || []" style="width: 100%" stripe empty-text="暂无数据">
           <el-table-column
             prop="taskJobName"
             label="方案名称"
@@ -164,7 +164,7 @@ const handleRunJob = async (row) => {
       ElMessage({
         message: '运行成功，即将跳转到"评估结果管理"列表页面',
         type: 'success',
-        duration: 2000
+        duration: 500
       })
 
       // 延迟跳转，让用户看到成功消息
@@ -173,7 +173,7 @@ const handleRunJob = async (row) => {
         router.push({
           name: 'EvaluationResultManagement'
         })
-      }, 2000)
+      })
     })
 }
 

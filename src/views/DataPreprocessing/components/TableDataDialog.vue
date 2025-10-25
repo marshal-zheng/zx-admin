@@ -62,7 +62,7 @@
 <script setup lang="ts">
 import { ref } from 'vue'
 import { ElMessage } from 'element-plus'
-import { useDialog } from 'zxui'
+import { useDialog } from '@zxio/zxui'
 import { datasetsApi } from '@/api/modules/dataPreprocessing/datasets'
 
 // 定义表数据查看的数据接口

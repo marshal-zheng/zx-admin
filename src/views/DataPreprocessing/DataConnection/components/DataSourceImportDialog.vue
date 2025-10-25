@@ -40,7 +40,7 @@
 <script setup lang="ts">
 import { ref, computed } from 'vue'
 import { ElMessage } from 'element-plus'
-import { useDialog } from 'zxui'
+import { useDialog } from '@zxio/zxui'
 import { dataConnectionApi } from '@/api/modules/dataPreprocessing/dataConnection'
 
 // 定义导入表单数据接口

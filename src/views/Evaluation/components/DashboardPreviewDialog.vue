@@ -41,7 +41,7 @@ import { InfoFilled } from '@element-plus/icons-vue'
 import DashboardDesigner from '@/components/business/DashboardGrid/DashboardDesigner.vue'
 import { dashboardApi } from '@/api/modules/evaluation/dashboard'
 import { ElMessage } from 'element-plus'
-import { useDialog } from 'zxui'
+import { useDialog } from '@zxio/zxui'
 import mockData from '@/views/Evaluation/Dashboard/mock'
 
 defineOptions({ name: 'DashboardPreviewDialog' })
@@ -60,7 +60,7 @@ const {
   close: closeDialog
 } = useDialog({
   title: (data) => data?.name || '仪表盘预览',
-  width: '70%',
+  width: '80%',
   fullscreen: true,
   showFooter: false,
   closeOnClickModal: false,

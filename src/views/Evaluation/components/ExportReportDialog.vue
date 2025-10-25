@@ -30,7 +30,7 @@
 <script setup lang="ts">
 import { ref, computed } from 'vue'
 import { ElMessage } from 'element-plus'
-import { useDialog } from 'zxui'
+import { useDialog } from '@zxio/zxui'
 import { SelectExportTemplate, SelectFileType } from './selector'
 import { evaluationApi } from '@/api/modules/evaluation'
 

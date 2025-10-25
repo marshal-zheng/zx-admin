@@ -43,6 +43,7 @@
           :data="grid.list || []"
           style="width: 100%"
           max-height="calc(100vh - 230px)"
+          empty-text="暂无数据"
         >
           <el-table-column
             prop="taskName"
@@ -92,7 +93,7 @@ import { evaluationApi } from '@/api/modules/evaluation'
 import SelectStatus from './components/selector/SelectStatus.vue'
 import TaskFormDialog from '../components/TaskFormDialog.vue'
 import { Setting, Delete } from '@element-plus/icons-vue'
-import { confirmInputDanger } from 'zxui'
+import { confirmInputDanger } from '@zxio/zxui'
 
 const { t } = useI18n()
 

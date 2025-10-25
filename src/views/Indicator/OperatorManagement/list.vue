@@ -73,7 +73,7 @@
 <script setup>
 import { ContentWrap } from '@/components/ContentWrap'
 import { operatorApi } from '@/api/modules/indicator/operator'
-import { confirmInputDanger } from 'zxui'
+import { confirmInputDanger } from '@zxio/zxui'
 import { ElMessage } from 'element-plus'
 import { Delete, View } from '@element-plus/icons-vue'
 

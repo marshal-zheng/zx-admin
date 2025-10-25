@@ -49,6 +49,7 @@
           :data="grid.list || []"
           style="width: 100%"
           max-height="calc(100vh - 230px)"
+          empty-text="暂无数据"
         >
           <el-table-column type="selection" width="55" />
           <el-table-column prop="taskName" label="任务名称" min-width="180" show-overflow-tooltip />
@@ -86,7 +87,7 @@ import { ContentWrap } from '@/components/ContentWrap'
 import { useI18n } from '@/hooks/web/useI18n'
 import { evaluationApi } from '@/api/modules/evaluation'
 import { Download, Delete, View } from '@element-plus/icons-vue'
-import { confirmInputDanger } from 'zxui'
+import { confirmInputDanger } from '@zxio/zxui'
 import { ExportReportDialog } from '../components'
 
 const { t } = useI18n()
@@ -112,6 +113,7 @@ const loadResultData = async (params) => {
   // 调用评估列表接口
   const response = await evaluationApi.getEvaluationList(params)
   console.log('评估结果列表响应:', response)
+  response.records = response.records.filter(item => item.taskName !== '评估任务')
   return response
 }
 
