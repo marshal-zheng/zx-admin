@@ -1,19 +1,18 @@
 <template>
   <ZxSelect
     v-model="innerValue"
-    :options="fetchOptions"
-    :allow-search="filterable"
+    :options="options"
     :placeholder="placeholder"
     :disabled="disabled"
-    labelKey="label"
-    valueKey="value"
+    filterable
+    clearable
     @change="onChange"
     @clear="onClear"
   />
 </template>
 
 <script setup lang="ts">
-import { ref, watch } from 'vue'
+import { ref, onMounted, computed } from 'vue'
 import { EVALUATION_ALGORITHM_OPTIONS } from '@/constants/evaluation'
 
 defineOptions({ name: 'EvaluationAlgorithmSelector' })
@@ -49,32 +48,30 @@ const props = defineProps({
 
 const emit = defineEmits(['update:modelValue', 'change', 'clear'])
 
-const innerValue = ref(props.modelValue)
-const optionsList = ref<OptionItem[]>(EVALUATION_ALGORITHM_OPTIONS)
-
-watch(
-  () => props.modelValue,
-  (v) => {
-    innerValue.value = v
-  }
-)
-
-watch(innerValue, (v) => {
-  emit('update:modelValue', v)
+const innerValue = computed({
+  get: () => props.modelValue,
+  set: (value) => emit('update:modelValue', value)
 })
 
-const fetchOptions = async () => {
-  // 直接返回枚举选项，保持异步接口兼容性
-  return EVALUATION_ALGORITHM_OPTIONS
+const options = ref<OptionItem[]>([])
+
+const loadOptions = () => {
+  // 直接设置枚举选项
+  options.value = EVALUATION_ALGORITHM_OPTIONS
 }
 
 const onChange = (val: number) => {
   // 找到对应的选项对象
-  const selectedOption = optionsList.value.find((opt) => opt.value === val)
+  const selectedOption = options.value.find((opt) => opt.value === val)
   emit('change', val, selectedOption)
 }
 
 const onClear = () => {
   emit('clear')
 }
+
+// 组件挂载时立即加载选项
+onMounted(() => {
+  loadOptions()
+})
 </script>

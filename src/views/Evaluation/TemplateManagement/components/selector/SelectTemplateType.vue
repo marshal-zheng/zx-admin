@@ -1,10 +1,9 @@
 <template>
   <ZxSelect
     v-model="innerValue"
-    mode="static"
     :options="options"
-    :allow-search="false"
-    :allow-clear="true"
+    :filterable="false"
+    clearable
     :placeholder="placeholder"
     :size="size"
     :disabled="disabled"

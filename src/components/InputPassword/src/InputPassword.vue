@@ -1,5 +1,5 @@
 <script setup lang="ts">
-import { ref, unref, computed, watch } from 'vue'
+import { ref, computed } from 'vue'
 import { ElInput } from 'element-plus'
 import { propTypes } from '@/utils/propTypes'
 import { useConfigGlobal } from '@/hooks/web/useConfigGlobal'
@@ -17,14 +17,6 @@ const props = defineProps({
   modelValue: propTypes.string.def('')
 })
 
-watch(
-  () => props.modelValue,
-  (val: string) => {
-    if (val === unref(valueRef)) return
-    valueRef.value = val
-  }
-)
-
 const { configGlobal } = useConfigGlobal()
 
 const emit = defineEmits(['update:modelValue'])
@@ -32,28 +24,24 @@ const emit = defineEmits(['update:modelValue'])
 // 设置input的type属性
 const textType = ref<'password' | 'text'>('password')
 
-// 输入框的值
-const valueRef = ref(props.modelValue)
-
-// 监听
-watch(
-  () => valueRef.value,
-  (val: string) => {
-    emit('update:modelValue', val)
-  }
-)
-
 // 获取密码强度
 const getPasswordStrength = computed(() => {
-  const value = unref(valueRef)
-  const zxcvbnRef = zxcvbn(unref(valueRef)) as ZxcvbnResult
-  return value ? zxcvbnRef.score : -1
+  const value = props.modelValue
+  if (!value) return -1
+  const zxcvbnRef = zxcvbn(value) as ZxcvbnResult
+  return zxcvbnRef.score
 })
 </script>
 
 <template>
   <div :class="[prefixCls, `${prefixCls}--${configGlobal?.size}`]">
-    <ElInput v-bind="$attrs" v-model="valueRef" showPassword :type="textType" />
+    <ElInput 
+      v-bind="$attrs" 
+      :model-value="modelValue"
+      showPassword 
+      :type="textType"
+      @update:model-value="$emit('update:modelValue', $event)"
+    />
     <div
       v-if="strength"
       :class="`${prefixCls}__bar`"

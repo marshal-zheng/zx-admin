@@ -1,8 +1,9 @@
 <template>
   <ZxSelect
     v-model="innerValue"
-    :options="fetchOptions"
-    :allow-search="filterable"
+    :options="options"
+    :loading="loading"
+    :filterable="filterable"
     :placeholder="placeholder"
     :disabled="disabled"
     labelKey="name"
@@ -13,7 +14,7 @@
 </template>
 
 <script setup>
-import { ref, watch } from 'vue'
+import { ref, computed, onMounted } from 'vue'
 import { systemTagApi } from '@/api/modules/indicator/systemTag'
 
 defineOptions({ name: 'IndicatorSystemTagSelector' })
@@ -43,34 +44,32 @@ const props = defineProps({
 
 const emit = defineEmits(['update:modelValue', 'change', 'clear'])
 
-const innerValue = ref(props.modelValue)
-
-watch(
-  () => props.modelValue,
-  (v) => {
-    innerValue.value = v
-  }
-)
-
-watch(innerValue, (v) => {
-  emit('update:modelValue', v)
+// 双向绑定
+const innerValue = computed({
+  get: () => props.modelValue,
+  set: (val) => emit('update:modelValue', val)
 })
 
-const fetchOptions = async () => {
+const options = ref([])
+const loading = ref(false)
+
+const loadOptions = async () => {
+  loading.value = true
   try {
     const res = await systemTagApi.getSystemTagList({ current: 1, size: 999 })
     const list = Array.isArray(res) ? res : res?.data?.records || res?.records || res?.data || []
     // 规范化字段为 { id, name }
-    const options = list
+    options.value = list
       .map((item) => ({
         id: item?.id,
         name: item?.tagName
       }))
       .filter((it) => it && it.id != null && it.name != null)
-    return options
   } catch (e) {
     console.error('加载指标体系标签列表失败:', e)
-    return []
+    options.value = []
+  } finally {
+    loading.value = false
   }
 }
 
@@ -81,6 +80,11 @@ const onChange = (val) => {
 const onClear = () => {
   emit('clear')
 }
+
+// 组件挂载时立即加载选项
+onMounted(() => {
+  loadOptions()
+})
 </script>
 
 <style scoped></style>

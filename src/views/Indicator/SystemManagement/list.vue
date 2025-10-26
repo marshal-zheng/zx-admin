@@ -167,9 +167,9 @@ const handleFormSuccess = (response) => {
   if (response && typeof response === 'object' && !response.id) {
     // 创建模式：跳转到创建页面，通过 sessionStorage 传递表单数据
     const formData = {
-      clazzId: response.categoryId,
-      evaluaName: response.name,
-      evaluaExpplain: response.description,
+      clazzId: response.clazzId,
+      evaluaName: response.evaluaName,
+      evaluaExpplain: response.evaluaExpplain,
       evaluaTemplate: 0,
       tagId: response.tagId || []
     }

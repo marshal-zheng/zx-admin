@@ -6,8 +6,8 @@
     :transform="transformData"
     label-key="evaluaName"
     value-key="evaluaId"
-    allow-search
-    allow-clear
+    filterable
+    clearable
     :disabled="disabled"
     :size="size"
     @change="handleChange"

@@ -73,7 +73,7 @@ const setupAll = async () => {
   // 可选全局配置
   app.use(ZXUI, {
     size: 'default',
-    namespace: 'zxxss',
+    namespace: 'zx',
     zIndex: 3000
   })
 

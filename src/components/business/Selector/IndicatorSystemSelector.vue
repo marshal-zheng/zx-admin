@@ -1,8 +1,9 @@
 <template>
   <ZxSelect
     v-model="innerValue"
-    :options="fetchOptions"
-    :allow-search="filterable"
+    :options="options"
+    :loading="loading"
+    :filterable="filterable"
     :placeholder="placeholder"
     :disabled="disabled"
     labelKey="name"
@@ -13,7 +14,7 @@
 </template>
 
 <script setup>
-import { ref, watch } from 'vue'
+import { ref, watch, onMounted, computed } from 'vue'
 import { systemApi } from '@/api/modules/indicator/system'
 
 defineOptions({ name: 'IndicatorSystemSelector' })
@@ -47,29 +48,25 @@ const props = defineProps({
 
 const emit = defineEmits(['update:modelValue', 'change', 'clear'])
 
-const innerValue = ref(props.modelValue)
-const optionsList = ref([])
-
-watch(
-  () => props.modelValue,
-  (v) => {
-    innerValue.value = v
-  }
-)
-
-watch(innerValue, (v) => {
-  emit('update:modelValue', v)
+const innerValue = computed({
+  get: () => props.modelValue,
+  set: (value) => emit('update:modelValue', value)
 })
 
-// 当 tagId 改变时，清空当前选择值
+const options = ref([])
+const loading = ref(false)
+
+// 当 tagId 改变时，清空当前选择值并重新加载选项
 watch(
   () => props.tagId,
   () => {
     innerValue.value = ''
+    loadOptions()
   }
 )
 
-const fetchOptions = async () => {
+const loadOptions = async () => {
+  loading.value = true
   try {
     const params = { page: 1, pageSize: 999 }
     // 如果有 tagId，则添加到请求参数中
@@ -80,30 +77,34 @@ const fetchOptions = async () => {
     const res = await systemApi.getSystemList(params)
     const list = Array.isArray(res) ? res : res?.data?.records || res?.records || res?.data || []
     // 规范化字段为 { id, name }
-    const options = list
+    options.value = list
       .map((item) => ({
         id: item?.id ?? item?.evaluaId ?? item?.evaluaid,
         name: item?.name ?? item?.evaluaName
       }))
       .filter((it) => it && it.id != null && it.name != null)
-    // 缓存选项列表
-    optionsList.value = options
-    return options
   } catch (e) {
     console.error('加载指标体系列表失败:', e)
-    return []
+    options.value = []
+  } finally {
+    loading.value = false
   }
 }
 
 const onChange = (val) => {
   // 找到对应的选项对象
-  const selectedOption = optionsList.value.find((opt) => opt.id === val)
+  const selectedOption = options.value.find((opt) => opt.id === val)
   emit('change', val, selectedOption)
 }
 
 const onClear = () => {
   emit('clear')
 }
+
+// 组件挂载时立即加载选项
+onMounted(() => {
+  loadOptions()
+})
 </script>
 
 <style scoped></style>

@@ -1,10 +1,10 @@
 <template>
   <ZxSelect
-    :model-value="modelValue"
+    v-model="innerValue"
     :options="CREATE_TYPE_OPTIONS"
     :placeholder="placeholder"
-    :allow-clear="clearable"
-    :allow-search="allowSearch"
+    :clearable="clearable"
+    :filterable="allowSearch"
     :disabled="disabled"
     :size="size"
     :loading="loading"
@@ -19,7 +19,6 @@
     :option-tooltip-position="optionTooltipPosition"
     :width="width"
     :style="computedStyle"
-    @update:model-value="$emit('update:modelValue', $event)"
     @change="$emit('change', $event)"
     @clear="$emit('clear')"
     @blur="$emit('blur')"
@@ -116,7 +115,12 @@ const props = withDefaults(defineProps<Props>(), {
   optionTooltipPosition: 'left'
 })
 
-defineEmits<Emits>()
+const emit = defineEmits<Emits>()
+
+const innerValue = computed({
+  get: () => props.modelValue,
+  set: (value) => emit('update:modelValue', value as CreateType | CreateType[] | null)
+})
 
 // 计算样式
 const computedStyle = computed(() => {

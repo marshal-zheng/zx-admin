@@ -6,8 +6,8 @@
     :options="options"
     label-key="name"
     value-key="id"
-    allow-search
-    allow-clear
+    filterable
+    clearable
     :disabled="disabled"
     :size="size"
     @change="handleChange"

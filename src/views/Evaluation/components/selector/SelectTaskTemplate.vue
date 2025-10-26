@@ -2,12 +2,13 @@
   <ZxSelect
     v-model="innerValue"
     :options="fetchOptions"
-    :allow-search="filterable"
+    :filterable="filterable"
     :placeholder="placeholder"
     :disabled="disabled"
     :size="size"
     label-key="taskName"
     value-key="id"
+    clearable
     @change="onChange"
     @clear="onClear"
   >

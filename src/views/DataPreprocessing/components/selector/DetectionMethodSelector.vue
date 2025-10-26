@@ -1,10 +1,10 @@
 <template>
   <ZxSelect
-    :model-value="modelValue"
+    v-model="innerValue"
     :options="DETECTION_METHOD_OPTIONS"
     :placeholder="placeholder"
-    :allow-clear="clearable"
-    :allow-search="allowSearch"
+    :clearable="clearable"
+    :filterable="allowSearch"
     :disabled="disabled"
     :size="size"
     :loading="loading"
@@ -19,7 +19,6 @@
     :option-tooltip-position="optionTooltipPosition"
     :width="width"
     :style="computedStyle"
-    @update:model-value="$emit('update:modelValue', $event)"
     @change="$emit('change', $event)"
     @clear="$emit('clear')"
     @blur="$emit('blur')"
@@ -108,7 +107,7 @@ const props = withDefaults(defineProps<Props>(), {
   optionTooltipPosition: 'top'
 })
 
-defineEmits<{
+const emit = defineEmits<{
   'update:modelValue': [value: DetectionMethod | DetectionMethod[] | null]
   change: [value: DetectionMethod | DetectionMethod[] | null]
   clear: []
@@ -117,6 +116,11 @@ defineEmits<{
   'visible-change': [visible: boolean]
   'remove-tag': [value: DetectionMethod]
 }>()
+
+const innerValue = computed({
+  get: () => props.modelValue,
+  set: (value) => emit('update:modelValue', value as DetectionMethod | DetectionMethod[] | null)
+})
 
 // 计算样式
 const computedStyle = computed(() => {

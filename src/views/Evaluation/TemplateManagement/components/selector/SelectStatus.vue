@@ -3,8 +3,8 @@
     v-model="innerValue"
     mode="remote"
     :remote-func="fetchOptions"
-    :allow-search="true"
-    :allow-clear="true"
+    filterable
+    clearable
     :placeholder="placeholder"
     :size="size"
     :disabled="disabled"

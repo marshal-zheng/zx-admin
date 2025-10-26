@@ -1,10 +1,10 @@
 <template>
   <ZxSelect
-    v-model="selectedValue"
+    v-model="innerValue"
     mode="remote"
     :remote-func="loadOptions"
-    :allow-search="filterable"
-    :allow-clear="clearable"
+    :filterable="filterable"
+    :clearable="clearable"
     :placeholder="placeholder"
     :disabled="disabled"
     @change="handleChange"
@@ -13,7 +13,7 @@
 </template>
 
 <script setup>
-import { ref, watch } from 'vue'
+import { computed } from 'vue'
 import { evaluateApi } from '@/api/modules/evaluate'
 
 defineOptions({ name: 'EvaluationSchemeSelector' })
@@ -43,19 +43,9 @@ const props = defineProps({
 
 const emit = defineEmits(['update:modelValue', 'change', 'clear'])
 
-const selectedValue = ref(props.modelValue)
-
-// 监听外部值变化
-watch(
-  () => props.modelValue,
-  (newVal) => {
-    selectedValue.value = newVal
-  }
-)
-
-// 监听内部值变化，同步到外部
-watch(selectedValue, (newVal) => {
-  emit('update:modelValue', newVal)
+const innerValue = computed({
+  get: () => props.modelValue,
+  set: (value) => emit('update:modelValue', value)
 })
 
 // 获取评估方案选项 - 供ZxSelect的remote-func使用

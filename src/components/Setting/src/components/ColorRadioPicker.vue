@@ -1,5 +1,5 @@
 <script setup lang="ts">
-import { PropType, watch, unref, ref } from 'vue'
+import { PropType } from 'vue'
 import { propTypes } from '@/utils/propTypes'
 import { useDesign } from '@/hooks/web/useDesign'
 
@@ -17,24 +17,10 @@ const props = defineProps({
 
 const emit = defineEmits(['update:modelValue', 'change'])
 
-const colorVal = ref(props.modelValue)
-
-watch(
-  () => props.modelValue,
-  (val: string) => {
-    if (val === unref(colorVal)) return
-    colorVal.value = val
-  }
-)
-
-// 监听
-watch(
-  () => colorVal.value,
-  (val: string) => {
-    emit('update:modelValue', val)
-    emit('change', val)
-  }
-)
+const handleColorSelect = (item: string) => {
+  emit('update:modelValue', item)
+  emit('change', item)
+}
 </script>
 
 <template>
@@ -43,13 +29,13 @@ watch(
       v-for="(item, i) in schema"
       :key="`radio-${i}`"
       class="w-20px h-20px cursor-pointer rounded-2px border-solid border-gray-300 border-2px text-center leading-20px mb-5px"
-      :class="{ 'is-active': colorVal === item }"
+      :class="{ 'is-active': modelValue === item }"
       :style="{
         background: item
       }"
-      @click="colorVal = item"
+      @click="handleColorSelect(item)"
     >
-      <Icon v-if="colorVal === item" color="#fff" icon="vi-ep:check" :size="16" />
+      <Icon v-if="modelValue === item" color="#fff" icon="vi-ep:check" :size="16" />
     </span>
   </div>
 </template>

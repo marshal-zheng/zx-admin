@@ -1,11 +1,12 @@
 <template>
   <ZxSelect
-    v-model="innerValue"
-    :options="fetchOptions"
-    :allow-search="true"
+    v-model="selectedValue"
+    :options="options"
+    :loading="loading"
+    filterable
     labelKey="clazzName"
     valueKey="id"
-    :allow-clear="true"
+    clearable
     :placeholder="placeholder"
     :size="size"
     :disabled="disabled"
@@ -14,7 +15,7 @@
 </template>
 
 <script setup>
-import { ref, watch } from 'vue'
+import { ref, computed, onMounted } from 'vue'
 import { categoryApi } from '@/api/modules/indicator/category'
 
 defineOptions({ name: 'CategorySelector' })
@@ -40,26 +41,34 @@ const props = defineProps({
 
 const emit = defineEmits(['update:modelValue', 'change'])
 
-const innerValue = ref(props.modelValue)
+const options = ref([])
+const loading = ref(false)
 
-watch(
-  () => props.modelValue,
-  (v) => {
-    innerValue.value = v
-  }
-)
-
-watch(innerValue, (v) => {
-  emit('update:modelValue', v)
+// 使用 computed 实现同步的双向绑定
+const selectedValue = computed({
+  get: () => props.modelValue,
+  set: (val) => emit('update:modelValue', val)
 })
 
-const fetchOptions = async () => {
-  const response = await categoryApi.getCategoryList({ query: { page: 1, size: 999 } })
-  return response?.records || []
+const loadOptions = async () => {
+  loading.value = true
+  try {
+    const response = await categoryApi.getCategoryList({ query: { page: 1, size: 999 } })
+    options.value = response?.records || []
+  } catch (error) {
+    console.error('加载分类选项失败:', error)
+    options.value = []
+  } finally {
+    loading.value = false
+  }
 }
 
 const onChange = (val) => {
-  console.log('val', val)
   emit('change', val)
 }
+
+// 组件挂载时立即加载选项
+onMounted(() => {
+  loadOptions()
+})
 </script>
