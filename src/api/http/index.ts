@@ -322,6 +322,17 @@ transform.requestInterceptors = (config, options) => {
       : token
   }
 
+  // 当请求体为 FormData 时，移除默认的 JSON Content-Type，让浏览器自动补 boundary
+  if (typeof FormData !== 'undefined' && config.data instanceof FormData) {
+    if (!config.headers) config.headers = {}
+    const keys = Object.keys(config.headers)
+    for (const k of keys) {
+      if (k.toLowerCase() === 'content-type') {
+        delete (config.headers as any)[k]
+      }
+    }
+  }
+
   return config
 }
 
