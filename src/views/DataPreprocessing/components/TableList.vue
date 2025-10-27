@@ -58,7 +58,6 @@
               <el-button
                 type="primary"
                 link
-                size="small"
                 @click="handleEdit(row, $index)"
               >
                 编辑
@@ -66,7 +65,6 @@
               <el-button
                 type="danger"
                 link
-                size="small"
                 @click="handleDelete(row, $index)"
               >
                 删除
