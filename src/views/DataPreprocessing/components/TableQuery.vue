@@ -57,8 +57,8 @@
           </el-table-column>
           <el-table-column prop="handType" label="处理类型" width="120" align="center">
             <template #default="{ row }">
-              <span v-if="row.handType === 1" class="text-orange-500">待处理</span>
-              <span v-else-if="row.handType === 2" class="text-green-500">已处理</span>
+              <span v-if="row.handType === 0" class="text-orange-500">未处理</span>
+              <span v-else-if="row.handType === 1" class="text-green-500">已处理</span>
               <span v-else class="text-gray-400">-</span>
             </template>
           </el-table-column>
@@ -151,9 +151,9 @@ const loadTableData = async (params) => {
   // 根据表格类型添加不同的筛选条件
   const queryParams = { ...params }
   if (props.tableType === 'before-conversion') {
-    queryParams.handType = 2
+    queryParams.handType = 1
   } else if (props.tableType === 'after-conversion') {
-    queryParams.handType = 3
+    queryParams.handType = 2
   }
 
   // 使用默认的数据加载
