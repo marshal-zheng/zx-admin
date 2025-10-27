@@ -164,6 +164,8 @@ transform.beforeRequestHook = (config, options) => {
   const { joinParamsToUrl, joinTime = true } = options
 
   const params = config.params || {}
+  // 标记是否为 FormData，用于在后续流程中跳过参数标准化与覆盖
+  const isFormData = typeof FormData !== 'undefined' && config.data instanceof FormData
   // const data = config.data || false
 
   // 添加调试日志 - 处理前
@@ -186,19 +188,26 @@ transform.beforeRequestHook = (config, options) => {
     config.url += params
     config.params = undefined
   } else {
-    const test =
+    // 对于 FormData 认为已经有有效数据，避免被覆盖
+    const hasValidData =
       Reflect.has(config, 'data') &&
       config.data &&
-      (Object.keys(config.data).length > 0 || Array.isArray(config.data))
+      (isFormData ||
+        (typeof config.data === 'object' &&
+          (Object.keys(config.data).length > 0 || Array.isArray(config.data))))
 
-    if (!test) {
+    if (!hasValidData) {
       config.data = params || {}
       config.params = undefined
     }
 
     if (joinParamsToUrl) {
-      const params = Object.assign({}, config.params, config.data)
-      const paramString = setObjToUrlParams(params)
+      // 当 body 为 FormData 时，不应把 body 合并到 URL 上
+      const paramsForUrl = Object.assign({}, config.params)
+      if (!isFormData && config.data && typeof config.data === 'object' && !Array.isArray(config.data)) {
+        Object.assign(paramsForUrl, config.data)
+      }
+      const paramString = setObjToUrlParams(paramsForUrl as any)
       config.url = config.url + (config.url?.includes('?') ? '&' : '?') + paramString
     }
   }

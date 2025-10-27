@@ -103,9 +103,10 @@ export class ZXAxios {
       }
 
       // 处理请求参数标准化 (将嵌套结构转换为扁平结构)
+      // 注意：跳过 FormData 类型的数据，避免破坏文件上传
       if (config.method?.toLowerCase() === 'get' && config.params) {
         config.params = normalizeParams(config.params)
-      } else if (config.data) {
+      } else if (config.data && !(config.data instanceof FormData)) {
         config.data = normalizeParams(config.data)
       }
 
