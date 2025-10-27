@@ -238,7 +238,7 @@ transform.transformRequestHook = (res, options) => {
 
   if (hasCode) {
     // code === 200 表示成功
-    if (code === 200) {
+    if (Number(code) === 200) {
       // 成功时根据配置显示提示
       const method = res?.config?.method || ''
       const successMessageMode = resolveSuccessMode(options.successMessageMode, method)
