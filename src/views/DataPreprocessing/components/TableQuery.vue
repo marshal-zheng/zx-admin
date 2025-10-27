@@ -49,8 +49,9 @@
           />
           <el-table-column prop="createType" label="创建类型" width="120" align="center">
             <template #default="{ row }">
-              <span v-if="row.createType === 1" class="text-blue-500">手动创建</span>
-              <span v-else-if="row.createType === 2" class="text-green-500">导入创建</span>
+              <span v-if="row.createType === 1" class="text-blue-500">自建表</span>
+              <span v-else-if="row.createType === 2" class="text-green-500">其他库导入表</span>
+              <span v-else-if="row.createType === 3" class="text-orange-500">文件导入表</span>
               <span v-else class="text-gray-400">-</span>
             </template>
           </el-table-column>
