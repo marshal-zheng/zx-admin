@@ -52,7 +52,7 @@ export function importDataSource(baseDataName, file) {
   formData.append('file', file)
 
   return ZXR.post({
-    url: `/zhpgxt/zhpgBase/import/${baseDataName}`,
+    url: `/zhpgxt/importData/${baseDataName}`,
     data: formData,
     headers: {
       'Content-Type': 'multipart/form-data'
@@ -101,10 +101,13 @@ export function migrationToLocalHost(data) {
 }
 
 // 根据表名查询表数据
-export function selectTableData(tableName: string, params = {}) {
+export function selectTableData(id: string | number, tableName: string, params = {}) {
   return ZXR.get({
     url: `/zhpgxt/zhpgCreateTable/selectTable/${tableName}`,
-    params
+    params: {
+      ...params,
+      id
+    }
   })
 }
 

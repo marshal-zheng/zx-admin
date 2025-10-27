@@ -117,164 +117,164 @@ let dataSourceList = [...baseDataSources]
 const mockTables = {
   '1': [
     {
-      tableName: 'users',
-      tableComment: '用户信息表',
-      rowCount: 1500,
-      createTime: '2024-01-01 10:00:00'
+      TABLE_NAME: 'users',
+      TABLE_COMMENT: '用户信息表',
+      TABLE_ROWS: 1500,
+      CREATE_TIME: '2024-01-01 10:00:00'
     },
     {
-      tableName: 'orders',
-      tableComment: '订单信息表',
-      rowCount: 8500,
-      createTime: '2024-01-02 11:30:00'
+      TABLE_NAME: 'orders',
+      TABLE_COMMENT: '订单信息表',
+      TABLE_ROWS: 8500,
+      CREATE_TIME: '2024-01-02 11:30:00'
     },
     {
-      tableName: 'products',
-      tableComment: '商品信息表',
-      rowCount: 320,
-      createTime: '2024-01-03 09:15:00'
+      TABLE_NAME: 'products',
+      TABLE_COMMENT: '商品信息表',
+      TABLE_ROWS: 320,
+      CREATE_TIME: '2024-01-03 09:15:00'
     },
     {
-      tableName: 'categories',
-      tableComment: '商品分类表',
-      rowCount: 25,
-      createTime: '2024-01-04 14:20:00'
+      TABLE_NAME: 'categories',
+      TABLE_COMMENT: '商品分类表',
+      TABLE_ROWS: 25,
+      CREATE_TIME: '2024-01-04 14:20:00'
     },
     {
-      tableName: 'order_items',
-      tableComment: '订单明细表',
-      rowCount: 15600,
-      createTime: '2024-01-05 16:45:00'
+      TABLE_NAME: 'order_items',
+      TABLE_COMMENT: '订单明细表',
+      TABLE_ROWS: 15600,
+      CREATE_TIME: '2024-01-05 16:45:00'
     },
     {
-      tableName: 'customers',
-      tableComment: '客户信息表',
-      rowCount: 2800,
-      createTime: '2024-01-06 08:30:00'
+      TABLE_NAME: 'customers',
+      TABLE_COMMENT: '客户信息表',
+      TABLE_ROWS: 2800,
+      CREATE_TIME: '2024-01-06 08:30:00'
     },
     {
-      tableName: 'suppliers',
-      tableComment: '供应商信息表',
-      rowCount: 150,
-      createTime: '2024-01-07 13:10:00'
+      TABLE_NAME: 'suppliers',
+      TABLE_COMMENT: '供应商信息表',
+      TABLE_ROWS: 150,
+      CREATE_TIME: '2024-01-07 13:10:00'
     },
     {
-      tableName: 'inventory',
-      tableComment: '库存管理表',
-      rowCount: 5200,
-      createTime: '2024-01-08 10:45:00'
+      TABLE_NAME: 'inventory',
+      TABLE_COMMENT: '库存管理表',
+      TABLE_ROWS: 5200,
+      CREATE_TIME: '2024-01-08 10:45:00'
     },
     {
-      tableName: 'payments',
-      tableComment: '支付记录表',
-      rowCount: 12300,
-      createTime: '2024-01-09 15:20:00'
+      TABLE_NAME: 'payments',
+      TABLE_COMMENT: '支付记录表',
+      TABLE_ROWS: 12300,
+      CREATE_TIME: '2024-01-09 15:20:00'
     },
     {
-      tableName: 'reviews',
-      tableComment: '商品评价表',
-      rowCount: 3400,
-      createTime: '2024-01-10 12:00:00'
+      TABLE_NAME: 'reviews',
+      TABLE_COMMENT: '商品评价表',
+      TABLE_ROWS: 3400,
+      CREATE_TIME: '2024-01-10 12:00:00'
     },
     {
-      tableName: 'coupons',
-      tableComment: '优惠券表',
-      rowCount: 680,
-      createTime: '2024-01-11 09:30:00'
+      TABLE_NAME: 'coupons',
+      TABLE_COMMENT: '优惠券表',
+      TABLE_ROWS: 680,
+      CREATE_TIME: '2024-01-11 09:30:00'
     },
     {
-      tableName: 'shipping',
-      tableComment: '物流信息表',
-      rowCount: 7800,
-      createTime: '2024-01-12 14:15:00'
+      TABLE_NAME: 'shipping',
+      TABLE_COMMENT: '物流信息表',
+      TABLE_ROWS: 7800,
+      CREATE_TIME: '2024-01-12 14:15:00'
     },
     {
-      tableName: 'user_profiles',
-      tableComment: '用户详细资料表',
-      rowCount: 1450,
-      createTime: '2024-01-13 11:40:00'
+      TABLE_NAME: 'user_profiles',
+      TABLE_COMMENT: '用户详细资料表',
+      TABLE_ROWS: 1450,
+      CREATE_TIME: '2024-01-13 11:40:00'
     },
     {
-      tableName: 'product_images',
-      tableComment: '商品图片表',
-      rowCount: 2100,
-      createTime: '2024-01-14 16:25:00'
+      TABLE_NAME: 'product_images',
+      TABLE_COMMENT: '商品图片表',
+      TABLE_ROWS: 2100,
+      CREATE_TIME: '2024-01-14 16:25:00'
     },
     {
-      tableName: 'order_status_log',
-      tableComment: '订单状态变更日志表',
-      rowCount: 18900,
-      createTime: '2024-01-15 08:50:00'
+      TABLE_NAME: 'order_status_log',
+      TABLE_COMMENT: '订单状态变更日志表',
+      TABLE_ROWS: 18900,
+      CREATE_TIME: '2024-01-15 08:50:00'
     },
     {
-      tableName: 'shopping_cart',
-      tableComment: '购物车表',
-      rowCount: 4200,
-      createTime: '2024-01-16 13:35:00'
+      TABLE_NAME: 'shopping_cart',
+      TABLE_COMMENT: '购物车表',
+      TABLE_ROWS: 4200,
+      CREATE_TIME: '2024-01-16 13:35:00'
     },
     {
-      tableName: 'wishlists',
-      tableComment: '心愿单表',
-      rowCount: 890,
-      createTime: '2024-01-17 10:20:00'
+      TABLE_NAME: 'wishlists',
+      TABLE_COMMENT: '心愿单表',
+      TABLE_ROWS: 890,
+      CREATE_TIME: '2024-01-17 10:20:00'
     },
     {
-      tableName: 'notifications',
-      tableComment: '系统通知表',
-      rowCount: 6700,
-      createTime: '2024-01-18 15:05:00'
+      TABLE_NAME: 'notifications',
+      TABLE_COMMENT: '系统通知表',
+      TABLE_ROWS: 6700,
+      CREATE_TIME: '2024-01-18 15:05:00'
     },
     {
-      tableName: 'audit_logs',
-      tableComment: '操作审计日志表',
-      rowCount: 25600,
-      createTime: '2024-01-19 09:10:00'
+      TABLE_NAME: 'audit_logs',
+      TABLE_COMMENT: '操作审计日志表',
+      TABLE_ROWS: 25600,
+      CREATE_TIME: '2024-01-19 09:10:00'
     },
     {
-      tableName: 'system_config',
-      tableComment: '系统配置表',
-      rowCount: 45,
-      createTime: '2024-01-20 12:55:00'
+      TABLE_NAME: 'system_config',
+      TABLE_COMMENT: '系统配置表',
+      TABLE_ROWS: 45,
+      CREATE_TIME: '2024-01-20 12:55:00'
     }
   ],
   '2': [
     {
-      tableName: 'test_users',
-      tableComment: '测试用户表',
-      rowCount: 100,
-      createTime: '2024-01-01 10:00:00'
+      TABLE_NAME: 'test_users',
+      TABLE_COMMENT: '测试用户表',
+      TABLE_ROWS: 100,
+      CREATE_TIME: '2024-01-01 10:00:00'
     },
     {
-      tableName: 'test_orders',
-      tableComment: '测试订单表',
-      rowCount: 500,
-      createTime: '2024-01-02 11:30:00'
+      TABLE_NAME: 'test_orders',
+      TABLE_COMMENT: '测试订单表',
+      TABLE_ROWS: 500,
+      CREATE_TIME: '2024-01-02 11:30:00'
     },
     {
-      tableName: 'test_products',
-      tableComment: '测试商品表',
-      rowCount: 50,
-      createTime: '2024-01-03 09:15:00'
+      TABLE_NAME: 'test_products',
+      TABLE_COMMENT: '测试商品表',
+      TABLE_ROWS: 50,
+      CREATE_TIME: '2024-01-03 09:15:00'
     }
   ],
   '3': [
     {
-      tableName: 'dm_users',
-      tableComment: '达梦用户表',
-      rowCount: 200,
-      createTime: '2024-01-01 10:00:00'
+      TABLE_NAME: 'dm_users',
+      TABLE_COMMENT: '达梦用户表',
+      TABLE_ROWS: 200,
+      CREATE_TIME: '2024-01-01 10:00:00'
     },
     {
-      tableName: 'dm_logs',
-      tableComment: '达梦日志表',
-      rowCount: 5000,
-      createTime: '2024-01-02 11:30:00'
+      TABLE_NAME: 'dm_logs',
+      TABLE_COMMENT: '达梦日志表',
+      TABLE_ROWS: 5000,
+      CREATE_TIME: '2024-01-02 11:30:00'
     },
     {
-      tableName: 'dm_config',
-      tableComment: '达梦配置表',
-      rowCount: 10,
-      createTime: '2024-01-03 09:15:00'
+      TABLE_NAME: 'dm_config',
+      TABLE_COMMENT: '达梦配置表',
+      TABLE_ROWS: 10,
+      CREATE_TIME: '2024-01-03 09:15:00'
     }
   ]
 }
@@ -849,7 +849,7 @@ export default [
 
   // 导入数据源
   {
-    url: '/api/zhpgxt/zhpgBase/import/:baseDataName',
+    url: '/api/zhpgxt/importData/:baseDataName',
     method: 'post',
     timeout,
     response: ({ query, body }) => {
@@ -1053,177 +1053,177 @@ export default [
     method: 'get',
     timeout,
     response: ({ query }) => {
-      const { current = 1, size = 10, createTableName = '' } = query
+      const { current = 1, size = 10, TABLE_NAME = '' } = query
 
       // 模拟创建表数据
       const mockCreateTables = [
         {
-          createTime: '2025-01-15 10:30:00',
+          CREATE_TIME: '2025-01-15 10:30:00',
           createType: 1, // 自建表
           createTableId: 'CT001',
-          createTableName: '用户信息表',
+          TABLE_NAME: '用户信息表',
           handType: 1, // 已处理
-          tableComment: '存储系统用户基本信息'
+          TABLE_COMMENT: '存储系统用户基本信息'
         },
         {
-          createTime: '2025-01-14 14:20:00',
+          CREATE_TIME: '2025-01-14 14:20:00',
           createType: 2, // 其他库导入表
           createTableId: 'CT002',
-          createTableName: '订单数据表',
+          TABLE_NAME: '订单数据表',
           handType: 0, // 未处理
-          tableComment: '电商订单详细信息记录'
+          TABLE_COMMENT: '电商订单详细信息记录'
         },
         {
-          createTime: '2025-01-13 09:15:00',
+          CREATE_TIME: '2025-01-13 09:15:00',
           createType: 3, // 文件导入表
           createTableId: 'CT003',
-          createTableName: '商品库存表',
+          TABLE_NAME: '商品库存表',
           handType: 1, // 已处理
-          tableComment: '商品库存管理数据'
+          TABLE_COMMENT: '商品库存管理数据'
         },
         {
-          createTime: '2025-01-12 16:45:00',
+          CREATE_TIME: '2025-01-12 16:45:00',
           createType: 1, // 自建表
           createTableId: 'CT004',
-          createTableName: '客户关系表',
+          TABLE_NAME: '客户关系表',
           handType: 0, // 未处理
-          tableComment: '客户关系管理信息'
+          TABLE_COMMENT: '客户关系管理信息'
         },
         {
-          createTime: '2025-01-11 11:30:00',
+          CREATE_TIME: '2025-01-11 11:30:00',
           createType: 2, // 其他库导入表
           createTableId: 'CT005',
-          createTableName: '财务报表',
+          TABLE_NAME: '财务报表',
           handType: 1, // 已处理
-          tableComment: '企业财务数据统计'
+          TABLE_COMMENT: '企业财务数据统计'
         },
         {
-          createTime: '2025-01-10 08:45:00',
+          CREATE_TIME: '2025-01-10 08:45:00',
           createType: 3, // 文件导入表
           createTableId: 'CT006',
-          createTableName: '员工档案表',
+          TABLE_NAME: '员工档案表',
           handType: 0, // 未处理
-          tableComment: '公司员工基本档案信息'
+          TABLE_COMMENT: '公司员工基本档案信息'
         },
         {
-          createTime: '2025-01-09 15:20:00',
+          CREATE_TIME: '2025-01-09 15:20:00',
           createType: 1, // 自建表
           createTableId: 'CT007',
-          createTableName: '产品分类表',
+          TABLE_NAME: '产品分类表',
           handType: 1, // 已处理
-          tableComment: '产品分类层级结构'
+          TABLE_COMMENT: '产品分类层级结构'
         },
         {
-          createTime: '2025-01-08 12:10:00',
+          CREATE_TIME: '2025-01-08 12:10:00',
           createType: 2, // 其他库导入表
           createTableId: 'CT008',
-          createTableName: '销售数据表',
+          TABLE_NAME: '销售数据表',
           handType: 0, // 未处理
-          tableComment: '销售业绩统计数据'
+          TABLE_COMMENT: '销售业绩统计数据'
         },
         {
-          createTime: '2025-01-07 13:25:00',
+          CREATE_TIME: '2025-01-07 13:25:00',
           createType: 3, // 文件导入表
           createTableId: 'CT009',
-          createTableName: '供应商信息表',
+          TABLE_NAME: '供应商信息表',
           handType: 1, // 已处理
-          tableComment: '供应商基本信息管理'
+          TABLE_COMMENT: '供应商基本信息管理'
         },
         {
-          createTime: '2025-01-06 10:50:00',
+          CREATE_TIME: '2025-01-06 10:50:00',
           createType: 1, // 自建表
           createTableId: 'CT010',
-          createTableName: '物流跟踪表',
+          TABLE_NAME: '物流跟踪表',
           handType: 0, // 未处理
-          tableComment: '物流配送跟踪信息'
+          TABLE_COMMENT: '物流配送跟踪信息'
         },
         {
-          createTime: '2025-01-05 14:35:00',
+          CREATE_TIME: '2025-01-05 14:35:00',
           createType: 2, // 其他库导入表
           createTableId: 'CT011',
-          createTableName: '营销活动表',
+          TABLE_NAME: '营销活动表',
           handType: 1, // 已处理
-          tableComment: '营销活动策划执行数据'
+          TABLE_COMMENT: '营销活动策划执行数据'
         },
         {
-          createTime: '2025-01-04 09:40:00',
+          CREATE_TIME: '2025-01-04 09:40:00',
           createType: 3, // 文件导入表
           createTableId: 'CT012',
-          createTableName: '设备维护表',
+          TABLE_NAME: '设备维护表',
           handType: 0, // 未处理
-          tableComment: '设备维护保养记录'
+          TABLE_COMMENT: '设备维护保养记录'
         },
         {
-          createTime: '2025-01-03 16:15:00',
+          CREATE_TIME: '2025-01-03 16:15:00',
           createType: 1, // 自建表
           createTableId: 'CT013',
-          createTableName: '会员积分表',
+          TABLE_NAME: '会员积分表',
           handType: 1, // 已处理
-          tableComment: '会员积分变动记录'
+          TABLE_COMMENT: '会员积分变动记录'
         },
         {
-          createTime: '2025-01-02 11:20:00',
+          CREATE_TIME: '2025-01-02 11:20:00',
           createType: 2, // 其他库导入表
           createTableId: 'CT014',
-          createTableName: '审计日志表',
+          TABLE_NAME: '审计日志表',
           handType: 0, // 未处理
-          tableComment: '系统操作审计日志'
+          TABLE_COMMENT: '系统操作审计日志'
         },
         {
-          createTime: '2025-01-01 08:30:00',
+          CREATE_TIME: '2025-01-01 08:30:00',
           createType: 3, // 文件导入表
           createTableId: 'CT015',
-          createTableName: '配置参数表',
+          TABLE_NAME: '配置参数表',
           handType: 1, // 已处理
-          tableComment: '系统配置参数管理'
+          TABLE_COMMENT: '系统配置参数管理'
         },
         {
-          createTime: '2024-12-31 17:45:00',
+          CREATE_TIME: '2024-12-31 17:45:00',
           createType: 1, // 自建表
           createTableId: 'CT016',
-          createTableName: '权限管理表',
+          TABLE_NAME: '权限管理表',
           handType: 0, // 未处理
-          tableComment: '用户权限分配管理'
+          TABLE_COMMENT: '用户权限分配管理'
         },
         {
-          createTime: '2024-12-30 13:10:00',
+          CREATE_TIME: '2024-12-30 13:10:00',
           createType: 2, // 其他库导入表
           createTableId: 'CT017',
-          createTableName: '数据字典表',
+          TABLE_NAME: '数据字典表',
           handType: 1, // 已处理
-          tableComment: '系统数据字典配置'
+          TABLE_COMMENT: '系统数据字典配置'
         },
         {
-          createTime: '2024-12-29 10:25:00',
+          CREATE_TIME: '2024-12-29 10:25:00',
           createType: 3, // 文件导入表
           createTableId: 'CT018',
-          createTableName: '报表模板表',
+          TABLE_NAME: '报表模板表',
           handType: 0, // 未处理
-          tableComment: '报表模板配置信息'
+          TABLE_COMMENT: '报表模板配置信息'
         },
         {
-          createTime: '2024-12-28 15:55:00',
+          CREATE_TIME: '2024-12-28 15:55:00',
           createType: 1, // 自建表
           createTableId: 'CT019',
-          createTableName: '消息通知表',
+          TABLE_NAME: '消息通知表',
           handType: 1, // 已处理
-          tableComment: '系统消息通知记录'
+          TABLE_COMMENT: '系统消息通知记录'
         },
         {
-          createTime: '2024-12-27 12:40:00',
+          CREATE_TIME: '2024-12-27 12:40:00',
           createType: 2, // 其他库导入表
           createTableId: 'CT020',
-          createTableName: '备份恢复表',
+          TABLE_NAME: '备份恢复表',
           handType: 0, // 未处理
-          tableComment: '数据备份恢复记录'
+          TABLE_COMMENT: '数据备份恢复记录'
         }
       ]
 
       // 根据搜索条件过滤数据
       let filteredData = mockCreateTables
-      if (createTableName) {
+      if (TABLE_NAME) {
         filteredData = mockCreateTables.filter((item) =>
-          item.createTableName.includes(createTableName)
+          item.TABLE_NAME.includes(TABLE_NAME)
         )
       }
 
@@ -1295,7 +1295,9 @@ export default [
     response: ({ query, url }) => {
       // 从 URL 中提取表名
       const tableName = url.split('/').pop()
-      const { current = 1, size = 20, keyword = '' } = query
+      const { current = 1, size = 20, keyword = '', id } = query
+      
+      console.log('selectTable 接口接收到的参数:', { tableName, id, current, size, keyword })
 
       // 模拟表数据结构 - 使用英文字段名
       const generateTableData = (tableName, count) => {

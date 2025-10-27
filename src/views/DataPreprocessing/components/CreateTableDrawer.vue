@@ -293,9 +293,7 @@ const loadDatasetDetail = async (createTableId: string) => {
         }
       ]
     }
-  } catch (error: any) {
-     throw error
-   } finally {
+  }finally {
      drawerLoading.value = false
    }
 }

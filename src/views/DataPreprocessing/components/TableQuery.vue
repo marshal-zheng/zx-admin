@@ -36,13 +36,13 @@
       <template #table="{ grid, refresh }">
         <el-table :data="grid.list" style="width: 100%" max-height="calc(100vh - 230px)">
           <el-table-column
-            prop="createTableName"
+            prop="TABLE_NAME"
             label="表名称"
             min-width="200"
             show-overflow-tooltip
           />
           <el-table-column
-            prop="tableComment"
+            prop="TABLE_COMMENT"
             label="表注释"
             min-width="150"
             show-overflow-tooltip
@@ -61,7 +61,7 @@
               <span v-else class="text-gray-400">-</span>
             </template>
           </el-table-column>
-          <el-table-column prop="createTime" label="创建时间" width="160" show-overflow-tooltip />
+          <el-table-column prop="CREATE_TIME" label="创建时间" width="160" show-overflow-tooltip />
           <el-table-column
             label="操作"
             :width="isConversionType ? '120' : '250'"
@@ -189,10 +189,11 @@ const handleViewData = (row) => {
   router.push({
     name: routeName,
     params: {
-      id: row.createTableId
+      id: row.createTableId || row.id
     },
     query: {
-      tableName: row.createTableName
+      tableName: row.TABLE_NAME,
+      id: row.createTableId || row.id // 确保 id 和 tableName 都传递
     }
   })
 }
@@ -201,7 +202,7 @@ const handleImportToLocal = async (row) => {
   try {
     const params = {
       createTableId: row.createTableId,
-      tableName: row.createTableName
+      tableName: row.TABLE_NAME
     }
 
     console.log('=== 导入本地数据库 ===', params)
@@ -210,7 +211,7 @@ const handleImportToLocal = async (row) => {
 
     const messageInstance = ElMessage.success({
       message: h('span', [
-        `表 "${row.createTableName}" 已成功导入到数据集，`,
+        `表 "${row.TABLE_NAME}" 已成功导入到数据集，`,
         h(
           'a',
           {
@@ -226,14 +227,14 @@ const handleImportToLocal = async (row) => {
       duration: 5000
     })
   } catch (error) {
-    ElMessage.error(`导入表 "${row.createTableName}" 失败: ${error.message || '未知错误'}`)
+    ElMessage.error(`导入表 "${row.TABLE_NAME}" 失败: ${error.message || '未知错误'}`)
   }
 }
 
 const handleDelete = async (row, handleRefresh) => {
   try {
     await ElMessageBox.confirm(
-      `您即将删除数据集"${row.createTableName}"，此操作不可恢复！`,
+      `您即将删除数据集"${row.TABLE_NAME}"，此操作不可恢复！`,
       '删除确认',
       {
         confirmButtonText: '确定删除',

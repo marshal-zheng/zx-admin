@@ -10,10 +10,13 @@ export function getDatasetByCreateTableId(createTableId: string | number, params
 }
 
 // 根据表名查询表数据
-export function getTableDataByTableName(tableName: string, params = {}) {
+export function getTableDataByTableName(id: string | number, tableName: string, params = {}) {
   return ZXR.get({
     url: `/zhpgxt/zhpgCreateTable/selectTable/${encodeURIComponent(tableName)}`,
-    params
+    params: {
+      ...params,
+      id
+    }
   })
 }
 

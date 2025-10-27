@@ -7,61 +7,61 @@ const timeout = 1000
 const mockDatasets = [
   {
     createTableId: '1',
-    tableName: 'user_dataset',
-    tableComment: '用户数据集',
+    TABLE_NAME: 'user_dataset',
+    TABLE_COMMENT: '用户数据集',
     dataSourceId: '1',
     dataSourceName: '生产环境MySQL',
-    rowCount: 1500,
+    TABLE_ROWS: 1500,
     columnCount: 8,
-    createTime: '2024-01-15 10:30:00',
+    CREATE_TIME: '2024-01-15 10:30:00',
     updateTime: '2024-01-20 14:20:00',
     status: 'active'
   },
   {
     createTableId: '2',
-    tableName: 'order_dataset',
-    tableComment: '订单数据集',
+    TABLE_NAME: 'order_dataset',
+    TABLE_COMMENT: '订单数据集',
     dataSourceId: '1',
     dataSourceName: '生产环境MySQL',
-    rowCount: 8500,
+    TABLE_ROWS: 8500,
     columnCount: 12,
-    createTime: '2024-01-16 11:15:00',
+    CREATE_TIME: '2024-01-16 11:15:00',
     updateTime: '2024-01-21 09:30:00',
     status: 'active'
   },
   {
     createTableId: '3',
-    tableName: 'product_dataset',
-    tableComment: '商品数据集',
+    TABLE_NAME: 'product_dataset',
+    TABLE_COMMENT: '商品数据集',
     dataSourceId: '2',
     dataSourceName: '测试环境MySQL',
-    rowCount: 320,
+    TABLE_ROWS: 320,
     columnCount: 6,
-    createTime: '2024-01-17 09:45:00',
+    CREATE_TIME: '2024-01-17 09:45:00',
     updateTime: '2024-01-22 16:10:00',
     status: 'active'
   },
   {
     createTableId: '4',
-    tableName: 'analytics_dataset',
-    tableComment: '分析数据集',
+    TABLE_NAME: 'analytics_dataset',
+    TABLE_COMMENT: '分析数据集',
     dataSourceId: '3',
     dataSourceName: '本地达梦数据库',
-    rowCount: 25600,
+    TABLE_ROWS: 25600,
     columnCount: 15,
-    createTime: '2024-01-18 14:20:00',
+    CREATE_TIME: '2024-01-18 14:20:00',
     updateTime: '2024-01-23 11:45:00',
     status: 'processing'
   },
   {
     createTableId: '5',
-    tableName: 'log_dataset',
-    tableComment: '日志数据集',
+    TABLE_NAME: 'log_dataset',
+    TABLE_COMMENT: '日志数据集',
     dataSourceId: '4',
     dataSourceName: '开发环境MySQL',
-    rowCount: 45000,
+    TABLE_ROWS: 45000,
     columnCount: 10,
-    createTime: '2024-01-19 16:30:00',
+    CREATE_TIME: '2024-01-19 16:30:00',
     updateTime: '2024-01-24 08:15:00',
     status: 'active'
   }
@@ -253,13 +253,13 @@ export default [
         message: '查询成功',
         data: {
           createTableId: dataset.createTableId,
-          tableName: dataset.tableName,
-          tableComment: dataset.tableComment,
+          tableName: dataset.TABLE_NAME,
+          tableComment: dataset.TABLE_COMMENT,
           dataSourceId: dataset.dataSourceId,
           dataSourceName: dataset.dataSourceName,
-          rowCount: dataset.rowCount,
+          rowCount: dataset.TABLE_ROWS,
           columnCount: dataset.columnCount,
-          createTime: dataset.createTime,
+          createTime: dataset.CREATE_TIME,
           updateTime: dataset.updateTime,
           status: dataset.status,
           createTableRowDtos: fields.map((field) => ({
@@ -401,13 +401,13 @@ export default [
       // 创建新的数据集记录
       const newDataset = {
         createTableId: newCreateTableId,
-        tableName: body.tableName,
-        tableComment: body.tableComment,
+        TABLE_NAME: body.tableName,
+        TABLE_COMMENT: body.tableComment,
         dataSourceId: '1',
         dataSourceName: '生产环境MySQL',
-        rowCount: 0,
+        TABLE_ROWS: 0,
         columnCount: fields.length,
-        createTime: new Date().toISOString().replace('T', ' ').substring(0, 19),
+        CREATE_TIME: new Date().toISOString().replace('T', ' ').substring(0, 19),
         updateTime: new Date().toISOString().replace('T', ' ').substring(0, 19),
         status: 'active'
       }
@@ -479,7 +479,7 @@ export default [
       let targetDataset: any = null
 
       for (const dataset of mockDatasets) {
-        if (dataset.tableName === tableName) {
+        if (dataset.TABLE_NAME === tableName) {
           targetDataset = dataset
           break
         }
@@ -540,7 +540,7 @@ export default [
       let targetDataset: any = null
 
       for (const dataset of mockDatasets) {
-        if (dataset.tableName === decodedTableName) {
+        if (dataset.TABLE_NAME === decodedTableName) {
           targetDataset = dataset
           break
         }

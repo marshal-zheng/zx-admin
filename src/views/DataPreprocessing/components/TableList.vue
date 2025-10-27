@@ -109,6 +109,7 @@ interface TableField {
 // 定义 Props
 interface Props {
   tableName: string
+  createTableId?: string | number
 }
 
 const props = defineProps<Props>()
@@ -187,10 +188,10 @@ const loadData = async (params) => {
     if (tableFields.value.length === 0) {
       await loadTableFields()
     }
+    console.log('props', props)
     
     // 然后加载表数据
-    const response = await datasetsApi.getTableDataByTableName(props.tableName, params)
-    console.log('表数据API响应:', response)
+    const response = await datasetsApi.getTableDataByTableName(props.createTableId || '', props.tableName, { id: props.createTableId || '' , tableName: props.tableName })
     
     // 兼容不同的返回格式
     let list: any[] = []

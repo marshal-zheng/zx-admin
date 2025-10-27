@@ -30,20 +30,20 @@
       <!-- 表格内容 -->
       <template #table="{ grid, refresh }">
         <el-table :data="grid.list" style="width: 100%" max-height="calc(100vh - 230px)">
-          <el-table-column prop="tableName" label="表名称" min-width="200" show-overflow-tooltip />
+          <el-table-column prop="TABLE_NAME" label="表名称" min-width="200" show-overflow-tooltip />
           <el-table-column
-            prop="tableComment"
+            prop="TABLE_COMMENT"
             label="表注释"
             min-width="150"
             show-overflow-tooltip
           />
-          <el-table-column prop="rowCount" label="数据行数" width="120" align="right">
+          <el-table-column prop="TABLE_ROWS" label="数据行数" width="120" align="right">
             <template #default="{ row }">
-              <span v-if="row.rowCount !== undefined">{{ formatNumber(row.rowCount) }}</span>
+              <span v-if="row.TABLE_ROWS !== undefined">{{ formatNumber(row.TABLE_ROWS) }}</span>
               <span v-else class="text-gray-400">-</span>
             </template>
           </el-table-column>
-          <el-table-column prop="createTime" label="创建时间" width="160" show-overflow-tooltip />
+          <el-table-column prop="CREATE_TIME" label="创建时间" width="160" show-overflow-tooltip />
           <el-table-column
             label="操作"
             width="200"
@@ -120,9 +120,11 @@ const formatNumber = (num) => {
 }
 
 const handleViewData = (row) => {
-  tableDataDialogRef.value?.open({
+  // 传递 id 和 tableName 两个参数
+  tableDataDialogRef.value.open({
     dataSourceId: dataSourceId.value,
-    tableName: row.tableName
+    id: row.id || row.createTableId, // 确保传递 id
+    tableName: row.TABLE_NAME
   })
 }
 
@@ -130,7 +132,7 @@ const handleImportToLocal = async (row) => {
   try {
     const params = {
       id: dataSourceId.value,
-      tableName: row.tableName
+      tableName: row.TABLE_NAME
     }
 
     console.log('=== 导入本地数据库 ===', params)
@@ -139,7 +141,7 @@ const handleImportToLocal = async (row) => {
 
     const messageInstance = ElMessage.success({
       message: h('span', [
-        `表 "${row.tableName}" 已成功导入到数据集，`,
+        `表 "${row.TABLE_NAME}" 已成功导入到数据集，`,
         h(
           'a',
           {
@@ -155,7 +157,7 @@ const handleImportToLocal = async (row) => {
       duration: 5000
     })
   } catch (error) {
-    ElMessage.error(`导入表 "${row.tableName}" 失败: ${error.message || '未知错误'}`)
+    ElMessage.error(`导入表 "${row.TABLE_NAME}" 失败: ${error.message || '未知错误'}`)
   }
 }
 </script>
