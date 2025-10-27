@@ -24,6 +24,8 @@ import '@/styles/index.less'
 // 引入动画
 import '@/plugins/animate.css'
 
+import zhCn from 'element-plus/dist/locale/zh-cn.mjs'
+
 // 路由
 import { setupRouter } from './router'
 
@@ -74,6 +76,7 @@ const setupAll = async () => {
   app.use(ZXUI, {
     size: 'default',
     namespace: 'zx',
+    locale: zhCn,
     zIndex: 3000
   })
 

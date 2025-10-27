@@ -56,7 +56,11 @@ export const useRenderLayout = () => {
             ]}
             style="transition: all var(--transition-time-02);"
           />
-          <Menu class={[{ '!h-[calc(100%-var(--logo-height))]': logo.value }]}></Menu>
+          <Menu class={[
+            logo.value 
+              ? '!h-[calc(100%-var(--logo-height))]' 
+              : '!h-full'
+          ]}></Menu>
         </div>
         <div
           class={[

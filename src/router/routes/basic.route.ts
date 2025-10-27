@@ -7,7 +7,8 @@ export const basicRoutes: AppRouteRecordRaw[] = [
   {
     path: '/',
     component: Layout,
-    redirect: '/dashboard/analysis',
+    redirect: '/data-preprocessing/data-connection/list',
+    // redirect: '/dashboard/analysis',
     name: 'Root',
     meta: {
       hidden: true

@@ -73,7 +73,7 @@ export default defineComponent({
       if (unref(layout) === 'top') {
         return renderMenu()
       } else {
-        return <ElScrollbar>{renderMenu()}</ElScrollbar>
+        return <ElScrollbar class="h-full">{renderMenu()}</ElScrollbar>
       }
     }
 
@@ -88,6 +88,7 @@ export default defineComponent({
           uniqueOpened={unref(layout) === 'top' ? false : unref(uniqueOpened)}
           backgroundColor="var(--left-menu-bg-color)"
           textColor="var(--left-menu-text-color)"
+          class="pb-[60px]"
           activeTextColor="var(--left-menu-text-active-color)"
           popperClass={
             unref(menuMode) === 'vertical'
@@ -111,7 +112,7 @@ export default defineComponent({
         id={prefixCls}
         class={[
           `${prefixCls} ${prefixCls}__${unref(menuMode)}`,
-          'h-[100%] overflow-hidden flex-col bg-[var(--left-menu-bg-color)]',
+          'h-[100%] flex flex-col min-h-0 bg-[var(--left-menu-bg-color)]',
           {
             'w-[var(--left-menu-min-width)]': unref(collapse) && unref(layout) !== 'cutMenu',
             'w-[var(--left-menu-max-width)]': !unref(collapse) && unref(layout) !== 'cutMenu'
