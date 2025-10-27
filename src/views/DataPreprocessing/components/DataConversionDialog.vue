@@ -12,7 +12,6 @@
       <el-form-item label="转换类型" prop="conversionType">
         <DataConversionTypeSelector
           v-model="state.data.conversionType"
-          style="width: 300px"
           @change="handleConversionTypeChange"
         />
       </el-form-item>
@@ -319,18 +318,18 @@ const { state, dialogProps, dialogEvents, open, close, setLoading } = useDialog<
       submitData = { zsjSelectDataList }
     } else if (data.conversionType === DataConversionType.MISSING_VALUE_FILL) {
       // 从 fillConfigList 中构建填充配置列表
-      const fillDataList = fillConfigList.value
+      const qszSelectDataList = fillConfigList.value
         .filter(config => config.fillValue)
         .map(config => ({
           name: config.fieldName,
           value: config.fillValue
         }))
       
-      if (fillDataList.length === 0) {
+      if (qszSelectDataList.length === 0) {
         throw new Error('请为每个检测字段配置填充值')
       }
       
-      submitData = { fillDataList }
+      submitData = { qszSelectDataList }
     } else if (data.conversionType === DataConversionType.OUTLIER_REMOVAL) {
       // 从 outlierConfigList 中构建野值剔除配置列表
       const yztcSelectDataList = outlierConfigList.value.map(config => ({

@@ -1,5 +1,11 @@
 <template>
-  <ZxDrawer v-bind="drawer.drawerProps.value" :loading="drawerLoading" loadingType="skeleton" v-on="drawer.drawerEvents.value">
+  <ZxDrawer 
+    v-bind="drawer.drawerProps.value" 
+    :title="isEditMode ? '编辑表' : '新增表'"
+    :loading="drawerLoading" 
+    loadingType="skeleton" 
+    v-on="drawer.drawerEvents.value"
+  >
     <div class="create-table-container">
       <!-- 基本信息表单 -->
       <el-form
@@ -169,7 +175,10 @@ const fieldColumns = computed(() => [
 
 // 验证字段数据
 const validateFields = (fields: TableField[]) => {
+  console.log('开始验证字段数据:', fields)
+  
   if (fields.length === 0) {
+    console.log('验证失败: 字段数组为空')
     ElMessage.error('请至少添加一个字段')
     return false
   }
@@ -178,6 +187,7 @@ const validateFields = (fields: TableField[]) => {
   const fieldNames = fields.map((f) => f.name).filter(Boolean)
   const uniqueNames = new Set(fieldNames)
   if (fieldNames.length !== uniqueNames.size) {
+    console.log('验证失败: 字段名重复', fieldNames)
     ElMessage.error('字段名不能重复')
     return false
   }
@@ -185,22 +195,33 @@ const validateFields = (fields: TableField[]) => {
   // 检查必填字段
   for (let i = 0; i < fields.length; i++) {
     const field = fields[i]
+    console.log(`验证第 ${i + 1} 行字段:`, field)
+    
     if (!field.name) {
+      console.log(`验证失败: 第 ${i + 1} 行字段名为空`)
       ElMessage.error(`第 ${i + 1} 行字段名不能为空`)
       return false
     }
     if (!field.type) {
+      console.log(`验证失败: 第 ${i + 1} 行字段类型为空`)
       ElMessage.error(`第 ${i + 1} 行字段类型不能为空`)
+      return false
+    }
+    if (!field.comment) {
+      console.log(`验证失败: 第 ${i + 1} 行字段注释为空`)
+      ElMessage.error(`第 ${i + 1} 行字段注释不能为空`)
       return false
     }
 
     // 验证字段名格式
     if (!/^[a-zA-Z][a-zA-Z0-9_]*$/.test(field.name)) {
+      console.log(`验证失败: 第 ${i + 1} 行字段名格式不正确`, field.name)
       ElMessage.error(`第 ${i + 1} 行字段名格式不正确,必须以字母开头,只能包含字母、数字和下划线`)
       return false
     }
   }
 
+  console.log('字段验证通过')
   return true
 }
 
@@ -236,31 +257,54 @@ const drawer = useDrawer<FormData>({
       throw new Error('字段验证失败')
     }
 
-    const submitData = {
-      tableName: drawer.state.data.tableName,
-      tableComment: drawer.state.data.tableComment,
-      createTableRowDtos: drawer.state.data.fields.map((field) => ({
-        name: field.name,
-        type: field.type,
-        extent: String(field.extent),
-        comment: field.comment
-      }))
-    }
-
     let response
     if (isEditMode.value && editingTableId.value) {
-      // 编辑模式：调用更新接口
-      response = await datasetsApi.updateDataset(editingTableId.value, submitData)
+      // 编辑模式：使用新的编辑接口
+      const editData = {
+        updateId: editingTableId.value,
+        tableName: drawer.state.data.tableName,
+        createTableRowDtos: drawer.state.data.fields.map((field) => ({
+          name: field.name,
+          tValue: JSON.stringify({
+            type: field.type,
+            extent: String(field.extent),
+            comment: field.comment
+          }) // 将字段的详细信息序列化到 tValue 中
+        }))
+      }
+      console.log('编辑提交数据:', editData)
+      console.log('字段数据:', drawer.state.data.fields)
+      response = await datasetsApi.updateTableRow(editData)
     } else {
       // 新增模式：调用创建接口
+      const submitData = {
+        tableName: drawer.state.data.tableName,
+        tableComment: drawer.state.data.tableComment,
+        createTableRowDtoLists: [
+          drawer.state.data.fields.map((field) => ({
+            name: field.name,
+            tValue: field.type + (field.extent ? `(${field.extent})` : '') + (field.comment ? ` COMMENT '${field.comment}'` : '')
+          }))
+        ]
+      }
+      console.log('新增提交数据:', submitData)
       response = await datasetsApi.createTable(submitData)
     }
 
-    emit('success')
-    drawer.close()
+    // 检查响应状态
+    if (response && (response.code === '200' || response.success)) {
+      ElMessage.success(isEditMode ? '编辑表成功' : '创建表成功')
+      emit('success')
+      drawer.close()
+    } else {
+      throw new Error(response?.msg || response?.message || '操作失败')
+    }
     
   },
   onConfirmError: (error: any) => {
+    console.error('操作失败:', error)
+    const errorMsg = error?.message || '操作失败'
+    ElMessage.error(errorMsg)
   }
 })
 

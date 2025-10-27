@@ -39,7 +39,7 @@
             v-for="field in getTableColumns()"
             :key="field.name"
             :prop="field.name"
-            :label="field.comment || field.name"
+            :label="field.name"
             :min-width="120"
             show-overflow-tooltip
           >

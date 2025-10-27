@@ -17,7 +17,6 @@
     :max-tag-count="maxTagCount"
     :full-tooltip-position="fullTooltipPosition"
     :option-tooltip-position="optionTooltipPosition"
-    :width="width"
     :style="computedStyle"
     @change="$emit('change', $event)"
     @clear="$emit('clear')"

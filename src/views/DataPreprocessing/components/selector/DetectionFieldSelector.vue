@@ -3,9 +3,7 @@
     :model-value="modelValue"
     :options="loadFieldOptions"
     multiple
-    :has-all-select="true"
     placeholder="请选择检测字段"
-    style="width: 400px"
     @update:model-value="handleChange"
   />
 </template>
@@ -57,7 +55,7 @@ const loadFieldOptions = async () => {
     }
 
     return fields.map((field) => ({
-      label: field.comment || field.name,
+      label: field.name,
       value: field.name
     }))
   } catch (error) {

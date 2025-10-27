@@ -64,12 +64,10 @@ export function migrationDatasetToLocalHost(data: {
 export function createTable(data: {
   tableName: string
   tableComment: string
-  createTableRowDtos: Array<{
+  createTableRowDtoLists: Array<Array<{
     name: string
-    type: string
-    extent: string | number
-    comment: string
-  }>
+    tValue: string
+  }>>
 }) {
   return ZXR.post({
     url: '/zhpgxt/zhpgCreateTable',
@@ -171,9 +169,8 @@ export function dirtyDataDetection(tableName: string, data: {
 
 // 数据转换 - 缺失值填充
 export function missingValueFill(tableName: string, data: {
-  fillDataList: Array<{
+  qszSelectDataList: Array<{
     name: string
-    method: string
     value: string
   }>
 }) {

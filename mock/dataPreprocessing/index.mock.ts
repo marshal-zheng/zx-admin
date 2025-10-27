@@ -1383,14 +1383,13 @@ export default [
     timeout,
     response: ({ body, url }) => {
       const tableName = url.split('/').pop()
-      const { fillDataList } = body || {}
+      const { qszSelectDataList } = body || {}
       
-      console.log('缺失值填充请求:', { tableName, fillDataList })
+      console.log('缺失值填充请求:', { tableName, qszSelectDataList })
       
       // 模拟填充结果
-      const fillResults = fillDataList?.map(config => ({
+      const fillResults = qszSelectDataList?.map(config => ({
         field: config.name,
-        method: config.method,
         value: config.value,
         filledCount: Math.floor(Math.random() * 20) // 随机填充数量
       })) || []

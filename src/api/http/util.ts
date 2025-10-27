@@ -56,7 +56,14 @@ function normalizeParams(params: RequestParams): NormalizedParams {
   Object.keys(params).forEach((key) => {
     if (key !== 'pager' && key !== 'query' && key !== 'total') {
       const value = params[key]
-      if (typeof value === 'string' || typeof value === 'number' || typeof value === 'boolean') {
+      // 保留基本类型、数组和对象
+      if (
+        typeof value === 'string' ||
+        typeof value === 'number' ||
+        typeof value === 'boolean' ||
+        Array.isArray(value) ||
+        (typeof value === 'object' && value !== null)
+      ) {
         normalized[key] = value
       }
     }
