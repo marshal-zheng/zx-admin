@@ -264,6 +264,7 @@ const handleDelete = async (row, index) => {
         confirmButtonText: '确认',
         cancelButtonText: '取消',
         type: 'warning',
+        confirmButtonClass: 'el-button--danger'
       }
     )
     
