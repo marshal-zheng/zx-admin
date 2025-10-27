@@ -11,7 +11,7 @@
       :default-page-size="10"
       :load-on-mounted="true"
       :clear-selection-on-load="true"
-      class="result-grid"
+      class="result-grid zx-grid-list--page"
     >
       <!-- 工具栏：左-操作 | 中-筛选 | 右-搜索 -->
       <template #form="{ query, loading, refresh, updateState }">
