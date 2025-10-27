@@ -134,6 +134,8 @@ html {
   --transition-time-02: 0.2s;
   --app-table-header-bg: #f7f8fa;
   --app-table-header-color: #1d2129;
+
+  --zx-upload-width: 100%;
 }
 
 .dark {
