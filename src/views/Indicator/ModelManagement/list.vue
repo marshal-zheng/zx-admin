@@ -65,8 +65,7 @@
 <script setup>
 import { ContentWrap } from '@/components/ContentWrap'
 import { modelApi } from '@/api/modules/indicator/model'
-import { confirmInputDanger } from '@zxio/zxui'
-import { ElMessage } from 'element-plus'
+import { ElMessage, ElMessageBox } from 'element-plus'
 import { Delete, View } from '@element-plus/icons-vue'
 
 const router = useRouter()
@@ -147,20 +146,24 @@ const handleMoreActionSelect = async (item, row, handleRefresh) => {
 // 删除计算模型
 const handleDelete = async (modelId, handleRefresh) => {
   try {
-    await confirmInputDanger({
-      targetName: '计算模型',
-      targetType: '计算模型',
-      keyword: '确认删除',
-      dangerMessage: '您即将删除该计算模型',
-      description: '此操作不可恢复,请输入"确认删除"以确认删除。',
-      confirmAction: async () => {
-        const result = await modelApi.deleteModel(modelId)
-        handleRefresh()
-        ElMessage.success('删除成功')
+    await ElMessageBox.confirm(
+      '您即将删除该计算模型，此操作不可恢复，是否确认删除？',
+      '删除确认',
+      {
+        confirmButtonText: '确认删除',
+        cancelButtonText: '取消',
+        type: 'warning',
+        confirmButtonClass: 'el-button--danger'
       }
-    })
+    )
+    
+    await modelApi.deleteModel(modelId)
+    ElMessage.success('计算模型删除成功')
+    handleRefresh()
   } catch (error) {
-    console.log('用户取消删除或操作失败:', error)
+    if (error !== 'cancel') {
+      ElMessage.error('删除失败，请重试')
+    }
   }
 }
 </script>

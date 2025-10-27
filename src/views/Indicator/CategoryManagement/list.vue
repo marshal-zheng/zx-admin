@@ -72,7 +72,7 @@
 import { ContentWrap } from '@/components/ContentWrap'
 import { categoryApi } from '@/api/modules/indicator/category'
 import CategoryFormDialog from './components/CategoryFormDialog.vue'
-import { confirmInputDanger } from '@zxio/zxui'
+import { ElMessage, ElMessageBox } from 'element-plus'
 
 const router = useRouter()
 
@@ -109,18 +109,26 @@ const handleEdit = (row) => {
 
 // 删除分类
 const handleDelete = async (row, refresh) => {
-  await confirmInputDanger({
-    targetName: row.clazzName,
-    targetType: '分类',
-    keyword: row.clazzName,
-    dangerMessage: `您即将删除分类"${row.clazzName}"`,
-    description: '此操作不可恢复，请输入分类名称以确认删除。',
-    confirmAction: async () => {
-      return categoryApi.deleteCategory(row.id).then(() => {
-        refresh()
-      })
+  try {
+    await ElMessageBox.confirm(
+      `您即将删除分类"${row.clazzName}"，此操作不可恢复，是否确认删除？`,
+      '删除确认',
+      {
+        confirmButtonText: '确认删除',
+        cancelButtonText: '取消',
+        type: 'warning',
+        confirmButtonClass: 'el-button--danger'
+      }
+    )
+    
+    await categoryApi.deleteCategory(row.id)
+    ElMessage.success('分类删除成功')
+    refresh()
+  } catch (error) {
+    if (error !== 'cancel') {
+      ElMessage.error('删除失败，请重试')
     }
-  })
+  }
 }
 
 // 表单成功回调

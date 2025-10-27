@@ -96,7 +96,7 @@ import { useRouter } from 'vue-router'
 import { ElMessage } from 'element-plus'
 import { ContentWrap } from '@/components/ContentWrap'
 import CreateTableDrawer from './CreateTableDrawer.vue'
-import { confirmInputDanger } from '@zxio/zxui'
+
 import { datasetsApi } from '@/api/modules/dataPreprocessing/datasets'
 import { Delete, View } from '@element-plus/icons-vue'
 import { dataConnectionApi } from '@/api/modules/dataPreprocessing/dataConnection'
@@ -232,19 +232,25 @@ const handleImportToLocal = async (row) => {
 
 const handleDelete = async (row, handleRefresh) => {
   try {
-    await confirmInputDanger({
-      targetName: '数据集',
-      targetType: '数据集',
-      keyword: '确认删除',
-      dangerMessage: `您即将删除数据集"${row.createTableName}"`,
-      description: '此操作不可恢复,请输入"确认删除"以确认删除。',
-      confirmAction: async () => {
-        const result = await datasetsApi.deleteDataset(row.createTableId)
-        handleRefresh()
+    await ElMessageBox.confirm(
+      `您即将删除数据集"${row.createTableName}"，此操作不可恢复！`,
+      '删除确认',
+      {
+        confirmButtonText: '确定删除',
+        cancelButtonText: '取消',
+        type: 'warning',
+        confirmButtonClass: 'el-button--danger'
       }
-    })
+    )
+    
+    const result = await datasetsApi.deleteDataset(row.createTableId)
+    handleRefresh()
+    ElMessage.success('删除成功')
   } catch (error) {
-    console.log('用户取消删除或操作失败:', error)
+    if (error !== 'cancel') {
+      ElMessage.error('删除失败')
+      console.error('删除失败:', error)
+    }
   }
 }
 

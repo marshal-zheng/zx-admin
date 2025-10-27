@@ -73,8 +73,7 @@
 <script setup>
 import { ContentWrap } from '@/components/ContentWrap'
 import { operatorApi } from '@/api/modules/indicator/operator'
-import { confirmInputDanger } from '@zxio/zxui'
-import { ElMessage } from 'element-plus'
+import { ElMessage, ElMessageBox } from 'element-plus'
 import { Delete, View } from '@element-plus/icons-vue'
 
 const router = useRouter()
@@ -177,20 +176,24 @@ const handleMoreActionSelect = async (item, row, handleRefresh) => {
 // 删除算子
 const handleDelete = async (operatorId, handleRefresh) => {
   try {
-    await confirmInputDanger({
-      targetName: '算子',
-      targetType: '算子',
-      keyword: '确认删除',
-      dangerMessage: '您即将删除该算子',
-      description: '此操作不可恢复,请输入"确认删除"以确认删除。',
-      confirmAction: async () => {
-        const result = await operatorApi.deleteOperator(operatorId)
-        handleRefresh()
-        ElMessage.success('删除成功')
+    await ElMessageBox.confirm(
+      '您即将删除该算子，此操作不可恢复，是否确认删除？',
+      '删除确认',
+      {
+        confirmButtonText: '确认删除',
+        cancelButtonText: '取消',
+        type: 'warning',
+        confirmButtonClass: 'el-button--danger'
       }
-    })
+    )
+    
+    await operatorApi.deleteOperator(operatorId)
+    ElMessage.success('算子删除成功')
+    handleRefresh()
   } catch (error) {
-    console.log('用户取消删除或操作失败:', error)
+    if (error !== 'cancel') {
+      ElMessage.error('删除失败，请重试')
+    }
   }
 }
 </script>

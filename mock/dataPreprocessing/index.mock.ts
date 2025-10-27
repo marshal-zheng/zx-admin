@@ -788,28 +788,61 @@ export default [
     url: '/api/zhpgxt/zhpgBase/export/:baseId',
     method: 'get',
     timeout,
-    response: ({ query }) => {
-      const { baseId } = query
-      const dataSource = dataSourceList.find((item) => item.baseId === baseId)
+    rawResponse: async (req, res) => {
+      try {
+        // 从URL中提取baseId
+        const url = req.url || ''
+        const baseIdMatch = url.match(/\/export\/([^?]+)/)
+        const baseId = baseIdMatch ? baseIdMatch[1] : ''
 
-      if (!dataSource) {
-        return {
-          code: '404',
+        const dataSource = dataSourceList.find((item) => item.baseId === baseId)
+
+        if (!dataSource) {
+          res.statusCode = 404
+          res.setHeader('Content-Type', 'application/json')
+          res.end(JSON.stringify({
+            code: '404',
+            success: false,
+            msg: '数据源不存在',
+            data: null
+          }))
+          return
+        }
+
+        // 设置Content-Disposition响应头
+        const filename = `datasource_${dataSource.baseName}.json`
+        const encodedFilename = encodeURIComponent(filename)
+        res.statusCode = 200
+        res.setHeader('Content-Disposition', `attachment; filename*=UTF-8''${encodedFilename}`)
+        res.setHeader('Content-Type', 'application/json')
+        res.setHeader('Access-Control-Expose-Headers', 'Content-Disposition')
+
+        // 返回模拟的JSON数据作为Blob
+        const mockData = {
+          baseId: dataSource.baseId,
+          baseName: dataSource.baseName,
+          baseIp: dataSource.baseIp,
+          basePort: dataSource.basePort,
+          baseDataName: dataSource.baseDataName,
+          baseType: dataSource.baseType,
+          isLocalhost: dataSource.isLocalhost,
+          createTime: dataSource.createTime,
+          exportTime: new Date().toISOString(),
+          tables: mockTables[baseId] || [],
+          data: mockTableData[baseId] || {}
+        }
+
+        res.end(JSON.stringify(mockData, null, 2))
+      } catch (error) {
+        console.error('导出数据源失败:', error)
+        res.statusCode = 500
+        res.setHeader('Content-Type', 'application/json')
+        res.end(JSON.stringify({
+          code: '500',
           success: false,
-          msg: '数据源不存在',
+          msg: '导出失败',
           data: null
-        }
-      }
-
-      // 模拟文件下载
-      return {
-        code: SUCCESS_CODE,
-        success: true,
-        msg: 'SUCCESS',
-        data: {
-          downloadUrl: `/download/datasource_${baseId}.json`,
-          filename: `datasource_${dataSource.baseName}.json`
-        }
+        }))
       }
     }
   },

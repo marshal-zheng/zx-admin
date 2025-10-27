@@ -92,7 +92,7 @@ import { ContentWrap } from '@/components/ContentWrap'
 import { useI18n } from '@/hooks/web/useI18n'
 import { evaluationApi } from '@/api/modules/evaluation'
 import { Delete } from '@element-plus/icons-vue'
-import { confirmInputDanger } from '@zxio/zxui'
+import { ElMessage, ElMessageBox } from 'element-plus'
 import { TemplateTypeText } from '@/views/Evaluation/components/model'
 import { SelectTemplateType } from '@/views/Evaluation/TemplateManagement/components/selector'
 
@@ -175,30 +175,35 @@ const handleMoreActionSelect = async (item, row, refresh) => {
 // 删除报告
 const handleDelete = async (row, refresh) => {
   try {
-    await confirmInputDanger({
-      targetName: row.templateName,
-      targetType: '评估报告模板',
-      keyword: row.templateName,
-      dangerMessage: `您即将删除评估报告模板"${row.templateName}"`,
-      description: '此操作不可恢复，请输入模板名称以确认删除。',
-      confirmAction: async () => {
-        // 调用删除API
-        // return evaluationApi.deleteReportTemplate(row.id).then(() => {
-        //   refresh()
-        // })
-
-        // 模拟删除
-        return new Promise((resolve) => {
-          setTimeout(() => {
-            ElMessage.success('删除成功')
-            refresh()
-            resolve()
-          }, 500)
-        })
+    await ElMessageBox.confirm(
+      `您即将删除评估报告模板"${row.templateName}"，此操作不可恢复！`,
+      '删除确认',
+      {
+        confirmButtonText: '确定删除',
+        cancelButtonText: '取消',
+        type: 'warning',
+        confirmButtonClass: 'el-button--danger'
       }
+    )
+    
+    // 调用删除API
+    // await evaluationApi.deleteReportTemplate(row.id)
+    // refresh()
+    // ElMessage.success('删除成功')
+
+    // 模拟删除
+    await new Promise((resolve) => {
+      setTimeout(() => {
+        ElMessage.success('删除成功')
+        refresh()
+        resolve()
+      }, 500)
     })
   } catch (error) {
-    console.log('用户取消删除或操作失败:', error)
+    if (error !== 'cancel') {
+      ElMessage.error('删除失败')
+      console.error('删除失败:', error)
+    }
   }
 }
 </script>

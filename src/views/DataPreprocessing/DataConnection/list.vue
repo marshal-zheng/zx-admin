@@ -93,7 +93,7 @@ import { Delete, Download, Upload } from '@element-plus/icons-vue'
 import DataSourceFormDialog from './components/DataSourceFormDialog.vue'
 import DataSourceImportDialog from './components/DataSourceImportDialog.vue'
 import { SelectDataSourceType } from '../components/selector'
-import { confirmInputDanger } from '@zxio/zxui'
+
 import { dataConnectionApi } from '@/api/modules/dataPreprocessing/dataConnection'
 import { getDatabaseTypeName } from '../components/utils'
 import { downloadByUrl } from '@/utils/domUtils'
@@ -194,25 +194,30 @@ const handleMoreActionSelect = async (item, row, handleRefresh) => {
 
 // 导出数据源
 const handleExport = async (row) => {
-  downloadByUrl(`/api/zhpgxt/zhpgBase/export/${row.baseId}`, 'hahha')
+  downloadByUrl(`/api/zhpgxt/zhpgBase/export/${row.baseId}`)
 }
 
 const handleDelete = async (row, handleRefresh) => {
   try {
-    await confirmInputDanger({
-      targetName: '数据源',
-      targetType: '数据源',
-      keyword: '确认删除',
-      // 指定具体的数据源
-      dangerMessage: `您即将删除 '${row.baseName}' 的数据源`,
-      description: '此操作不可恢复,请输入"确认删除"以确认删除。',
-      confirmAction: async () => {
-        const result = await dataConnectionApi.deleteDataSource(row.baseId)
-        handleRefresh()
+    await ElMessageBox.confirm(
+      `您即将删除数据源"${row.baseName}"，此操作不可恢复！`,
+      '删除确认',
+      {
+        confirmButtonText: '确定删除',
+        cancelButtonText: '取消',
+        type: 'warning',
+        confirmButtonClass: 'el-button--danger'
       }
-    })
+    )
+    
+    const result = await dataConnectionApi.deleteDataSource(row.baseId)
+    handleRefresh()
+    ElMessage.success('删除成功')
   } catch (error) {
-    console.log('用户取消删除或操作失败:', error)
+    if (error !== 'cancel') {
+      ElMessage.error('删除失败')
+      console.error('删除失败:', error)
+    }
   }
 }
 </script>

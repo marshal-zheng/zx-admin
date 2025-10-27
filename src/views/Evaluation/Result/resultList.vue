@@ -87,7 +87,7 @@ import { ContentWrap } from '@/components/ContentWrap'
 import { useI18n } from '@/hooks/web/useI18n'
 import { evaluationApi } from '@/api/modules/evaluation'
 import { Download, Delete, View } from '@element-plus/icons-vue'
-import { confirmInputDanger } from '@zxio/zxui'
+import { ElMessage, ElMessageBox } from 'element-plus'
 import { ExportReportDialog } from '../components'
 
 const { t } = useI18n()
@@ -227,21 +227,26 @@ const handleDownloadData = async (row) => {
 const handleDelete = async (row, refresh) => {
   try {
     const targetName = row.taskName || row.object || row.id
-    await confirmInputDanger({
-      targetName,
-      targetType: '评估结果',
-      keyword: targetName,
-      dangerMessage: `您即将删除评估结果"${targetName}"`,
-      description: '此操作不可恢复，请输入任务名称以确认删除。',
-      confirmAction: async () => {
-        // 调用删除评估任务API（评估结果使用同一个接口）
-        return evaluationApi.deleteEvaluation(row.id).then(() => {
-          refresh()
-        })
+    await ElMessageBox.confirm(
+      `您即将删除评估结果"${targetName}"，此操作不可恢复！`,
+      '删除确认',
+      {
+        confirmButtonText: '确定删除',
+        cancelButtonText: '取消',
+        type: 'warning',
+        confirmButtonClass: 'el-button--danger'
       }
-    })
+    )
+    
+    // 调用删除评估任务API（评估结果使用同一个接口）
+    await evaluationApi.deleteEvaluation(row.id)
+    refresh()
+    ElMessage.success('删除成功')
   } catch (error) {
-    console.log('用户取消删除或操作失败:', error)
+    if (error !== 'cancel') {
+      ElMessage.error('删除失败')
+      console.error('删除失败:', error)
+    }
   }
 }
 

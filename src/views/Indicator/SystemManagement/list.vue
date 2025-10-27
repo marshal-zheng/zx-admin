@@ -86,11 +86,10 @@
 import { ContentWrap } from '@/components/ContentWrap'
 import { systemApi } from '@/api/modules/indicator/system'
 import { CategorySelector } from '../components/selector'
-import { confirmInputDanger } from '@zxio/zxui'
+import { ElMessage, ElMessageBox } from 'element-plus'
 import SystemFormDialog from './components/SystemFormDialog.vue'
 import SystemFormDrawer from './components/SystemFormDrawer.vue'
 import SystemTagManageDialog from './components/SystemTagManageDialog.vue'
-import { ElMessage } from 'element-plus'
 import { Delete, Setting, Edit } from '@element-plus/icons-vue'
 
 const router = useRouter()
@@ -237,19 +236,24 @@ const handleSetAsTemplate = async (row, refresh) => {
 // 删除体系
 const handleDelete = async (systemId, refresh) => {
   try {
-    await confirmInputDanger({
-      targetName: '指标体系',
-      targetType: '指标体系',
-      keyword: '确认删除',
-      dangerMessage: '您即将删除该指标体系',
-      description: '此操作不可恢复,请输入"确认删除"以确认删除。',
-      confirmAction: async () => {
-        const result = await systemApi.deleteSystem(systemId)
-        refresh()
+    await ElMessageBox.confirm(
+      '您即将删除该指标体系，此操作不可恢复，是否确认删除？',
+      '删除确认',
+      {
+        confirmButtonText: '确认删除',
+        cancelButtonText: '取消',
+        type: 'warning',
+        confirmButtonClass: 'el-button--danger'
       }
-    })
+    )
+    
+    await systemApi.deleteSystem(systemId)
+    ElMessage.success('指标体系删除成功')
+    refresh()
   } catch (error) {
-    console.log('用户取消删除或操作失败:', error)
+    if (error !== 'cancel') {
+      ElMessage.error('删除失败，请重试')
+    }
   }
 }
 </script>

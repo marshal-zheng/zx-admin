@@ -68,7 +68,7 @@
 import { ContentWrap } from '@/components/ContentWrap'
 import { systemApi } from '@/api/modules/indicator/system'
 import { CategorySelector } from '../components/selector'
-import { confirmInputDanger } from '@zxio/zxui'
+import { ElMessage, ElMessageBox } from 'element-plus'
 
 const router = useRouter()
 
@@ -97,42 +97,27 @@ const handleEdit = (row) => {
   router.push(`/indicator/template-edit/${row.evaluaId}`)
 }
 
-// 获取当前实例
-const instance = getCurrentInstance()
-const { proxy } = instance || {}
-
 // 删除模版
 const handleDelete = async (row, refresh) => {
   try {
-    if (proxy?.$confirmInput) {
-      await proxy.$confirmInput.danger({
-        targetName: row.evaluaName,
-        targetType: '模版',
-        keyword: row.evaluaName,
-        dangerMessage: `您即将删除模版"${row.evaluaName}"`,
-        description: '此操作不可恢复，请输入模版名称以确认删除。',
-        confirmAction: async () => {
-          return systemApi.deleteSystem(row.evaluaId).then(() => {
-            refresh()
-          })
-        }
-      })
-    } else {
-      await confirmInputDanger({
-        targetName: row.evaluaName,
-        targetType: '模版',
-        keyword: row.evaluaName,
-        dangerMessage: `您即将删除模版"${row.evaluaName}"`,
-        description: '此操作不可恢复，请输入模版名称以确认删除。',
-        confirmAction: async () => {
-          return systemApi.deleteSystem(row.evaluaId).then(() => {
-            refresh()
-          })
-        }
-      })
-    }
+    await ElMessageBox.confirm(
+      `您即将删除模版"${row.evaluaName}"，此操作不可恢复，是否确认删除？`,
+      '删除确认',
+      {
+        confirmButtonText: '确认删除',
+        cancelButtonText: '取消',
+        type: 'warning',
+        confirmButtonClass: 'el-button--danger'
+      }
+    )
+    
+    await systemApi.deleteSystem(row.evaluaId)
+    ElMessage.success('模版删除成功')
+    refresh()
   } catch (error) {
-    console.log('用户取消删除或操作失败:', error)
+    if (error !== 'cancel') {
+      ElMessage.error('删除失败，请重试')
+    }
   }
 }
 </script>

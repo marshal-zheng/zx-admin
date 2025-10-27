@@ -91,7 +91,7 @@ import EvaluationAlgorithmSelector from '@/components/business/Selector/Evaluati
 import IndicatorSystemSelector from '@/components/business/Selector/IndicatorSystemSelector.vue'
 import SelectStatus from './components/selector/SelectStatus.vue'
 import { Delete } from '@element-plus/icons-vue'
-import { confirmInputDanger } from '@zxio/zxui'
+import { ElMessage, ElMessageBox } from 'element-plus'
 
 const { t } = useI18n()
 const router = useRouter()
@@ -215,38 +215,25 @@ onMounted(() => {})
 // 删除模版
 const handleDelete = async (row, refresh) => {
   try {
-    // 方案1: 尝试使用全局服务
-    if (proxy?.$confirmInput) {
-      await proxy.$confirmInput.danger({
-        targetName: row.taskName,
-        targetType: '模版',
-        keyword: row.taskName,
-        dangerMessage: `您即将删除模版"${row.taskName}"`,
-        description: '此操作不可恢复，请输入模版名称以确认删除。',
-        confirmAction: async () => {
-          return evaluationApi.deleteEvaluation(row.id).then(() => {
-            refresh()
-          })
-        }
-      })
-    } else {
-      // 方案2: 使用直接导入的服务
-      console.warn('⚠️ 使用备用方案：直接导入服务')
-      await confirmInputDanger({
-        targetName: row.taskName,
-        targetType: '模版',
-        keyword: row.taskName,
-        dangerMessage: `您即将删除模版"${row.taskName}"`,
-        description: '此操作不可恢复，请输入模版名称以确认删除。',
-        confirmAction: async () => {
-          return evaluationApi.deleteEvaluation(row.id).then(() => {
-            refresh()
-          })
-        }
-      })
-    }
+    await ElMessageBox.confirm(
+      `您即将删除模版"${row.taskName}"，此操作不可恢复！`,
+      '删除确认',
+      {
+        confirmButtonText: '确定删除',
+        cancelButtonText: '取消',
+        type: 'warning',
+        confirmButtonClass: 'el-button--danger'
+      }
+    )
+    
+    await evaluationApi.deleteEvaluation(row.id)
+    refresh()
+    ElMessage.success('删除成功')
   } catch (error) {
-    console.log('用户取消删除或操作失败:', error)
+    if (error !== 'cancel') {
+      ElMessage.error('删除失败')
+      console.error('删除失败:', error)
+    }
   }
 }
 
