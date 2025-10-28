@@ -64,13 +64,35 @@ export function migrationDatasetToLocalHost(data: {
 export function createTable(data: {
   tableName: string
   tableComment: string
-  createTableRowDtoLists: Array<Array<{
+  createTableRowDtos: Array<{
     name: string
-    tValue: string
-  }>>
+    type: string
+    extent: string
+    comment: string
+  }>
 }) {
   return ZXR.post({
-    url: '/zhpgxt/zhpgCreateTable',
+    url: '/zhpgxt/zhpgCreateTable/creatTable',
+    data
+  })
+}
+
+// 编辑表
+export function modifyTable(data: {
+  updateId: string
+  oldTableName: string
+  tableName: string
+  tableComment: string
+  createTableRowDtos: Array<{
+    name: string
+    type: string
+    extent: string
+    comment: string
+    oldColumnName: string
+  }>
+}) {
+  return ZXR.post({
+    url: '/zhpgxt/zhpgCreateTable/modifyTable',
     data
   })
 }
@@ -208,6 +230,7 @@ export const datasetsApi = {
   updateTableRow,
   migrationToLocalHost: migrationDatasetToLocalHost,
   createTable,
+  modifyTable,
   updateDataset,
   dirtyDataDetection,
   missingValueFill,

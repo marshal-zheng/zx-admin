@@ -9,6 +9,15 @@ declare module '@zxio/zxui' {
     setLoading: (loading: boolean) => void
   }
 
+  export function useDrawer<T = any>(options?: any): {
+    state: any
+    drawerProps: any
+    drawerEvents: any
+    open: (...args: any[]) => any
+    close: () => void
+    setLoading: (loading: boolean) => void
+  }
+
   export function confirmInputDanger(options: any): Promise<any>
 
   // Optional component types placeholders

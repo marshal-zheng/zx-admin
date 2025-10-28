@@ -262,43 +262,39 @@ const drawer = useDrawer<FormData>({
       // 编辑模式：使用新的编辑接口
       const editData = {
         updateId: editingTableId.value,
+        oldTableName: drawer.state.data.tableName, // 保存原表名
         tableName: drawer.state.data.tableName,
+        tableComment: drawer.state.data.tableComment,
         createTableRowDtos: drawer.state.data.fields.map((field) => ({
           name: field.name,
-          tValue: JSON.stringify({
-            type: field.type,
-            extent: String(field.extent),
-            comment: field.comment
-          }) // 将字段的详细信息序列化到 tValue 中
+          type: field.type,
+          extent: String(field.extent),
+          comment: field.comment,
+          oldColumnName: field.name // 保存原字段名
         }))
       }
       console.log('编辑提交数据:', editData)
       console.log('字段数据:', drawer.state.data.fields)
-      response = await datasetsApi.updateTableRow(editData)
+      response = await datasetsApi.modifyTable(editData)
     } else {
       // 新增模式：调用创建接口
       const submitData = {
         tableName: drawer.state.data.tableName,
         tableComment: drawer.state.data.tableComment,
-        createTableRowDtoLists: [
-          drawer.state.data.fields.map((field) => ({
-            name: field.name,
-            tValue: field.type + (field.extent ? `(${field.extent})` : '') + (field.comment ? ` COMMENT '${field.comment}'` : '')
-          }))
-        ]
+        createTableRowDtos: drawer.state.data.fields.map((field) => ({
+          name: field.name,
+          type: field.type,
+          extent: String(field.extent),
+          comment: field.comment
+        }))
       }
       console.log('新增提交数据:', submitData)
       response = await datasetsApi.createTable(submitData)
     }
 
-    // 检查响应状态
-    if (response && (response.code === '200' || response.success)) {
-      ElMessage.success(isEditMode ? '编辑表成功' : '创建表成功')
-      emit('success')
-      drawer.close()
-    } else {
-      throw new Error(response?.msg || response?.message || '操作失败')
-    }
+    
+    emit('success')
+    drawer.close()
     
   },
   onConfirmError: (error: any) => {

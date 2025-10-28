@@ -367,6 +367,59 @@ export default [
     }
   },
 
+  // 创建表接口 - 新路径
+  {
+    url: '/api/zhpgxt/zhpgCreateTable/creatTable',
+    method: 'post',
+    timeout,
+    response: ({ body }) => {
+      console.log('创建表请求数据:', body)
+      
+      const { tableName, tableComment, createTableRowDtos } = body
+      
+      if (!tableName) {
+        return {
+          code: 400,
+          message: '表名不能为空',
+          data: null
+        }
+      }
+      
+      if (!createTableRowDtos || !Array.isArray(createTableRowDtos) || createTableRowDtos.length === 0) {
+        return {
+          code: 400,
+          message: '表字段不能为空',
+          data: null
+        }
+      }
+      
+      // 验证字段格式
+      for (const field of createTableRowDtos) {
+        if (!field.name || !field.type) {
+          return {
+            code: 400,
+            message: '字段名和字段类型不能为空',
+            data: null
+          }
+        }
+      }
+      
+      // 模拟创建成功
+      const newTableId = Mock.mock('@id')
+      
+      return {
+        code: SUCCESS_CODE,
+        message: '创建表成功',
+        data: {
+          createTableId: newTableId,
+          tableName,
+          tableComment,
+          fields: createTableRowDtos
+        }
+      }
+    }
+  },
+
   // 创建表
   {
     url: '/api/zhpgxt/zhpgCreateTable',
@@ -453,6 +506,184 @@ export default [
           createTableId: newCreateTableId,
           tableName: body.tableName,
           message: '表创建成功'
+        }
+      }
+    }
+  },
+
+  // 新增表数据接口 - 新接口
+  {
+    url: '/api/zhpgxt/zhpgCreateTable/insterTable',
+    method: 'post',
+    timeout,
+    response: ({ body }) => {
+      console.log('新增表数据请求数据:', body)
+      
+      const { tableName, createTableRowDtoLists } = body
+      
+      if (!tableName) {
+        return {
+          code: 400,
+          message: '表名不能为空',
+          data: null
+        }
+      }
+      
+      if (!createTableRowDtoLists || !Array.isArray(createTableRowDtoLists) || createTableRowDtoLists.length === 0) {
+        return {
+          code: 400,
+          message: '表数据不能为空',
+          data: null
+        }
+      }
+      
+      // 验证数据格式
+      for (const rowList of createTableRowDtoLists) {
+        if (!Array.isArray(rowList) || rowList.length === 0) {
+          return {
+            code: 400,
+            message: '数据行格式不正确',
+            data: null
+          }
+        }
+        
+        for (const field of rowList) {
+          if (!field.name || field.tValue === undefined) {
+            return {
+              code: 400,
+              message: '字段名和字段值不能为空',
+              data: null
+            }
+          }
+        }
+      }
+      
+      // 模拟新增表数据成功
+      return {
+        code: SUCCESS_CODE,
+        message: '新增表数据成功',
+        data: {
+          tableName,
+          insertedRows: createTableRowDtoLists.length,
+          insertedData: createTableRowDtoLists
+        }
+      }
+    }
+  },
+
+  // 编辑表数据接口 - 新接口
+  {
+    url: '/api/zhpgxt/zhpgCreateTable/updateTable',
+    method: 'put',
+    timeout,
+    response: ({ body }) => {
+      console.log('编辑表数据请求数据:', body)
+      
+      const { updateId, tableName, createTableRowDtos } = body
+      
+      if (!updateId) {
+        return {
+          code: 400,
+          message: '更新ID不能为空',
+          data: null
+        }
+      }
+      
+      if (!tableName) {
+        return {
+          code: 400,
+          message: '表名不能为空',
+          data: null
+        }
+      }
+      
+      if (!createTableRowDtos || !Array.isArray(createTableRowDtos) || createTableRowDtos.length === 0) {
+        return {
+          code: 400,
+          message: '表数据不能为空',
+          data: null
+        }
+      }
+      
+      // 验证字段格式
+      for (const field of createTableRowDtos) {
+        if (!field.name || field.tValue === undefined) {
+          return {
+            code: 400,
+            message: '字段名和字段值不能为空',
+            data: null
+          }
+        }
+      }
+      
+      // 模拟编辑表数据成功
+      return {
+        code: SUCCESS_CODE,
+        message: '编辑表数据成功',
+        data: {
+          updateId,
+          tableName,
+          updatedFields: createTableRowDtos
+        }
+      }
+    }
+  },
+
+  // 编辑表接口 - 新接口
+  {
+    url: '/api/zhpgxt/zhpgCreateTable/modifyTable',
+    method: 'put',
+    timeout,
+    response: ({ body }) => {
+      console.log('编辑表请求数据:', body)
+      
+      const { updateId, oldTableName, tableName, tableComment, createTableRowDtos } = body
+      
+      if (!updateId) {
+        return {
+          code: 400,
+          message: '更新ID不能为空',
+          data: null
+        }
+      }
+      
+      if (!tableName) {
+        return {
+          code: 400,
+          message: '表名不能为空',
+          data: null
+        }
+      }
+      
+      if (!createTableRowDtos || !Array.isArray(createTableRowDtos) || createTableRowDtos.length === 0) {
+        return {
+          code: 400,
+          message: '表字段不能为空',
+          data: null
+        }
+      }
+      
+      // 验证字段格式
+      for (const field of createTableRowDtos) {
+        if (!field.name || !field.type) {
+          return {
+            code: 400,
+            message: '字段名和字段类型不能为空',
+            data: null
+          }
+        }
+      }
+      
+      // 模拟编辑成功
+      return {
+        code: SUCCESS_CODE,
+        message: '编辑表成功',
+        data: {
+          updateId,
+          oldTableName,
+          tableName,
+          tableComment,
+          fields: createTableRowDtos
         }
       }
     }
