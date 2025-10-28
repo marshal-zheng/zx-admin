@@ -184,7 +184,7 @@ export function dirtyDataDetection(tableName: string, data: {
   }>
 }) {
   return ZXR.post({
-    url: `/zhpgxt/zhpgCreateTable/dataConversion/dirtyDataDetection/${encodeURIComponent(tableName)}`,
+    url: `/zhpgxt/zhpgCreateTable/selectTable/${encodeURIComponent(tableName)}`,
     data
   })
 }
@@ -197,7 +197,7 @@ export function missingValueFill(tableName: string, data: {
   }>
 }) {
   return ZXR.post({
-    url: `/zhpgxt/zhpgCreateTable/dataConversion/missingValueFill/${encodeURIComponent(tableName)}`,
+    url: `/zhpgxt/zhpgCreateTable/selectTable/${encodeURIComponent(tableName)}`,
     data
   })
 }
@@ -209,7 +209,7 @@ export function outlierRemoval(tableName: string, data: {
   maxValue?: number
 }) {
   return ZXR.post({
-    url: `/zhpgxt/zhpgCreateTable/dataConversion/outlierRemoval/${encodeURIComponent(tableName)}`,
+    url: `/zhpgxt/zhpgCreateTable/selectTable/${encodeURIComponent(tableName)}`,
     data
   })
 }

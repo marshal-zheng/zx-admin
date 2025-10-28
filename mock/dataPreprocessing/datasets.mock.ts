@@ -7,61 +7,61 @@ const timeout = 1000
 const mockDatasets = [
   {
     createTableId: '1',
-    TABLE_NAME: 'user_dataset',
+    createTableName: 'user_dataset',
     TABLE_COMMENT: '用户数据集',
     dataSourceId: '1',
     dataSourceName: '生产环境MySQL',
     TABLE_ROWS: 1500,
     columnCount: 8,
-    CREATE_TIME: '2024-01-15 10:30:00',
+    createTime: '2024-01-15 10:30:00',
     updateTime: '2024-01-20 14:20:00',
     status: 'active'
   },
   {
     createTableId: '2',
-    TABLE_NAME: 'order_dataset',
+    createTableName: 'order_dataset',
     TABLE_COMMENT: '订单数据集',
     dataSourceId: '1',
     dataSourceName: '生产环境MySQL',
     TABLE_ROWS: 8500,
     columnCount: 12,
-    CREATE_TIME: '2024-01-16 11:15:00',
+    createTime: '2024-01-16 11:15:00',
     updateTime: '2024-01-21 09:30:00',
     status: 'active'
   },
   {
     createTableId: '3',
-    TABLE_NAME: 'product_dataset',
+    createTableName: 'product_dataset',
     TABLE_COMMENT: '商品数据集',
     dataSourceId: '2',
     dataSourceName: '测试环境MySQL',
     TABLE_ROWS: 320,
     columnCount: 6,
-    CREATE_TIME: '2024-01-17 09:45:00',
+    createTime: '2024-01-17 09:45:00',
     updateTime: '2024-01-22 16:10:00',
     status: 'active'
   },
   {
     createTableId: '4',
-    TABLE_NAME: 'analytics_dataset',
+    createTableName: 'analytics_dataset',
     TABLE_COMMENT: '分析数据集',
     dataSourceId: '3',
     dataSourceName: '本地达梦数据库',
     TABLE_ROWS: 25600,
     columnCount: 15,
-    CREATE_TIME: '2024-01-18 14:20:00',
+    createTime: '2024-01-18 14:20:00',
     updateTime: '2024-01-23 11:45:00',
     status: 'processing'
   },
   {
     createTableId: '5',
-    TABLE_NAME: 'log_dataset',
+    createTableName: 'log_dataset',
     TABLE_COMMENT: '日志数据集',
     dataSourceId: '4',
     dataSourceName: '开发环境MySQL',
     TABLE_ROWS: 45000,
     columnCount: 10,
-    CREATE_TIME: '2024-01-19 16:30:00',
+    createTime: '2024-01-19 16:30:00',
     updateTime: '2024-01-24 08:15:00',
     status: 'active'
   }
@@ -253,13 +253,13 @@ export default [
         message: '查询成功',
         data: {
           createTableId: dataset.createTableId,
-          tableName: dataset.TABLE_NAME,
+          tableName: dataset.createTableName,
           tableComment: dataset.TABLE_COMMENT,
           dataSourceId: dataset.dataSourceId,
           dataSourceName: dataset.dataSourceName,
           rowCount: dataset.TABLE_ROWS,
           columnCount: dataset.columnCount,
-          createTime: dataset.CREATE_TIME,
+          createTime: dataset.createTime,
           updateTime: dataset.updateTime,
           status: dataset.status,
           createTableRowDtos: fields.map((field) => ({
@@ -454,13 +454,13 @@ export default [
       // 创建新的数据集记录
       const newDataset = {
         createTableId: newCreateTableId,
-        TABLE_NAME: body.tableName,
+        createTableName: body.tableName,
         TABLE_COMMENT: body.tableComment,
         dataSourceId: '1',
         dataSourceName: '生产环境MySQL',
         TABLE_ROWS: 0,
         columnCount: fields.length,
-        CREATE_TIME: new Date().toISOString().replace('T', ' ').substring(0, 19),
+        createTime: new Date().toISOString().replace('T', ' ').substring(0, 19),
         updateTime: new Date().toISOString().replace('T', ' ').substring(0, 19),
         status: 'active'
       }
@@ -710,7 +710,7 @@ export default [
       let targetDataset: any = null
 
       for (const dataset of mockDatasets) {
-        if (dataset.TABLE_NAME === tableName) {
+        if (dataset.create === tableName) {
           targetDataset = dataset
           break
         }
@@ -771,7 +771,7 @@ export default [
       let targetDataset: any = null
 
       for (const dataset of mockDatasets) {
-        if (dataset.TABLE_NAME === decodedTableName) {
+        if (dataset.createTableName === decodedTableName) {
           targetDataset = dataset
           break
         }

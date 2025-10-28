@@ -39,7 +39,7 @@
             v-for="field in getTableColumns()"
             :key="field.name"
             :prop="field.name"
-            :label="field.name"
+            :label="field.comment || field.name"
             :min-width="120"
             show-overflow-tooltip
           >
@@ -264,7 +264,6 @@ const handleDelete = async (row, index) => {
         confirmButtonText: '确认',
         cancelButtonText: '取消',
         type: 'warning',
-        confirmButtonClass: 'el-button--danger'
       }
     )
     

@@ -849,7 +849,7 @@ export default [
 
   // 导入数据源
   {
-    url: '/api/zhpgxt/importData/:baseDataName',
+    url: '/api/zhpgxt/zhpgBase/importData/:baseDataName',
     method: 'post',
     timeout,
     response: ({ query, body }) => {
@@ -1053,7 +1053,7 @@ export default [
     method: 'get',
     timeout,
     response: ({ query }) => {
-      const { current = 1, size = 10, TABLE_NAME = '' } = query
+      const { current = 1, size = 10, createTableName = '' } = query
 
       // 模拟创建表数据
       const mockCreateTables = [
@@ -1061,7 +1061,7 @@ export default [
           CREATE_TIME: '2025-01-15 10:30:00',
           createType: 1, // 自建表
           createTableId: 'CT001',
-          TABLE_NAME: '用户信息表',
+          createTableName: '用户信息表',
           handType: 1, // 已处理
           TABLE_COMMENT: '存储系统用户基本信息'
         },
@@ -1069,7 +1069,7 @@ export default [
           CREATE_TIME: '2025-01-14 14:20:00',
           createType: 2, // 其他库导入表
           createTableId: 'CT002',
-          TABLE_NAME: '订单数据表',
+          createTableName: '订单数据表',
           handType: 0, // 未处理
           TABLE_COMMENT: '电商订单详细信息记录'
         },
@@ -1077,7 +1077,7 @@ export default [
           CREATE_TIME: '2025-01-13 09:15:00',
           createType: 3, // 文件导入表
           createTableId: 'CT003',
-          TABLE_NAME: '商品库存表',
+          createTableName: '商品库存表',
           handType: 1, // 已处理
           TABLE_COMMENT: '商品库存管理数据'
         },
@@ -1085,7 +1085,7 @@ export default [
           CREATE_TIME: '2025-01-12 16:45:00',
           createType: 1, // 自建表
           createTableId: 'CT004',
-          TABLE_NAME: '客户关系表',
+          createTableName: '客户关系表',
           handType: 0, // 未处理
           TABLE_COMMENT: '客户关系管理信息'
         },
@@ -1093,7 +1093,7 @@ export default [
           CREATE_TIME: '2025-01-11 11:30:00',
           createType: 2, // 其他库导入表
           createTableId: 'CT005',
-          TABLE_NAME: '财务报表',
+          createTableName: '财务报表',
           handType: 1, // 已处理
           TABLE_COMMENT: '企业财务数据统计'
         },
@@ -1101,7 +1101,7 @@ export default [
           CREATE_TIME: '2025-01-10 08:45:00',
           createType: 3, // 文件导入表
           createTableId: 'CT006',
-          TABLE_NAME: '员工档案表',
+          createTableName: '员工档案表',
           handType: 0, // 未处理
           TABLE_COMMENT: '公司员工基本档案信息'
         },
@@ -1109,7 +1109,7 @@ export default [
           CREATE_TIME: '2025-01-09 15:20:00',
           createType: 1, // 自建表
           createTableId: 'CT007',
-          TABLE_NAME: '产品分类表',
+          createTableName: '产品分类表',
           handType: 1, // 已处理
           TABLE_COMMENT: '产品分类层级结构'
         },
@@ -1117,7 +1117,7 @@ export default [
           CREATE_TIME: '2025-01-08 12:10:00',
           createType: 2, // 其他库导入表
           createTableId: 'CT008',
-          TABLE_NAME: '销售数据表',
+          createTableName: '销售数据表',
           handType: 0, // 未处理
           TABLE_COMMENT: '销售业绩统计数据'
         },
@@ -1125,7 +1125,7 @@ export default [
           CREATE_TIME: '2025-01-07 13:25:00',
           createType: 3, // 文件导入表
           createTableId: 'CT009',
-          TABLE_NAME: '供应商信息表',
+          createTableName: '供应商信息表',
           handType: 1, // 已处理
           TABLE_COMMENT: '供应商基本信息管理'
         },
@@ -1133,7 +1133,7 @@ export default [
           CREATE_TIME: '2025-01-06 10:50:00',
           createType: 1, // 自建表
           createTableId: 'CT010',
-          TABLE_NAME: '物流跟踪表',
+          createTableName: '物流跟踪表',
           handType: 0, // 未处理
           TABLE_COMMENT: '物流配送跟踪信息'
         },
@@ -1141,7 +1141,7 @@ export default [
           CREATE_TIME: '2025-01-05 14:35:00',
           createType: 2, // 其他库导入表
           createTableId: 'CT011',
-          TABLE_NAME: '营销活动表',
+          createTableName: '营销活动表',
           handType: 1, // 已处理
           TABLE_COMMENT: '营销活动策划执行数据'
         },
@@ -1149,7 +1149,7 @@ export default [
           CREATE_TIME: '2025-01-04 09:40:00',
           createType: 3, // 文件导入表
           createTableId: 'CT012',
-          TABLE_NAME: '设备维护表',
+          createTableName: '设备维护表',
           handType: 0, // 未处理
           TABLE_COMMENT: '设备维护保养记录'
         },
@@ -1157,7 +1157,7 @@ export default [
           CREATE_TIME: '2025-01-03 16:15:00',
           createType: 1, // 自建表
           createTableId: 'CT013',
-          TABLE_NAME: '会员积分表',
+          createTableName: '会员积分表',
           handType: 1, // 已处理
           TABLE_COMMENT: '会员积分变动记录'
         },
@@ -1165,7 +1165,7 @@ export default [
           CREATE_TIME: '2025-01-02 11:20:00',
           createType: 2, // 其他库导入表
           createTableId: 'CT014',
-          TABLE_NAME: '审计日志表',
+          createTableName: '审计日志表',
           handType: 0, // 未处理
           TABLE_COMMENT: '系统操作审计日志'
         },
@@ -1173,7 +1173,7 @@ export default [
           CREATE_TIME: '2025-01-01 08:30:00',
           createType: 3, // 文件导入表
           createTableId: 'CT015',
-          TABLE_NAME: '配置参数表',
+          createTableName: '配置参数表',
           handType: 1, // 已处理
           TABLE_COMMENT: '系统配置参数管理'
         },
@@ -1181,7 +1181,7 @@ export default [
           CREATE_TIME: '2024-12-31 17:45:00',
           createType: 1, // 自建表
           createTableId: 'CT016',
-          TABLE_NAME: '权限管理表',
+          createTableName: '权限管理表',
           handType: 0, // 未处理
           TABLE_COMMENT: '用户权限分配管理'
         },
@@ -1189,7 +1189,7 @@ export default [
           CREATE_TIME: '2024-12-30 13:10:00',
           createType: 2, // 其他库导入表
           createTableId: 'CT017',
-          TABLE_NAME: '数据字典表',
+          createTableName: '数据字典表',
           handType: 1, // 已处理
           TABLE_COMMENT: '系统数据字典配置'
         },
@@ -1197,7 +1197,7 @@ export default [
           CREATE_TIME: '2024-12-29 10:25:00',
           createType: 3, // 文件导入表
           createTableId: 'CT018',
-          TABLE_NAME: '报表模板表',
+          createTableName: '报表模板表',
           handType: 0, // 未处理
           TABLE_COMMENT: '报表模板配置信息'
         },
@@ -1205,7 +1205,7 @@ export default [
           CREATE_TIME: '2024-12-28 15:55:00',
           createType: 1, // 自建表
           createTableId: 'CT019',
-          TABLE_NAME: '消息通知表',
+          createTableName: '消息通知表',
           handType: 1, // 已处理
           TABLE_COMMENT: '系统消息通知记录'
         },
@@ -1213,7 +1213,7 @@ export default [
           CREATE_TIME: '2024-12-27 12:40:00',
           createType: 2, // 其他库导入表
           createTableId: 'CT020',
-          TABLE_NAME: '备份恢复表',
+          createTableName: '备份恢复表',
           handType: 0, // 未处理
           TABLE_COMMENT: '数据备份恢复记录'
         }
@@ -1221,9 +1221,9 @@ export default [
 
       // 根据搜索条件过滤数据
       let filteredData = mockCreateTables
-      if (TABLE_NAME) {
+      if (createTableName) {
         filteredData = mockCreateTables.filter((item) =>
-          item.TABLE_NAME.includes(TABLE_NAME)
+          item.createTableName?.includes(createTableName)
         )
       }
 
@@ -1343,7 +1343,7 @@ export default [
 
   // 数据转换接口 - 脏数据检测
   {
-    url: '/api/zhpgxt/zhpgCreateTable/dataConversion/dirtyDataDetection/:tableName',
+    url: '/api/zhpgxt/zhpgCreateTable/selectTable/:tableName',
     method: 'post',
     timeout,
     response: ({ body, url }) => {

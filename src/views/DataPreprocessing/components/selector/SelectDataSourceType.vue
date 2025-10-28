@@ -37,7 +37,7 @@ const props = defineProps({
   },
   autoSelectFirst: {
     type: Boolean,
-    default: true
+    default: false
   }
 })
 

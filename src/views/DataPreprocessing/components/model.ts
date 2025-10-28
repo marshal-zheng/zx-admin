@@ -4,7 +4,6 @@
 
 // 数据库类型枚举
 export enum DatabaseType {
-  ALL = 0, // 全部数据库
   MYSQL = 1, // MySql数据库
   DM = 2 // 达梦数据库
 }
@@ -102,10 +101,6 @@ export interface DatabaseTypeOption {
 
 // 数据库类型选项列表
 export const DATABASE_TYPE_OPTIONS: DatabaseTypeOption[] = [
-  {
-    label: '全部',
-    value: DatabaseType.ALL
-  },
   {
     label: 'MySql数据库',
     value: DatabaseType.MYSQL

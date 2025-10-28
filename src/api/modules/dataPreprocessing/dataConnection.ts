@@ -52,7 +52,7 @@ export function importDataSource(baseDataName, file) {
   formData.append('file', file)
 
   return ZXR.post({
-    url: `/zhpgxt/importData/${baseDataName}`,
+    url: `/zhpgxt/zhpgBase/importData/${baseDataName}`,
     data: formData,
     headers: {
       'Content-Type': 'multipart/form-data'
