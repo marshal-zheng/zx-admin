@@ -117,7 +117,7 @@ const loadData = async (params) => {
 
   try {
     const data = await dataConnectionApi.getTableData({
-      dataSourceId: currentData.value.dataSourceId,
+      id: currentData.value.dataSourceId,
       tableName: currentData.value.tableName,
       ...params
     })

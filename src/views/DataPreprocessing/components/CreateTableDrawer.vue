@@ -66,6 +66,7 @@ interface TableField {
   type: string
   extent: number
   comment: string
+  isNew?: boolean // 标识是否为新字段，true为新字段，false为旧字段
 }
 
 // 表单数据接口
@@ -247,7 +248,8 @@ const drawer = useDrawer<FormData>({
         name: '',
         type: 'varchar',
         extent: 255,
-        comment: ''
+        comment: '',
+        isNew: true // 默认新字段
       }
     ]
   }),
@@ -270,11 +272,9 @@ const drawer = useDrawer<FormData>({
           type: field.type,
           extent: String(field.extent),
           comment: field.comment,
-          oldColumnName: field.name // 保存原字段名
+          ...(field.isNew === false && { oldColumnName: field.name }) // 只为旧字段传递oldColumnName
         }))
       }
-      console.log('编辑提交数据:', editData)
-      console.log('字段数据:', drawer.state.data.fields)
       response = await datasetsApi.modifyTable(editData)
     } else {
       // 新增模式：调用创建接口
@@ -320,7 +320,8 @@ const loadDatasetDetail = async (createTableId: string) => {
         name: field.name || '',
         type: field.type || 'varchar',
         extent: field.extent || '255',
-        comment: field.comment || ''
+        comment: field.comment || '',
+        isNew: false // 从后端加载的都是旧字段
       }))
     } else {
       // 如果没有字段数据，保持默认的一个空字段
@@ -329,7 +330,8 @@ const loadDatasetDetail = async (createTableId: string) => {
           name: '',
           type: 'varchar',
           extent: 255,
-          comment: ''
+          comment: '',
+          isNew: true // 默认新字段
         }
       ]
     }

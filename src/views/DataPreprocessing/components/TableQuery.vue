@@ -42,7 +42,7 @@
             show-overflow-tooltip
           />
           <el-table-column
-            prop="TABLE_COMMENT"
+            prop="tableComment"
             label="表注释"
             min-width="150"
             show-overflow-tooltip

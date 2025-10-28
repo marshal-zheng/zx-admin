@@ -17,6 +17,7 @@
         <el-form-item label="数据源类型" prop="baseType">
           <SelectDataSourceType
             v-model="state.data.baseType"
+            autoSelectFirst
             @change="handleDataSourceTypeChange"
           />
         </el-form-item>
@@ -84,7 +85,7 @@ const formRef = ref()
 // 表单验证规则
 const formRules = computed(() => ({
   baseName: [{ required: true, message: '请输入数据源名称', trigger: 'blur' }],
-  // baseType: [{ required: true, message: '请选择数据源类型', trigger: 'change' }],
+  baseType: [{ required: true, message: '请选择数据源类型', trigger: 'change' }],
   baseIp: [
     { required: true, message: '请输入IP地址', trigger: 'blur' },
     { pattern: /^(\d{1,3}\.){3}\d{1,3}$/, message: 'IP地址格式不正确', trigger: 'blur' }
