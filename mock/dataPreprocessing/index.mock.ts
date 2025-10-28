@@ -318,7 +318,9 @@ const mockTableFields = {
   ],
   test_users: [
     { name: 'id', comment: '用户ID', type: 'int(11)' },
-    { name: 'username', comment: '用户名', type: 'varchar(50)' },
+    { name: 'name', comment: '姓名', type: 'varchar(50)' },
+    { name: 'name', comment: '用户名', type: 'varchar(50)' },
+    { name: 'name', comment: '昵称', type: 'varchar(50)' },
     { name: 'email', comment: '邮箱', type: 'varchar(100)' },
     { name: 'created_at', comment: '创建时间', type: 'datetime' },
     { name: 'status', comment: '状态', type: 'tinyint(1)' }

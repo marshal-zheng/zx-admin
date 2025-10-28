@@ -33,17 +33,19 @@
       <template #table="{ grid, refresh }">
         <el-table
           :data="grid.list"
+          :row-key="getRowKey"
           style="width: 100%"
         >
           <el-table-column
-            v-for="field in getTableColumns()"
-            :key="field.name"
+            v-for="(field, index) in getTableColumns()"
+            :key="`${field.name}_${index}`"
             :prop="field.name"
-            :label="field.comment || field.name"
+            :label="field.name"
             :min-width="120"
             show-overflow-tooltip
           >
             <template #default="{ row }">
+              {{ row }}
               <span>{{ formatCellValue(row[field.name]) }}</span>
             </template>
           </el-table-column>
@@ -53,6 +55,7 @@
             label="操作"
             width="150"
             fixed="right"
+            key="actions"
           >
             <template #default="{ row, $index }">
               <el-button
@@ -223,6 +226,12 @@ const formatCellValue = (value) => {
     return value.toLocaleString()
   }
   return String(value)
+}
+
+// 获取行的唯一标识
+const getRowKey = (row) => {
+  // 优先使用id字段，如果没有则使用其他唯一字段，最后使用行的JSON字符串作为key
+  return row.id || row.updateId || row.rowId || JSON.stringify(row)
 }
 
 // 处理新建表数据

@@ -340,14 +340,14 @@ export default [
           success: true,
           msg: 'SUCCESS',
           data: [
-            { name: 'id', comment: '用户ID', type: 'int(11)' },
-            { name: 'username', comment: '用户名', type: 'varchar(50)' },
-            { name: 'email', comment: '邮箱', type: 'varchar(100)' },
-            { name: 'age', comment: '年龄', type: 'int(3)' },
-            { name: 'department', comment: '部门', type: 'varchar(50)' },
-            { name: 'salary', comment: '薪资', type: 'decimal(10,2)' },
-            { name: 'join_date', comment: '入职日期', type: 'date' },
-            { name: 'status', comment: '状态', type: 'varchar(20)' }
+            { name: 'aaa', comment: '用户ID', type: 'int(11)', id:'1' },
+            { name: 'bbb', comment: '用户名', type: 'varchar(50)', id:'2' },
+            { name: 'aaa', comment: '邮箱', type: 'varchar(100)', id:'3' },
+            { name: 'aaa', comment: '年龄', type: 'int(3)', id:'4' },
+            { name: 'bbb', comment: '部门', type: 'varchar(50)', id:'5' },
+            { name: 'salary', comment: '薪资', type: 'decimal(10,2)', id:'6' },
+            { name: 'join_date', comment: '入职日期', type: 'date', id:'7' },
+            { name: 'status', comment: '状态', type: 'varchar(20)', id:'8' }
           ]
         }
       }
