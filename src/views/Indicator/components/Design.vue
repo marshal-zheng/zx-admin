@@ -8,18 +8,21 @@
       :graph-data="testGraphData"
       :is-show-side-nav="isShowSideNav"
       :is-show-toolbar="isShowToolbar"
+      :show-save-btn="showSaveBtn"
       :is-editable="isEditable"
+      :exportXmindHandler="exportXmindHandler"
       @save="handleSave"
+      @click-save="handleSaveClick"
       @edit-node="handleEditNode"
       @delete-node="handleDeleteNode"
     >
-      <template #toolbar-right>
-        <ZxButton type="primary" size="small" @click="handleSaveClick"> 保存 </ZxButton>
-      </template>
+      <!-- 仍保留插槽，避免破坏外部自定义，但内置按钮已可用 -->
+      <template #toolbar-right></template>
     </IndicatorDagEditor>
   </ZxFlexView>
   <div v-else class="indicator-system-design h-full">
     <IndicatorDagEditor
+      :exportXmindHandler="exportXmindHandler"
       :algo-type="algoType"
       ref="editorRef"
       :key="refreshKey"
@@ -27,14 +30,14 @@
       :graph-data="testGraphData"
       :is-show-side-nav="isShowSideNav"
       :is-show-toolbar="isShowToolbar"
+      :show-save-btn="showSaveBtn"
       :is-editable="isEditable"
       @save="handleSave"
+      @click-save="handleSaveClick"
       @edit-node="handleEditNode"
       @delete-node="handleDeleteNode"
     >
-      <template v-if="showSaveBtn" #toolbar-right>
-        <ZxButton type="primary" size="small" @click="handleSaveClick"> 保存 </ZxButton>
-      </template>
+      <template #toolbar-right></template>
     </IndicatorDagEditor>
   </div>
 </template>
@@ -78,7 +81,7 @@ const props = defineProps({
   },
   algoType: {
     type: Number,
-    default: 2
+    default: null
   },
   // 是否使用 ZxFlexView 包裹
   useFlexView: {
@@ -103,6 +106,11 @@ const baseIndicatorList = ref([])
 
 // 体系详情数据
 const systemDetailData = ref(null)
+
+const exportXmindHandler = () => {
+  // 导出xmaind
+  console.log('导出xmaind')
+}
 
 // 获取体系详情
 const fetchSystemDetail = async (evaluaId) => {

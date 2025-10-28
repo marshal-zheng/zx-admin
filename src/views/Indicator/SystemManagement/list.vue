@@ -18,12 +18,13 @@
             <ZxButton @click="handleManageTags">标签管理</ZxButton>
           </div>
           <div class="zx-grid-form-bar__filters">
-            <CategorySelector
+            <!-- 暂时隐藏指标分类筛选 -->
+            <!-- <CategorySelector
               v-model="query.categoryId"
               placeholder="选择体系分类"
               style="width: 150px"
               @change="(v) => onFilterChange('categoryId', v, { refresh, updateState })"
-            />
+            /> -->
           </div>
           <div class="zx-grid-form-bar__right">
             <ZxSearch
@@ -41,10 +42,10 @@
       <!-- 表格内容 -->
       <template #table="{ grid, refresh }">
         <el-table :data="grid.list" style="width: 100%" max-height="calc(100vh - 230px)">
-          <el-table-column prop="categoryName" label="体系分类" width="150" />
-          <el-table-column prop="name" label="体系名称" min-width="200" />
+          <el-table-column prop="clazzName" label="体系分类" width="150" />
+          <el-table-column prop="evaluaName" label="体系名称" min-width="200" />
           <el-table-column
-            prop="description"
+            prop="evaluaExpplain"
             label="体系说明"
             min-width="300"
             show-overflow-tooltip
@@ -102,14 +103,8 @@ const tagManageDialogRef = ref()
 
 // 数据加载函数 - 适配 ZxGridList
 const loadSystemData = async (params) => {
-  try {
-    const data = await systemApi.getSystemList({ ...params, evaluaTemplate: 0 })
-    console.log('=== System API 返回数据 ===', data)
-    return data
-  } catch (error) {
-    console.error('=== loadSystemData 错误 ===', error)
-    throw error
-  }
+  const data = await systemApi.getSystemList({ ...params, evaluaTemplate: 0 })
+  return data
 }
 
 const onFilterChange = (field, value, { refresh, updateState }) => {
@@ -146,7 +141,7 @@ const handleEditIndicator = (row) => {
   router.push({
     path: '/indicator/system-design-edit',
     query: {
-      systemId: row.id,
+      systemId: row.evaluaId,
       systemName: row.name
     }
   })
@@ -163,7 +158,10 @@ const handleFormSuccess = (response) => {
   console.log('=== list.vue 接收到的 response ===', response)
 
   // 判断是创建还是编辑模式
-  if (response && typeof response === 'object' && !response.id) {
+  if (response?.evaluaId) {
+    // 编辑模式：刷新列表
+    gridListRef.value?.refresh()
+  } else {
     // 创建模式：跳转到创建页面，通过 sessionStorage 传递表单数据
     const formData = {
       clazzId: response.clazzId,
@@ -180,9 +178,6 @@ const handleFormSuccess = (response) => {
 
     // 跳转到创建页面
     router.push('/indicator/system-create')
-  } else {
-    // 编辑模式：刷新列表
-    gridListRef.value?.refresh()
   }
 }
 
@@ -214,7 +209,7 @@ const handleMoreActionSelect = async (item, row, refresh) => {
       handleSetAsTemplate(row, refresh)
       break
     case 'delete':
-      handleDelete(row.id, refresh)
+      handleDelete(row, refresh)
       break
     default:
       break
@@ -223,38 +218,24 @@ const handleMoreActionSelect = async (item, row, refresh) => {
 
 // 设为模版
 const handleSetAsTemplate = async (row, refresh) => {
-  try {
-    await systemApi.setAsTemplate(row.id)
-    ElMessage.success(`"${row.name}"已设为模版`)
-    refresh()
-  } catch (error) {
-    ElMessage.error(`设为模版失败: ${error.message || '未知错误'}`)
-    console.error('设为模版失败:', error)
-  }
+  await systemApi.setAsTemplate(row.evaluaId)
+  refresh()
 }
 
 // 删除体系
-const handleDelete = async (systemId, refresh) => {
-  try {
-    await ElMessageBox.confirm(
-      '您即将删除该指标体系，此操作不可恢复，是否确认删除？',
-      '删除确认',
-      {
-        confirmButtonText: '确认删除',
-        cancelButtonText: '取消',
-        type: 'warning',
-        confirmButtonClass: 'el-button--danger'
-      }
-    )
-    
-    await systemApi.deleteSystem(systemId)
-    ElMessage.success('指标体系删除成功')
-    refresh()
-  } catch (error) {
-    if (error !== 'cancel') {
-      ElMessage.error('删除失败，请重试')
+const handleDelete = async (row, refresh) => {
+  await ElMessageBox.confirm(
+    '您即将删除该指标体系，此操作不可恢复，是否确认删除？',
+    '删除确认',
+    {
+      confirmButtonText: '确认删除',
+      cancelButtonText: '取消',
+      type: 'warning',
+      confirmButtonClass: 'el-button--danger'
     }
-  }
+  )
+  await systemApi.deleteSystem(row.evaluaId)
+  refresh()
 }
 </script>
 

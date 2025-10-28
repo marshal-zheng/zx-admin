@@ -61,7 +61,7 @@
               :min="0"
               :max="100"
               :precision="0"
-              :disabled="disabledMenu.includes('supportDescription') || isReadOnly"
+              :disabled="disabledMenu.includes('supportDescription') || isReadOnly || formData.properties.level === 1"
               class="support-input"
             />
             <span class="percent-symbol">%</span>

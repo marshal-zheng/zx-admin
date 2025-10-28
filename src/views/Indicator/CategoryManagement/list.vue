@@ -40,7 +40,6 @@
             show-overflow-tooltip
           />
           <el-table-column prop="createTime" label="创建时间" width="180" />
-          <el-table-column prop="id" label="编号" width="120" />
           <el-table-column
             label="操作"
             width="150"

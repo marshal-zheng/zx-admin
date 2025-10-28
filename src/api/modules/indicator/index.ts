@@ -26,7 +26,7 @@ export function getIndicatorSystemList(params = {}) {
 // 获取计算模型列表
 export function getCalculationModelList(params = {}) {
   return ZXR.get({
-    url: '/indicator/calculation-model/list',
+    url: '/zhpgxt/zhpgOperatorModel',
     params
   })
 }

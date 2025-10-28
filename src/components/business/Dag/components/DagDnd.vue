@@ -208,7 +208,7 @@ const handleMouseDown = (event, item) => {
             id: generateContentId(),
             label: item.title
           },
-          weight: 50,
+          weight: 100,
           otherData: {}, // 空的计算模型数据
           parentNodeId: null, // 稍后会在连线时更新
           customType: '',

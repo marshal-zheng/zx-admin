@@ -21,7 +21,7 @@ export const systemApi = {
   // 更新体系
   updateSystem: (data: any) => {
     return ZXR.put({
-      url: `/zhpgxt/zhpgEvaluaSystem/${data.id}`,
+      url: `/zhpgxt/zhpgEvaluaSystem/${data.evaluaId}`,
       data
     })
   },

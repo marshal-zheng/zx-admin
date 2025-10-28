@@ -21,6 +21,9 @@
         @export-xmind="handleExportXmind"
       >
         <template #right>
+          <ZxButton v-if="showSaveBtn" type="primary" size="small" @click="handleSaveButtonClick">
+            保存
+          </ZxButton>
           <slot name="toolbar-right"></slot>
         </template>
       </DAGPage>
@@ -77,6 +80,11 @@ const props = defineProps({
     type: Boolean,
     default: true
   },
+  // 是否显示保存按钮（内置到工具栏右侧，避免插槽在全屏切换后丢失）
+  showSaveBtn: {
+    type: Boolean,
+    default: true
+  },
   // 是否可编辑
   isEditable: {
     type: Boolean,
@@ -95,7 +103,7 @@ const props = defineProps({
 })
 
 // Emits 定义
-const emit = defineEmits(['save', 'edit-node', 'delete-node', 'export-xmind'])
+const emit = defineEmits(['save', 'edit-node', 'delete-node', 'export-xmind', 'click-save'])
 
 // 初始化工具函数
 const { showConfirm } = useMessageBox()
@@ -380,6 +388,19 @@ const handleEditNode = (node) => {
   }
 
   const nodeClone = cloneNodeForForm({ ...nodeData, id: node?.id || nodeData.id })
+  // 根级指标（无 parentNodeId）默认权重为 100（仅在未设置或无效时赋默认值）
+  try {
+    const isRootNode = !propsData.parentNodeId
+    if (isRootNode) {
+      nodeClone.properties = nodeClone.properties || {}
+      const currentWeight = Number(nodeClone.properties.weight)
+      if (!Number.isFinite(currentWeight)) {
+        nodeClone.properties.weight = 100
+      }
+    }
+  } catch (e) {
+    // 忽略默认权重设置中的异常
+  }
   currentIndicatorData.value = nodeClone
   currentIndicatorMeta.parentIndicator = parentIndicatorName
   currentIndicatorMeta.isLeafNode = nodeData.type === 'leaf-node'
@@ -430,6 +451,21 @@ const handleIndicatorConfirm = (formNodeData) => {
   try {
     const nodeId = editingNodeId.value
     if (!nodeId) return
+
+    // 根级指标（无 parentNodeId）在提交时兜底权重为 100（当未填写或无效时）
+    try {
+      const parentId = formNodeData?.properties?.parentNodeId
+      const isRootNode = !parentId
+      if (isRootNode) {
+        formNodeData.properties = { ...(formNodeData.properties || {}) }
+        const inputWeight = Number(formNodeData.properties.weight)
+        if (!Number.isFinite(inputWeight)) {
+          formNodeData.properties.weight = 100
+        }
+      }
+    } catch (e) {
+      // 忽略兜底权重设置中的异常
+    }
 
     const submitNode = prepareNodeSubmitData(
       { ...formNodeData, id: nodeId },
@@ -524,6 +560,11 @@ const handleSave = (graphData) => {
 
   // 触发外部事件
   emit('save', graphData)
+}
+
+// 内置保存按钮点击，向外抛出事件，由上层处理保存逻辑
+const handleSaveButtonClick = () => {
+  emit('click-save')
 }
 
 // 导出 Xmind 事件处理

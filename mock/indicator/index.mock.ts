@@ -823,7 +823,7 @@ export default [
     response: ({ query }) => {
       const { page = 1, pageSize = 10, keyword = '', categoryId = '', evaluaTemplate = '' } = query
 
-      // 模拟体系数据 - 只有油料库火灾损毁评估体系
+      // 模拟体系数据 - 包含两条测试数据
       const allSystems = [
         {
           id: '1',
@@ -833,6 +833,15 @@ export default [
           description: '涵盖泄漏扩散、危害影响、应急响应、处置效果等多维度的综合评估体系',
           evaluaTemplate: 1,
           createTime: '2024-01-15 10:30:00'
+        },
+        {
+          id: '2',
+          categoryId: '2',
+          categoryName: '安全评估分类',
+          name: '化工厂安全风险评估体系',
+          description: '针对化工厂生产过程中的安全风险进行全面评估，包括设备安全、人员安全、环境安全等方面',
+          evaluaTemplate: 0,
+          createTime: '2024-02-20 14:25:00'
         }
       ]
 

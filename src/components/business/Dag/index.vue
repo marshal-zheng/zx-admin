@@ -57,11 +57,11 @@
             <div class="dag-toolbar__right">
               <slot name="right"></slot>
               <!-- 全屏按钮 -->
-              <ZxButton size="small" @click="toggleFullscreen">
+              <!-- <ZxButton size="small" @click="toggleFullscreen">
                 <el-icon>
                   <component :is="fullScreenIcon" />
                 </el-icon>
-              </ZxButton>
+              </ZxButton> -->
             </div>
           </div>
           <!-- 图形视图 -->

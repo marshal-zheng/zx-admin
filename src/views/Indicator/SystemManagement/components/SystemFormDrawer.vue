@@ -1,7 +1,7 @@
 <template>
   <ZxDrawer
     v-bind="drawer.drawerProps.value"
-    :title="isEditMode ? '编辑指标体系' : '新建指标体系'"
+    title="新建指标体系"
     :loading="drawerLoading"
     loadingType="skeleton"
     v-on="drawer.drawerEvents.value"
@@ -31,7 +31,7 @@
             clearable
           />
         </el-form-item>
-        <el-form-item v-if="!isEditMode" label="评估模板" prop="templateId">
+        <el-form-item label="评估模板" prop="templateId">
           <EvaluationTemplateSelector
             v-model="drawer.state.data.templateId"
             placeholder="请选择评估模板"
@@ -83,6 +83,7 @@ import { EvaluationTemplateSelector } from './selector'
 interface SystemFormData {
   evaluaId?: string | number
   id?: string | number // 兼容列表传递的 id 字段
+  evalu?: string | number // 兼容列表传递的 id 字段
   clazzId: string
   clazzName?: string
   createTime?: string
@@ -118,18 +119,14 @@ const formRules = {
   evaluaExpplain: [{ max: 200, message: '指标体系说明不能超过 200 个字符', trigger: 'blur' }]
 }
 
-// 编辑模式状态
-const isEditMode = ref(false)
-const editingSystemId = ref<string | number | null>(null)
-
 // 标签数据
 const allTags = ref<SystemTag[]>([])
 
 // 使用 drawer hook
 const drawer = useDrawer<SystemFormData>({
-  title: computed(() => (isEditMode.value ? '编辑指标体系' : '新建指标体系')),
+  title: '新建指标体系',
   size: '35%',
-  okText: computed(() => (isEditMode.value ? '确定' : '下一步')),
+  okText: '下一步',
   placement: 'right',
   formRef,
   formModel: computed(() => drawer.state.data),
@@ -144,33 +141,12 @@ const drawer = useDrawer<SystemFormData>({
     tagId: []
   }),
   onConfirm: async () => {
-    // 准备提交数据
-    const submitData = {
-      clazzId: drawer.state.data.clazzId,
-      evaluaName: drawer.state.data.evaluaName,
-      evaluaExpplain: drawer.state.data.evaluaExpplain,
-      templateId: drawer.state.data.templateId,
-      tagId: drawer.state.data.tagId
-    }
+    // 准备提交数据，只排除不需要的字段
+    const { reEvaluaSystemTags, ...submitData } = drawer.state.data
 
-    let response
-    if (isEditMode.value && editingSystemId.value) {
-      // 编辑模式：直接全量提交
-      response = await systemApi.updateSystem({ evaluaId: editingSystemId.value, ...submitData })
-      ElMessage.success('编辑指标体系成功')
-    } else {
-      // 创建模式：返回表单数据，交由父组件处理下一步
-      response = submitData
-    }
-
-    // 触发成功事件，通知父组件
-    emit('success', response)
-    drawer.close()
+    emit('success', submitData)
   },
   onConfirmError: (error: any) => {
-    console.error('表单提交失败:', error)
-    const errorMsg = error?.response?.data?.message || error?.message || '操作失败，请重试'
-    ElMessage.error(errorMsg)
   }
 })
 
@@ -239,10 +215,6 @@ const openDrawer = async (systemData?: SystemFormData) => {
   const systemId = systemData?.evaluaId || systemData?.id
 
   if (systemData && systemId) {
-    // 编辑模式
-    isEditMode.value = true
-    editingSystemId.value = systemId
-
     // 先打开抽屉
     drawer.open()
 
@@ -253,21 +225,14 @@ const openDrawer = async (systemData?: SystemFormData) => {
       // 调用详情接口获取完整数据
       const detail = await systemApi.getSystemDetail(systemId)
 
-      // 填充表单数据
-      drawer.state.data.clazzId = detail.clazzId || ''
-      drawer.state.data.evaluaName = detail.evaluaName || ''
-      drawer.state.data.evaluaExpplain = detail.evaluaExpplain || ''
-      drawer.state.data.templateId = detail.templateId || ''
-
-      // 从 reEvaluaSystemTags 中提取标签 ID 列表
-      if (detail.reEvaluaSystemTags && Array.isArray(detail.reEvaluaSystemTags)) {
-        drawer.state.data.tagId = detail.reEvaluaSystemTags.map((tag: any) => tag.id)
-      } else {
-        drawer.state.data.tagId = []
+      // 直接使用 detail 数据填充表单，不需要手动逐个赋值
+      drawer.state.data = {
+        ...detail,
+        // 从 reEvaluaSystemTags 中提取标签 ID 列表
+        tagId: detail.reEvaluaSystemTags && Array.isArray(detail.reEvaluaSystemTags)
+          ? detail.reEvaluaSystemTags.map((tag: any) => tag.id)
+          : []
       }
-    } catch (error) {
-      ElMessage.error('加载体系详情失败')
-      console.error('加载体系详情失败:', error)
     } finally {
       drawerLoading.value = false
     }
@@ -276,8 +241,6 @@ const openDrawer = async (systemData?: SystemFormData) => {
     setupTransferDblClick()
   } else {
     // 新增模式
-    isEditMode.value = false
-    editingSystemId.value = null
     drawer.open()
 
     // 设置穿梭框双击事件

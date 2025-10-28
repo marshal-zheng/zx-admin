@@ -29,8 +29,10 @@
       <!-- 模型列表 -->
       <ZxGridList
         ref="gridRef"
+        :page-sizes="[10, 20, 50, 100]"
+        :default-page-size="10"
         :load-data="loadModelData"
-        :show-pagination="false"
+        :show-pagination="true"
         :debounce-delay="300"
         :auto-fit-table-height="false"
         :params-transform="paramsTransform"
@@ -53,7 +55,7 @@
 
             <!-- 计算模型名称列 -->
             <el-table-column
-              prop="name"
+              prop="oprModelName"
               label="计算模型名称"
               min-width="200"
               show-overflow-tooltip
@@ -61,7 +63,7 @@
 
             <!-- 描述列 -->
             <el-table-column
-              prop="description"
+              prop="oprModelDesc"
               label="描述"
               min-width="200"
               show-overflow-tooltip
@@ -131,16 +133,34 @@ const tableRef = ref(null)
 // 数据加载函数
 const loadModelData = async (params) => {
   const response = await getCalculationModelList(params)
-  console.log('loadModelData response:', response)
-  console.log('params:', params)
-  params.query.page = 1111
+  
+  // 处理返回数据格式，将 records 映射为 list，并添加字段映射
+  
   return response
 }
 
-// 将外部搜索关键字合并到请求参数中
+// 将外部搜索关键字合并到请求参数中，并转换分页参数
 const paramsTransform = (params) => {
   const merged = { ...params }
-  merged.query = { ...(params?.query || {}), keyword: searchKeyword.value || undefined }
+  
+  // 转换分页参数：page -> pageNumber, size -> pageSize
+  if (params.page) {
+    merged.pageNumber = params.page
+    delete merged.page
+  }
+  if (params.size) {
+    merged.pageSize = params.size
+    delete merged.size
+  }
+  
+  // 合并搜索关键字
+  if (searchKeyword.value) {
+    merged.keyword = searchKeyword.value
+  }
+  
+  // 移除 query 对象，直接使用顶层参数
+  delete merged.query
+  
   return merged
 }
 
