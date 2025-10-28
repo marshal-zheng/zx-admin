@@ -45,7 +45,6 @@
             show-overflow-tooltip
           >
             <template #default="{ row }">
-              {{ row }}
               <span>{{ formatCellValue(row[field.name]) }}</span>
             </template>
           </el-table-column>
